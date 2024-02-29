@@ -46,30 +46,41 @@ void Game::Initialize(HWND window, int width, int height)
     m_timer.SetFixedTimeStep(true);
     m_timer.SetTargetElapsedSeconds(1.0 / 60);
     */
+
+    // set time to 0
+    m_pTimer->Reset();
 }
 
 #pragma region Frame Update
 // Executes the basic game loop.
-void Game::Tick()
+float Game::Tick()
 {
-    m_timer.Tick([&]()
+    m_pTimer->Tick();
+    fCurrTime = m_pTimer->Get();
+    if (fCurrTime - fPrevTime > 1) {
+        fps = int(m_pTimer->GetDT());
+        fPrevTime = fCurrTime;
+    }
+    
+    /*m_timer.Tick([&]()
     {
         Update(m_timer);
-    });
-
+    });*/
+  
     Render();
+    return fps;
 }
 
 // Updates the world.
-void Game::Update(DX::StepTimer const& timer)
+void Game::Update(Timer* timer) //DX::StepTimer const& timer
 {
     PIXBeginEvent(PIX_COLOR_DEFAULT, L"Update");
 
-    float elapsedTime = float(timer.GetElapsedSeconds());
+    //float elapsedTime = float(timer.GetElapsedSeconds());
+    float dt = timer->GetDT();
 
     // TODO: Add your game logic here.
-    elapsedTime;
-
+    
     PIXEndEvent();
 }
 #pragma endregion
@@ -79,7 +90,7 @@ void Game::Update(DX::StepTimer const& timer)
 void Game::Render()
 {
     // Don't try to render anything before the first Update.
-    if (m_timer.GetFrameCount() == 0)
+    if (m_pTimer->Get() == 0) //m_timer.GetFrameCount()
     {
         return;
     }
@@ -148,7 +159,8 @@ void Game::OnSuspending()
 
 void Game::OnResuming()
 {
-    m_timer.ResetElapsedTime();
+    m_pTimer->Resume();
+    //m_timer.ResetElapsedTime();
 
     // TODO: Game is being power-resumed (or returning from minimize).
 }
@@ -178,8 +190,8 @@ void Game::OnWindowSizeChanged(int width, int height)
 void Game::GetDefaultSize(int& width, int& height) const noexcept
 {
     // TODO: Change to desired default window size (note minimum size is 320x200).
-    width = 800;
-    height = 600;
+    width = 720; //800
+    height = 480; //600
 }
 #pragma endregion
 

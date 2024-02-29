@@ -52,7 +52,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 #endif
 
     g_game = std::make_unique<Game>();
-
+    HWND hwnd;
     // Register class and create window
     {
         // Register class
@@ -77,7 +77,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-        HWND hwnd = CreateWindowExW(0, L"StonEngineWindowClass", g_szAppName, WS_OVERLAPPEDWINDOW,
+        hwnd = CreateWindowExW(0, L"StonEngineWindowClass", g_szAppName, WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top,
             nullptr, nullptr, hInstance,
             g_game.get());
@@ -106,7 +106,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         }
         else
         {
-            g_game->Tick();
+            float fps = 1000/g_game->Tick();
+            std::wstring fpsStr = std::to_wstring(fps);
+            std::wstring windowText = L"fps: " + fpsStr;
+            SetWindowText(hwnd, windowText.c_str());
         }
     }
 
