@@ -52,6 +52,7 @@
 
 #include <DirectXMath.h>
 #include <DirectXColors.h>
+#include <MathHelper.h>
 
 #include <algorithm>
 #include <cmath>
