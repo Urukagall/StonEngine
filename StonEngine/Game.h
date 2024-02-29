@@ -7,6 +7,7 @@
 #include "DeviceResources.h"
 #include "StepTimer.h"
 
+using Microsoft::WRL::ComPtr;
 
 // A basic game implementation that creates a D3D12 device and
 // provides a game loop.
@@ -55,12 +56,19 @@ private:
     void CreateDeviceDependentResources();
     void CreateWindowSizeDependentResources();
 
+    void CreateVertexBuffer();
+    void CreateRootSignature();
+    bool ConfigurePipelineState();
     // Device resources.
     std::unique_ptr<DX::DeviceResources>        m_deviceResources;
 
     // Rendering loop timer.
     DX::StepTimer                               m_timer;
+	ID3D12Resource* m_vertexBuffer;
+	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 
+    ComPtr<ID3D12PipelineState> m_pipelineState = nullptr;
+    ComPtr<ID3D12PipelineState> m_rootSignature = nullptr;
     // If using the DirectX Tool Kit for DX12, uncomment this line:
     // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 };
