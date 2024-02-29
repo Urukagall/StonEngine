@@ -57,18 +57,36 @@ private:
     void CreateWindowSizeDependentResources();
 
     void CreateVertexBuffer();
+    void UploadVertexBufferToGPU(Vertex* vertices);
     void CreateRootSignature();
     bool ConfigurePipelineState();
     // Device resources.
-    std::unique_ptr<DX::DeviceResources>        m_deviceResources;
+
+    std::unique_ptr<DX::DeviceResources> m_deviceResources;
 
     // Rendering loop timer.
     DX::StepTimer                               m_timer;
-	ID3D12Resource* m_vertexBuffer;
-	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 
-    ComPtr<ID3D12PipelineState> m_pipelineState = nullptr;
-    ComPtr<ID3D12PipelineState> m_rootSignature = nullptr;
+    ComPtr<ID3D12Resource> m_vertexBuffer;
+    ComPtr<ID3D12Resource> m_vertexBufferUpload;
+
+
+    // Direct3D
+    Microsoft::WRL::ComPtr<ID3D12Device> m_d3dDevice;
+    Microsoft::WRL::ComPtr<IDXGISwapChain3> m_swapChain;
+    Microsoft::WRL::ComPtr<ID3D12Resource> m_renderTargets[2];
+    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_commandAllocators[2];
+    Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
+    Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineState;
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
+
+    // Synchronization objects
+    UINT m_frameIndex;
+    HANDLE m_fenceEvent;
+    Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;
+    UINT64 m_fenceValues[2];
+    UINT m_vertexBufferSize;
     // If using the DirectX Tool Kit for DX12, uncomment this line:
     // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 };

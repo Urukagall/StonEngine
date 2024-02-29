@@ -4,6 +4,8 @@
 
 #include "pch.h"
 #include "Game.h"
+#include "Utils.h"
+#include <fstream>
 
 extern void ExitGame() noexcept;
 
@@ -11,18 +13,58 @@ using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;
 
+Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer;
+D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+
 struct Vertex
 {
     XMFLOAT3 position;
     XMFLOAT4 color;
 };
 
+namespace DX
+{
+    // Utility function to read shader bytecode from a file
+    std::vector<byte> DX::ReadData(const wchar_t* filename)
+    {
+        std::ifstream file(filename, std::ios::binary | std::ios::ate);
+
+        if (!file.is_open())
+        {
+            throw std::runtime_error("Failed to open file");
+        }
+
+        std::streamsize size = file.tellg();
+        file.seekg(0, std::ios::beg);
+
+        std::vector<byte> buffer(static_cast<size_t>(size));
+        if (file.read(reinterpret_cast<char*>(buffer.data()), size))
+        {
+            return buffer;
+        }
+        else
+        {
+            throw std::runtime_error("Failed to read file");
+        }
+    }
+}
+
+
+Game::Game() noexcept(false)
+{
+    m_deviceResources = std::make_unique<DX::DeviceResources>();
+    // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
+    //   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
+    //   Add DX::DeviceResources::c_EnableHDR for HDR10 display.
+    //   Add DX::DeviceResources::c_ReverseDepth to optimize depth buffer clears for 0 instead of 1.
+    m_deviceResources->RegisterDeviceNotify(this);
+}
+
 bool Game::ConfigurePipelineState()
 {
     auto device = m_deviceResources->GetD3DDevice();
 
-    auto vertexShaderBlob = DX::ReadData(L"TriangleVertexShader.cso");
-    auto pixelShaderBlob = DX::ReadData(L"TrianglePixelShader.cso");
+    auto shaderBlob = DX::ReadData(L"Color.cso");
 
     // Define the input layout
     D3D12_INPUT_ELEMENT_DESC inputElementDesc[] = {
@@ -40,8 +82,8 @@ bool Game::ConfigurePipelineState()
     // Configuration du format de la mémoire tampon de rendu
     psoDesc.InputLayout = { inputElementDesc, _countof(inputElementDesc) };
     psoDesc.pRootSignature = m_rootSignature.Get();
-    psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShaderBlob.Get());
-    psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShaderBlob.Get());
+    psoDesc.VS = CD3DX12_SHADER_BYTECODE(shaderBlob.data(), shaderBlob.size());
+    psoDesc.PS = CD3DX12_SHADER_BYTECODE(shaderBlob.data(), shaderBlob.size());
     psoDesc.RasterizerState = rasterizerDesc;
     psoDesc.BlendState = blendDesc;
     psoDesc.DepthStencilState = depthStencilDesc;
@@ -52,35 +94,72 @@ bool Game::ConfigurePipelineState()
     psoDesc.DSVFormat = m_deviceResources->GetDepthBufferFormat();
     psoDesc.SampleDesc.Count = 1;
 
-    // Chargez les shaders dans psoDesc.VS et psoDesc.PS
-
-    // Création du PSO
     HRESULT hRes = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
-    assert(hRes == S_OK);
-    if (hRes)
+    if (FAILED(hRes))
+    {
+        // Handle the error appropriately (logging, return false, etc.)
         return false;
+    }
+
     return true;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer;
-D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 
 // ...
 
 // Implémentez cette fonction pour créer et initialiser la mémoire tampon de sommets
 void Game::CreateVertexBuffer()
 {
+    // Define the vertices for a simple triangle
+    Vertex vertices[] = {
+        {XMFLOAT3(0.0f, 0.5f, 0.0f)},
+        {XMFLOAT3(0.5f, -0.5f, 0.0f)},
+        {XMFLOAT3(-0.5f, -0.5f, 0.0f)},
+    };
 
+    m_vertexBufferSize = sizeof(vertices);
+
+    // Create the vertex buffer
+    CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
+    CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(m_vertexBufferSize);
+
+    ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &bufferDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(m_vertexBuffer.ReleaseAndGetAddressOf())));
+
+    // Upload the vertex data to the GPU
+    UploadVertexBufferToGPU(vertices);
 }
 
-Game::Game() noexcept(false)
+void Game::UploadVertexBufferToGPU(Vertex* vertices)
 {
-    m_deviceResources = std::make_unique<DX::DeviceResources>();
-    // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
-    //   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
-    //   Add DX::DeviceResources::c_EnableHDR for HDR10 display.
-    //   Add DX::DeviceResources::c_ReverseDepth to optimize depth buffer clears for 0 instead of 1.
-    m_deviceResources->RegisterDeviceNotify(this);
+    // Describe the data we want to copy
+    D3D12_SUBRESOURCE_DATA vertexData = {};
+    vertexData.pData = reinterpret_cast<BYTE*>(vertices);
+    vertexData.RowPitch = m_vertexBufferSize;
+    vertexData.SlicePitch = m_vertexBufferSize;
+
+    // Create an upload heap to move the vertex data to the GPU
+    CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
+    CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(m_vertexBufferSize);
+
+    ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &bufferDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(m_vertexBuffer.GetAddressOf())));
+
+    // Copy the vertex data to the upload heap
+    UpdateSubresources<1>(m_commandList.Get(),
+        m_vertexBuffer.Get(),
+        m_vertexBufferUpload.Get(),
+        0, 0, 1, &vertexData);
 }
 
 Game::~Game()
@@ -153,18 +232,22 @@ void Game::Render()
     auto commandList = m_deviceResources->GetCommandList();
     PIXBeginEvent(commandList, PIX_COLOR_DEFAULT, L"Render");
 
-    // TODO: Add your rendering code here.
-    // Set the render target.
-    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    // Set pipeline state
+    commandList->SetPipelineState(m_pipelineState.Get());
+    commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 
-    // Set the vertex buffer.
-    commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+    // Set vertex buffer
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = {};
+    vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+    vertexBufferView.SizeInBytes = m_vertexBufferSize;
+    vertexBufferView.StrideInBytes = sizeof(Vertex);
 
-    // Set the primitive topology (triangle list in this case).
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+
+    // Draw the triangle
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    // Draw the vertices.
     commandList->DrawInstanced(3, 1, 0, 0);
+
     PIXEndEvent(commandList);
 
     // Show the new frame.
@@ -282,7 +365,7 @@ void Game::CreateDeviceDependentResources()
     // If using the DirectX Tool Kit for DX12, uncomment this line:
     // m_graphicsMemory = std::make_unique<GraphicsMemory>(device);
 
-    // TODO: Initialize device dependent objects here (independent of window size).
+    // TODO: Initialize device-dependent objects here (independent of window size).
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
