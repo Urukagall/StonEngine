@@ -56,8 +56,10 @@ void Game::Initialize(HWND window, int width, int height)
 float Game::Tick()
 {
     m_pTimer->Tick();
+
+    // return fps every half second
     fCurrTime = m_pTimer->Get();
-    if (fCurrTime - fPrevTime > 1) {
+    if (fCurrTime - fPrevTime > 0.5f) {
         fps = int(m_pTimer->GetDT());
         fPrevTime = fCurrTime;
     }

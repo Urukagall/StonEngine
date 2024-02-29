@@ -106,9 +106,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         }
         else
         {
+            // show fps in window bar
             float fps = 1000/g_game->Tick();
             std::wstring fpsStr = std::to_wstring(fps);
-            std::wstring windowText = L"fps: " + fpsStr;
+            std::wstring windowText = L"fps: " + fpsStr + L" " + g_szAppName;
             SetWindowText(hwnd, windowText.c_str());
         }
     }
