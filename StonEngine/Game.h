@@ -51,6 +51,7 @@ public:
     void OnWindowMoved();
     void OnDisplayChange();
     void OnWindowSizeChanged(int width, int height);
+    
 
     // Properties
     void GetDefaultSize( int& width, int& height ) const noexcept;
@@ -65,10 +66,11 @@ private:
     void CreateDeviceDependentResources();
     void CreateWindowSizeDependentResources();
 
+    void BuildRootSignature();
     void CreateVertexBuffer();
     void UploadVertexBufferToGPU(Vertex* vertices);
     void CreateRootSignature();
-    bool ConfigurePipelineState();
+    void ConfigurePipelineState();
     // Device resources.
 
     std::unique_ptr<DX::DeviceResources> m_deviceResources;
@@ -79,7 +81,7 @@ private:
     ComPtr<ID3D12Resource> m_vertexBuffer;
     ComPtr<ID3D12Resource> m_vertexBufferUpload;
 
-
+	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
     // Direct3D
     ComPtr<ID3D12Device> m_d3dDevice;
     ComPtr<IDXGISwapChain3> m_swapChain;
@@ -87,7 +89,7 @@ private:
     ComPtr<ID3D12CommandAllocator> m_commandAllocators[2];
     ComPtr<ID3D12CommandQueue> m_commandQueue;
     ComPtr<ID3D12RootSignature> m_rootSignature = nullptr;
-    ComPtr<ID3D12PipelineState> m_pipelineState;
+    ComPtr<ID3D12PipelineState> m_pipelineState = nullptr;
     ComPtr<ID3D12GraphicsCommandList> m_commandList;
 
     // Synchronization objects

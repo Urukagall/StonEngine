@@ -13,8 +13,7 @@ using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;
 
-Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer;
-D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+
 
 
 namespace DX
@@ -55,11 +54,11 @@ Game::Game() noexcept(false)
     m_deviceResources->RegisterDeviceNotify(this);
 }
 
-bool Game::ConfigurePipelineState()
+void Game::ConfigurePipelineState()
 {
     auto device = m_deviceResources->GetD3DDevice();
 
-    auto shaderBlob = DX::ReadData(L"Color.cso");
+    auto shaderBlob = DX::ReadData(L"color.hlsl");
 
     // Define the input layout
     D3D12_INPUT_ELEMENT_DESC inputElementDesc[] = {
@@ -88,17 +87,50 @@ bool Game::ConfigurePipelineState()
     psoDesc.RTVFormats[0] = m_deviceResources->GetBackBufferFormat();
     psoDesc.DSVFormat = m_deviceResources->GetDepthBufferFormat();
     psoDesc.SampleDesc.Count = 1;
+    psoDesc.SampleDesc.Quality = 0;
 
-    HRESULT hRes = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
-    if (FAILED(hRes))
-    {
-        // Handle the error appropriately (logging, return false, etc.)
-        return false;
-    }
 
-    return true;
+    ThrowIfFailed(device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)));
 }
 
+void Game::BuildRootSignature()
+{
+    // Shader programs typically require resources as input (constant buffers,
+    // textures, samplers).  The root signature defines the resources the shader
+    // programs expect.  If we think of the shader programs as a function, and
+    // the input resources as function parameters, then the root signature can be
+    // thought of as defining the function signature.  
+
+    // Root parameter can be a table, root descriptor or root constants.
+    CD3DX12_ROOT_PARAMETER slotRootParameter[1];
+
+    // Create a single descriptor table of CBVs.
+    CD3DX12_DESCRIPTOR_RANGE cbvTable;
+    cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+    slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
+
+    // A root signature is an array of root parameters.
+    CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(1, slotRootParameter, 0, nullptr,
+        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+    // create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
+    ComPtr<ID3DBlob> serializedRootSig = nullptr;
+    ComPtr<ID3DBlob> errorBlob = nullptr;
+    HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
+        serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
+
+    if (errorBlob != nullptr)
+    {
+        ::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+    }
+    ThrowIfFailed(hr);
+
+    ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateRootSignature(
+        0,
+        serializedRootSig->GetBufferPointer(),
+        serializedRootSig->GetBufferSize(),
+        IID_PPV_ARGS(&m_rootSignature)));
+}
 
 // ...
 
@@ -138,6 +170,10 @@ void Game::CreateVertexBuffer()
 	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
 	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
 	m_vertexBufferView.SizeInBytes = vertexBufferSize;
+	m_vertexBufferSize = vertexBufferSize;
+
+    UploadVertexBufferToGPU(triangleVertices);
+
 }
 
 
@@ -162,10 +198,11 @@ void Game::UploadVertexBufferToGPU(Vertex* vertices)
         IID_PPV_ARGS(m_vertexBuffer.GetAddressOf())));
 
     // Copy the vertex data to the upload heap
-    UpdateSubresources<1>(m_commandList.Get(),
+     <1>(m_commandList.Get(),
         m_vertexBuffer.Get(),
         m_vertexBufferUpload.Get(),
         0, 0, 1, &vertexData);
+
 }
 
 Game::~Game()
@@ -187,13 +224,11 @@ void Game::Initialize(HWND window, int width, int height)
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
+    BuildRootSignature();
+
     // Configure the pipeline state
-    if (!ConfigurePipelineState())
-    {
-        // Handle the failure, log an error, etc.
-        // You might want to return from the function or throw an exception.
-        return;
-    }
+    ConfigurePipelineState();
+       
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:
@@ -364,7 +399,7 @@ void Game::GetDefaultSize(int& width, int& height) const noexcept
 void Game::CreateDeviceDependentResources()
 {
     auto device = m_deviceResources->GetD3DDevice();
-
+    CreateVertexBuffer();
     // Check Shader Model 6 support
     D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { D3D_SHADER_MODEL_6_0 };
     if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel)))
