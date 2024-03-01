@@ -110,30 +110,41 @@ bool Game::ConfigurePipelineState()
 // Implémentez cette fonction pour créer et initialiser la mémoire tampon de sommets
 void Game::CreateVertexBuffer()
 {
-    // Define the vertices for a simple triangle
-    Vertex vertices[] = {
-        {XMFLOAT3(0.0f, 0.5f, 0.0f)},
-        {XMFLOAT3(0.5f, -0.5f, 0.0f)},
-        {XMFLOAT3(-0.5f, -0.5f, 0.0f)},
-    };
+	// Déclaration des sommets d'un triangle
+	Vertex triangleVertices[] =
+	{
+		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Red) },  // Sommet 1 (rouge)
+		{ XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Green) },  // Sommet 2 (vert)
+		{ XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue) }  // Sommet 3 (bleu)
+	};
 
-    m_vertexBufferSize = sizeof(vertices);
+	// Création de la mémoire tampon de sommets
+	UINT vertexBufferSize = sizeof(triangleVertices);
+	D3D12_HEAP_PROPERTIES heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize);
 
-    // Create the vertex buffer
-    CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
-    CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(m_vertexBufferSize);
+	ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateCommittedResource(
+		&heapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&bufferDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&m_vertexBuffer)
+	));
 
-    ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateCommittedResource(
-        &heapProperties,
-        D3D12_HEAP_FLAG_NONE,
-        &bufferDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(m_vertexBuffer.ReleaseAndGetAddressOf())));
+	// Copie des données dans la mémoire tampon de sommets
+	UINT8* pVertexDataBegin;
+	CD3DX12_RANGE readRange(0, 0); // Ne sera pas lu sur le CPU
+	ThrowIfFailed(m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)));
+	memcpy(pVertexDataBegin, triangleVertices, vertexBufferSize);
+	m_vertexBuffer->Unmap(0, nullptr);
 
-    // Upload the vertex data to the GPU
-    UploadVertexBufferToGPU(vertices);
+	// Configuration de la vue de la mémoire tampon de sommets
+	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_vertexBufferView.StrideInBytes = sizeof(Vertex);
+	m_vertexBufferView.SizeInBytes = vertexBufferSize;
 }
+
 
 void Game::UploadVertexBufferToGPU(Vertex* vertices)
 {
