@@ -28,7 +28,7 @@
 // WinHelp is deprecated
 #define NOHELP
 
-#define WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #ifdef __MINGW32__

@@ -45,6 +45,8 @@
     </ClInclude>
     <ClInclude Include="defines.h">
       <Filter>Ressources</Filter>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="defines.cpp">
       <Filter>Ressources</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

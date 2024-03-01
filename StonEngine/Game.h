@@ -6,6 +6,7 @@
 
 #include "DeviceResources.h"
 #include "StepTimer.h"
+#include "Timer.h"
 
 
 // A basic game implementation that creates a D3D12 device and
@@ -27,7 +28,7 @@ public:
     void Initialize(HWND window, int width, int height);
 
     // Basic game loop
-    void Tick();
+    float Tick();
 
     // IDeviceNotify
     void OnDeviceLost() override;
@@ -47,7 +48,7 @@ public:
 
 private:
 
-    void Update(DX::StepTimer const& timer);
+    void Update(Timer* timer); //DX::StepTimer const& timer
     void Render();
 
     void Clear();
@@ -56,10 +57,15 @@ private:
     void CreateWindowSizeDependentResources();
 
     // Device resources.
-    std::unique_ptr<DX::DeviceResources>        m_deviceResources;
+    std::unique_ptr<DX::DeviceResources> m_deviceResources;
 
     // Rendering loop timer.
-    DX::StepTimer                               m_timer;
+    //DX::StepTimer m_timer;
+    Timer* m_pTimer = new Timer();
+    float dt = 0.0f;
+    float fCurrTime;
+    float fPrevTime;
+    int fps = 0;
 
     // If using the DirectX Tool Kit for DX12, uncomment this line:
     // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
