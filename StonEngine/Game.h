@@ -6,8 +6,17 @@
 
 #include "DeviceResources.h"
 #include "StepTimer.h"
+#include "pch.h"
 
-using Microsoft::WRL::ComPtr;
+using Microsoft::WRL::ComPtr;   
+using namespace DirectX;
+
+
+struct Vertex
+{
+    XMFLOAT3 position;
+    XMFLOAT4 color;
+};
 
 // A basic game implementation that creates a D3D12 device and
 // provides a game loop.
@@ -72,19 +81,19 @@ private:
 
 
     // Direct3D
-    Microsoft::WRL::ComPtr<ID3D12Device> m_d3dDevice;
-    Microsoft::WRL::ComPtr<IDXGISwapChain3> m_swapChain;
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_renderTargets[2];
-    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_commandAllocators[2];
-    Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
-    Microsoft::WRL::ComPtr<ID3D12RootSignature> m_rootSignature;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineState;
-    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_commandList;
+    ComPtr<ID3D12Device> m_d3dDevice;
+    ComPtr<IDXGISwapChain3> m_swapChain;
+    ComPtr<ID3D12Resource> m_renderTargets[2];
+    ComPtr<ID3D12CommandAllocator> m_commandAllocators[2];
+    ComPtr<ID3D12CommandQueue> m_commandQueue;
+    ComPtr<ID3D12RootSignature> m_rootSignature = nullptr;
+    ComPtr<ID3D12PipelineState> m_pipelineState;
+    ComPtr<ID3D12GraphicsCommandList> m_commandList;
 
     // Synchronization objects
     UINT m_frameIndex;
     HANDLE m_fenceEvent;
-    Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;
+    ComPtr<ID3D12Fence> m_fence;
     UINT64 m_fenceValues[2];
     UINT m_vertexBufferSize;
     // If using the DirectX Tool Kit for DX12, uncomment this line:

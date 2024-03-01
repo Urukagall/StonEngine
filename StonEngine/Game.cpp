@@ -16,16 +16,11 @@ using Microsoft::WRL::ComPtr;
 Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer;
 D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 
-struct Vertex
-{
-    XMFLOAT3 position;
-    XMFLOAT4 color;
-};
 
 namespace DX
 {
     // Utility function to read shader bytecode from a file
-    std::vector<byte> DX::ReadData(const wchar_t* filename)
+    std::vector<byte> ReadData(const wchar_t* filename)
     {
         std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
@@ -191,6 +186,14 @@ void Game::Initialize(HWND window, int width, int height)
 
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
+
+    // Configure the pipeline state
+    if (!ConfigurePipelineState())
+    {
+        // Handle the failure, log an error, etc.
+        // You might want to return from the function or throw an exception.
+        return;
+    }
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:

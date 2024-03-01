@@ -34,6 +34,8 @@
     <ClInclude Include="pch.h">
       <Filter>Ressources</Filter>
     </ClInclude>
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -48,6 +50,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Ressources</Filter>
     </ClCompile>
+    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">
@@ -63,5 +66,10 @@
     <ResourceCompile Include="resource.rc">
       <Filter>Ressources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="color.hlsl">
+      <Filter>Ressources</Filter>
+    </Text>
   </ItemGroup>
 </Project>
