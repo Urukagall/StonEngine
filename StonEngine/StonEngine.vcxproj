@@ -201,6 +201,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="defines.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="MathHelper.h" />
@@ -211,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="defines.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="Main.cpp" />
