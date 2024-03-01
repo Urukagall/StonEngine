@@ -1,15 +1,18 @@
 //
 // Game.cpp
 //
-
 #include "pch.h"
 #include "Game.h"
+#include "input.h"
+#include "defines.h"
 
+Input input;
 extern void ExitGame() noexcept;
 
 using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;
+
 
 Game::Game() noexcept(false)
 {
@@ -82,7 +85,12 @@ void Game::Update(Timer* timer) //DX::StepTimer const& timer
     float dt = timer->GetDT();
 
     // TODO: Add your game logic here.
-    
+    input.Store();
+    if (input.getKeyDown(pitchDown)) {
+        OutputDebugStringA("\n");
+        OutputDebugStringA("Z HOLDED");
+    }
+    elapsedTime;
     PIXEndEvent();
 }
 #pragma endregion
