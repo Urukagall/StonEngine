@@ -1,15 +1,18 @@
 //
 // Game.cpp
 //
-
 #include "pch.h"
 #include "Game.h"
+#include "input.h"
+#include "defines.h"
 
+Input input;
 extern void ExitGame() noexcept;
 
 using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;
+
 
 Game::Game() noexcept(false)
 {
@@ -68,6 +71,11 @@ void Game::Update(DX::StepTimer const& timer)
     float elapsedTime = float(timer.GetElapsedSeconds());
 
     // TODO: Add your game logic here.
+    input.Store();
+    if (input.getKeyDown(pitchDown)) {
+        OutputDebugStringA("\n");
+        OutputDebugStringA("Z HOLDED");
+    }
     elapsedTime;
 
     PIXEndEvent();

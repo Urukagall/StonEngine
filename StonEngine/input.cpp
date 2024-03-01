@@ -1,37 +1,78 @@
 #include "pch.h"
 #include "input.h"
+#include "defines.h"
 #include <iostream>
 
 using namespace std;
 Input::Input() {
-	inputs["pitchUp"] = false;
-	inputs["pitchDown"] = false;
-	inputs["yawLeft"] = false;
-	inputs["yawRight"] = false;
-	inputs["rollLeft"] = false;
-	inputs["rollRight"] = false;
-	inputs["throttleUp"] = false;
-	inputs["throttleDown"] = false;
-	inputs["Gun"] = false;
-	inputs["Missile"] = false;
+	inputs["S"] = 0;				// pitchUp
+	inputs["Z"] = 0;				// pitchDown
+	inputs["Q"] = 0;				// yawLeft
+	inputs["D"] = 0;				// yawRight
+	inputs["A"] = 0;				// rollLeft
+	inputs["E"] = 0;				// rollRight
+	inputs["UP"] = 0;				// throttleUp
+	inputs["DOWN"] = 0;				// throttleDown
+	inputs["LEFT"] = 0;				// Gun
+	inputs["RIGHT"] = 0;			// Missile
 }
 
 Input::~Input() {}
 
-void Input::Store() {
-	(GetAsyncKeyState('Z') & 0x8000) ? inputs["pitchUp"] = true : inputs["pitchUp"] = false;					// KEY Z			-	pitch UP
-	(GetAsyncKeyState('S') & 0x8000) ? inputs["pitchDown"] = true : inputs["pitchDown"] = false;				// KEY S			-	pitch DOWN 
-	(GetAsyncKeyState('Q') & 0x8000) ? inputs["yawLeft"] = true : inputs["yawLeft"] = false;					// KEY Q			-	yaw LEFT
-	(GetAsyncKeyState('D') & 0x8000) ? inputs["yawRight"] = true : inputs["yawRight"] = false;					// KEY D			-	yaw RIGHT
-	(GetAsyncKeyState('A') & 0x8000) ? inputs["rollLeft"] = true : inputs["rollLeft"] = false;					// KEY A			-	roll LEFT
-	(GetAsyncKeyState('E') & 0x8000) ? inputs["rollRight"] = true : inputs["rollRight"] = false;				// KEY E			-	roll RIGHT
-	(GetAsyncKeyState(VK_UP) & 0x8000) ? inputs["throttleUp"] = true : inputs["throttleUp"] = false;			// KEY ARROW_UP		-	throttle UP
-	(GetAsyncKeyState(VK_DOWN) & 0x8000) ? inputs["throttleDown"] = true : inputs["throttleDown"] = false;		// KEY ARROW_DOWN	-	throttle DOWN
-	(GetAsyncKeyState(VK_LEFT) & 0x8000) ? inputs["Gun"] = true : inputs["Gun"] = false;						// KEY ARROW_LEFT	-	Gun
-	(GetAsyncKeyState(VK_RIGHT) & 0x8000) ? inputs["Missile"] = true : inputs["Missile"] = false;				// KEY ARROW_RIGHT	-	Missile
+void Input::keyState(const char& key, const string& index) {
+	if (GetAsyncKeyState(key) & 0x8000) {
+		switch (inputs[index]) {
+		case 0: // Down
+			inputs[index] = 1;
+			break;
+		case 1: // Hold
+			inputs[index] = 2;
+			break;
+		default:
+			inputs[index] = 2;
+			break;
+		}
+	}
+	else if (inputs[index] != 0 && inputs[index] != 3) { // Up
+		inputs[index] = 3;
+	}
+	else {
+		inputs[index] = 0;
+	}
 }
 
-map<string, bool> Input::Get() {
-	
-	return inputs;
+void Input::Store() {
+	keyState('Z', pitchDown);
+	keyState('S', pitchUp);
+	keyState('Q', yawLeft);
+	keyState('D', yawRight);
+	keyState('A', rollLeft);
+	keyState('E', rollRight);
+	keyState(VK_UP, ARROW_UP);
+	keyState(VK_DOWN, ARROW_DOWN);
+	keyState(VK_LEFT, ARROW_LEFT);
+	keyState(VK_RIGHT, ARROW_RIGHT);
 }
+
+#pragma region getKeys Methods
+bool Input::getKeyUp(const string& c) {
+	auto iterator = inputs.find(c);
+	int value = iterator->second;
+
+	return (value == KEY_UP) ? true : false;
+}
+
+bool Input::getKeyDown(const string& c) {
+	auto iterator = inputs.find(c);
+	int value = iterator->second;
+
+	return (value == KEY_DOWN) ? true : false;
+}
+
+bool Input::getKey(const string& c) {
+	auto iterator = inputs.find(c);
+	int value = iterator->second;
+
+	return (value == KEY_DOWN || value == KEY_HOLD) ? true : false;
+}
+#pragma endregion

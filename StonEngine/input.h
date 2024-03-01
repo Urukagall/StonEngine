@@ -2,17 +2,21 @@
 #include <map>
 #include <string>
 using namespace std;
+
 class Input
 {
 private:
-	map<string, bool>	inputs;
+	map<string, int>	inputs;
 	
 
 public:
 	
 						Input(); // Constructor
 						~Input();
-	map<string, bool>	Get();
+	bool				getKeyUp(const string& c);
+	bool				getKeyDown(const string& c);
+	bool				getKey(const string& c);
+	void				keyState(const char& key, const string& index);
 	void				Store();
 
 };
