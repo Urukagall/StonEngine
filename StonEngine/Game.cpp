@@ -7,12 +7,12 @@
 #include "Utils.h"
 #include <fstream>
 
+
 extern void ExitGame() noexcept;
 
 using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;
-
 
 
 
@@ -172,12 +172,12 @@ void Game::CreateVertexBuffer()
 	m_vertexBufferView.SizeInBytes = vertexBufferSize;
 	m_vertexBufferSize = vertexBufferSize;
 
-    UploadVertexBufferToGPU(triangleVertices);
+    UploadVertexBufferToGPU(triangleVertices, vertexBufferSize);
 
 }
 
 
-void Game::UploadVertexBufferToGPU(Vertex* vertices)
+void Game::UploadVertexBufferToGPU(Vertex* vertices, UINT64 byteSize)
 {
     // Describe the data we want to copy
     D3D12_SUBRESOURCE_DATA vertexData = {};
@@ -189,16 +189,32 @@ void Game::UploadVertexBufferToGPU(Vertex* vertices)
     CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
     CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(m_vertexBufferSize);
 
+    CD3DX12_HEAP_PROPERTIES heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+    CD3DX12_HEAP_PROPERTIES heapUIpload = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+    CD3DX12_RESOURCE_DESC size = CD3DX12_RESOURCE_DESC::Buffer(byteSize);
+
     ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateCommittedResource(
-        &heapProperties,
+        &heap,
         D3D12_HEAP_FLAG_NONE,
-        &bufferDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
+        &size,
+        D3D12_RESOURCE_STATE_COMMON,
         nullptr,
         IID_PPV_ARGS(m_vertexBuffer.GetAddressOf())));
 
+    ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateCommittedResource(
+        &heapUIpload,
+        D3D12_HEAP_FLAG_NONE,
+        &size,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(m_vertexBufferUpload.GetAddressOf())));
+
+    CD3DX12_RESOURCE_BARRIER tr = CD3DX12_RESOURCE_BARRIER::Transition(m_vertexBuffer.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_DEST);
+
+    m_commandList->ResourceBarrier(1, &tr);
     // Copy the vertex data to the upload heap
-     <1>(m_commandList.Get(),
+
+    UpdateSubresources<1>(m_commandList.Get(),
         m_vertexBuffer.Get(),
         m_vertexBufferUpload.Get(),
         0, 0, 1, &vertexData);
@@ -216,6 +232,8 @@ Game::~Game()
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
 {
+
+
     m_deviceResources->SetWindow(window, width, height);
 
     m_deviceResources->CreateDeviceResources();

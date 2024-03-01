@@ -68,7 +68,7 @@ private:
 
     void BuildRootSignature();
     void CreateVertexBuffer();
-    void UploadVertexBufferToGPU(Vertex* vertices);
+    void UploadVertexBufferToGPU(Vertex* vertices, UINT64 byteSize);
     void CreateRootSignature();
     void ConfigurePipelineState();
     // Device resources.
