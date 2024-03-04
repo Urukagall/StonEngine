@@ -118,6 +118,23 @@ void Render::Draw(const GameTimer& gt)
 
 
 	for (int i = 0; i < m_Entities.size(); ++i) {
+		for (const auto& pair : m_Entities[i]->m_mComponents) {
+			// pair.first est la clé, pair.second est la valeur
+			std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
+			Mesh* comp = pair.second->mBoxGeo;
+			D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
+			D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
+			mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
+			mCommandList->IASetIndexBuffer(&indexBuffer);
+			mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+			mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+			
+			mCommandList->DrawIndexedInstanced(
+				comp->DrawArgs["box"].IndexCount,
+				1, 0, 0, 0);
+		}
+		/*
 		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
 			Mesh* comp = m_Entities[i]->m_mComponents["cube"]->mBoxGeo;
 			D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
@@ -132,7 +149,7 @@ void Render::Draw(const GameTimer& gt)
 				comp->DrawArgs["box"].IndexCount,
 				1, 0, 0, 0);
 		}
-
+		*/
 	}
 
 	CD3DX12_RESOURCE_BARRIER resssourceState = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
@@ -290,6 +307,7 @@ void Render::BuildShadersAndInputLayout()
 void Render::CreateEntity() {
 	Entity* en = new Entity(md3dDevice, mCommandList);
 	en->CreateCube();
+	en->CreatePyramid();
 	m_Entities.push_back(en);
 }
 

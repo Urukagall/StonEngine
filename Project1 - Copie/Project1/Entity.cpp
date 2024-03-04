@@ -12,6 +12,13 @@ Entity::~Entity() {
 }
 
 void Entity::CreateCube() {
-	Component* com = new MeshRenderer(this);
+	MeshRenderer* com = new MeshRenderer(this);
+	com->Box();
 	m_mComponents["cube"] = com;
+}
+
+void Entity::CreatePyramid() {
+	MeshRenderer* com = new MeshRenderer(this);
+	com->Pyramid();
+	m_mComponents["pyr"] = com;
 }

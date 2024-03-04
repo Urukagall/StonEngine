@@ -18,6 +18,7 @@ public:
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 
 	void CreateCube();
+	void CreatePyramid();
 	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList);
 	~Entity();
 

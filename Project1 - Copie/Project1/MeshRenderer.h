@@ -22,5 +22,6 @@ public :
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
 	void Box();
+	void Pyramid();
 };
 

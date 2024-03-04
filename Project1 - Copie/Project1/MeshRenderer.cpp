@@ -6,7 +6,6 @@ MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
 
 	md3dDevice = m_oEntity->md3dDevice;
 	mCommandList = m_oEntity->mCommandList;
-	Box();
 }
 
 void MeshRenderer::Box() {
@@ -55,6 +54,65 @@ void MeshRenderer::Box() {
 	mBoxGeo = new Mesh();
 	mBoxGeo->Name = "boxGeo";
 	
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeo->VertexBufferCPU));
+	CopyMemory(mBoxGeo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &mBoxGeo->IndexBufferCPU));
+	CopyMemory(mBoxGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	mBoxGeo->VertexBufferGPU = Tools::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), vertices.data(), vbByteSize, mBoxGeo->VertexBufferUploader);
+
+	mBoxGeo->IndexBufferGPU = Tools::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), indices.data(), ibByteSize, mBoxGeo->IndexBufferUploader);
+
+	mBoxGeo->VertexByteStride = sizeof(Vertex);
+	mBoxGeo->VertexBufferByteSize = vbByteSize;
+	mBoxGeo->IndexFormat = DXGI_FORMAT_R16_UINT;
+	mBoxGeo->IndexBufferByteSize = ibByteSize;
+
+	Submesh submesh;
+	submesh.IndexCount = (UINT)indices.size();
+	submesh.StartIndexLocation = 0;
+	submesh.BaseVertexLocation = 0;
+
+	mBoxGeo->DrawArgs["box"] = submesh;
+}
+
+void MeshRenderer::Pyramid() {
+	std::array<Vertex, 5> vertices =
+	{
+		Vertex({ XMFLOAT3(2.0f, 0.0f, 0.0f), XMFLOAT4(Colors::White) }),
+		Vertex({ XMFLOAT3(2.0f, 0.0f, 2.0f), XMFLOAT4(Colors::Black) }),
+		Vertex({ XMFLOAT3(+4.0f, 0.0f, 2.0f), XMFLOAT4(Colors::Red) }),
+		Vertex({ XMFLOAT3(+4.0f, 0.0f, 0.0f), XMFLOAT4(Colors::Green) }),
+		Vertex({ XMFLOAT3(3.0f, 1.0f, 1.0f), XMFLOAT4(Colors::Blue) }),
+
+	};
+
+	std::array<std::uint16_t, 18> indices =
+	{
+		// front face
+		0, 2, 1,
+		0, 3, 2,
+
+		// back face (ordre antihoraire)
+		0, 1, 4,
+		0, 4, 3,
+
+		// left face (ordre antihoraire)
+		2, 4, 1,
+		2, 3, 4,
+
+
+	};
+	
+	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+	mBoxGeo = new Mesh();
+	mBoxGeo->Name = "boxGeo";
+
 	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeo->VertexBufferCPU));
 	CopyMemory(mBoxGeo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
 
