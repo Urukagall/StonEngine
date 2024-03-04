@@ -17,7 +17,8 @@ private:
 	float fGameTime;
 	float fDeltaTime;
 
-	const float fMinDelta = 5; // minimum frame time in s
+	const float maxFps = 20;
+	const float fMinDelta = 1000/maxFps; // minimum frame time in s
 	const float fMaxDelta = 50; // maximum time in s
 
 	float fSpeed; // time multiplier

@@ -90,7 +90,6 @@ void Game::Update(Timer* timer) //DX::StepTimer const& timer
         OutputDebugStringA("\n");
         OutputDebugStringA("Z HOLDED");
     }
-    elapsedTime;
     PIXEndEvent();
 }
 #pragma endregion
