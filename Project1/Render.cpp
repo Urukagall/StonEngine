@@ -45,7 +45,7 @@ void Render::OnResize()
 	XMStoreFloat4x4(&mProj, P);
 }
 
-void Render::Update(const GameTimer& gt)
+void Render::Update(const Timer& gt)
 {
 	// Convert Spherical to Cartesian coordinates.
 	float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
@@ -70,7 +70,7 @@ void Render::Update(const GameTimer& gt)
 	mObjectCB->CopyData(0, objConstants);
 }
 
-void Render::Draw(const GameTimer& gt)
+void Render::Draw(const Timer& gt)
 {
 	// Reuse the memory associated with command recording.
 	// We can only reset when the associated command lists have finished execution on the GPU.
