@@ -6,7 +6,29 @@ MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
 
 	md3dDevice = m_oEntity->md3dDevice;
 	mCommandList = m_oEntity->mCommandList;
+	mObjectCB = std::move(m_oEntity->mObjectCB);
 	Box();
+}
+
+
+void MeshRenderer::BuildConstantBuffers()
+{
+	mObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
+
+	//UINT objCBByteSize = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+	//
+	//D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectCB->Resource()->GetGPUVirtualAddress();
+	//// Offset to the ith object constant buffer in the buffer.
+	//int boxCBufIndex = 0;
+	//cbAddress += boxCBufIndex * objCBByteSize;
+	//
+	//D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+	//cbvDesc.BufferLocation = cbAddress;
+	//cbvDesc.SizeInBytes = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+	//
+	//md3dDevice->CreateConstantBufferView(
+	//	&cbvDesc,
+	//	mCbvHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
 void MeshRenderer::Box() {
@@ -55,11 +77,11 @@ void MeshRenderer::Box() {
 	mBoxGeo = new Mesh();
 	mBoxGeo->Name = "boxGeo";
 	
-	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeo->VertexBufferCPU));
-	CopyMemory(mBoxGeo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
-
-	ThrowIfFailed(D3DCreateBlob(ibByteSize, &mBoxGeo->IndexBufferCPU));
-	CopyMemory(mBoxGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+	//ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeo->VertexBufferCPU));
+	//CopyMemory(mBoxGeo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+	//
+	//ThrowIfFailed(D3DCreateBlob(ibByteSize, &mBoxGeo->IndexBufferCPU));
+	//CopyMemory(mBoxGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
 
 	mBoxGeo->VertexBufferGPU = Tools::CreateDefaultBuffer(md3dDevice.Get(),
 		mCommandList.Get(), vertices.data(), vbByteSize, mBoxGeo->VertexBufferUploader);

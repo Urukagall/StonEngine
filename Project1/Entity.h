@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "UploadBuffer.h"
 #include <iostream>
 #include <map>
 #include "Component.h"
@@ -7,6 +8,7 @@
 #include "Transform.h"
 
 using Microsoft::WRL::ComPtr;
+
 
 class Entity
 {
@@ -16,9 +18,10 @@ public:
 
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
+	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
 
 	void CreateCube();
-	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList);
+	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB);
 	~Entity();
 
 

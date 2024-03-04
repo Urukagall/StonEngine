@@ -78,7 +78,7 @@ void Render::Draw(const GameTimer& gt)
 
 	// A command list can be reset after it has been added to the command queue via ExecuteCommandList.
 	// Reusing the command list reuses memory.
-	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), mPSO.Get()));
+	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
@@ -103,7 +103,7 @@ void Render::Draw(const GameTimer& gt)
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mCbvHeap.Get() };
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+
 	//for (int i = 0; i < m_vEntities.size(); ++i) {
 	//	mCommandList->IASetVertexBuffers(0, 1, &m_vEntities[i]->VertexBufferView());
 	//	mCommandList->IASetIndexBuffer(&m_vEntities[i]->IndexBufferView());
@@ -126,7 +126,10 @@ void Render::Draw(const GameTimer& gt)
 			mCommandList->IASetIndexBuffer(&indexBuffer);
 			mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-			mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+			mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+
+			mCommandList->SetPipelineState(mPSO.Get());
 
 			mCommandList->DrawIndexedInstanced(
 				comp->DrawArgs["box"].IndexCount,
@@ -246,9 +249,9 @@ void Render::BuildRootSignature()
 	CD3DX12_ROOT_PARAMETER slotRootParameter[1];
 
 	// Create a single descriptor table of CBVs.
-	CD3DX12_DESCRIPTOR_RANGE cbvTable;
-	cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-	slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
+	//CD3DX12_DESCRIPTOR_RANGE cbvTable;
+	//cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+	slotRootParameter[0].InitAsConstantBufferView(0);
 
 	// A root signature is an array of root parameters.
 	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(1, slotRootParameter, 0, nullptr,
@@ -288,7 +291,7 @@ void Render::BuildShadersAndInputLayout()
 }
 
 void Render::CreateEntity() {
-	Entity* en = new Entity(md3dDevice, mCommandList);
+	Entity* en = new Entity(md3dDevice, mCommandList, mObjectCB);
 	en->CreateCube();
 	m_Entities.push_back(en);
 }
