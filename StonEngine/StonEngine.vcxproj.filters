@@ -19,38 +19,59 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="StepTimer.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="Render.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DeviceResources.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="Tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadBuffer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="d3dx12.h">
-      <Filter>Common</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Init.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>Ressources</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DeviceResources.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
+    <ClCompile Include="GameTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Init.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>Ressources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">
@@ -66,10 +87,5 @@
     <ResourceCompile Include="resource.rc">
       <Filter>Ressources</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="color.hlsl">
-      <Filter>Ressources</Filter>
-    </Text>
   </ItemGroup>
 </Project>

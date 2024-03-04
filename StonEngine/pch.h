@@ -28,7 +28,7 @@
 // WinHelp is deprecated
 #define NOHELP
 
-#define WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #ifdef __MINGW32__
@@ -93,14 +93,7 @@ namespace DX
         HRESULT result;
     };
 
-    // Helper utility converts D3D API failures into exceptions.
-    inline void ThrowIfFailed(HRESULT hr)
-    {
-        if (FAILED(hr))
-        {
-            throw com_exception(hr);
-        }
-    }
+
 }
 
 #ifdef __MINGW32__
