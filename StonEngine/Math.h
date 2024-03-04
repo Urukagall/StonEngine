@@ -55,9 +55,9 @@ public:
 	static DirectX::XMVECTOR SphericalToCartesian(float radius, float theta, float phi)
 	{
 		return DirectX::XMVectorSet(
-			radius * sinf(phi) * cosf(theta),
-			radius * cosf(phi),
-			radius * sinf(phi) * sinf(theta),
+			radius * DirectX::XMScalarSin(phi) * DirectX::XMScalarCos(theta),
+			radius * DirectX::XMScalarCos(phi),
+			radius * DirectX::XMScalarSin(phi) * DirectX::XMScalarSin(theta),
 			1.0f);
 	}
 

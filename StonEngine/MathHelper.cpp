@@ -4,7 +4,6 @@
 
 #include "MathHelper.h"
 #include <float.h>
-#include <cmath>
 
 using namespace DirectX;
 

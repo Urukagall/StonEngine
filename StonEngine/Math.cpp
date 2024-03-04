@@ -10,24 +10,31 @@ const float Math::Pi = 3.1415926535f;
 
 float Math::AngleFromXY(float x, float y)
 {
-	float theta = 0.0f;
+	// Use atan2 to directly get the angle in the range [-pi, pi]
+	float theta = atan2(y, x);
 
-	// Quadrant I or IV
-	if (x >= 0.0f)
-	{
-		// If x = 0, then atanf(y/x) = +pi/2 if y > 0
-		//                atanf(y/x) = -pi/2 if y < 0
-		theta = atanf(y / x); // in [-pi/2, +pi/2]
-
-		if (theta < 0.0f)
-			theta += 2.0f * Pi; // in [0, 2*pi).
-	}
-
-	// Quadrant II or III
-	else
-		theta = atanf(y / x) + Pi; // in [0, 2*pi).
+	if (theta < 0.0f)
+		theta += 2.0f * Pi; // Convert negative angles to the [0, 2*pi) range
 
 	return theta;
+	//float theta = 0.0f;
+
+	//// Quadrant I or IV
+	//if (x >= 0.0f)
+	//{
+	//	// If x = 0, then atanf(y/x) = +pi/2 if y > 0
+	//	//                atanf(y/x) = -pi/2 if y < 0
+	//	theta = atanf(y / x); // in [-pi/2, +pi/2]
+
+	//	if (theta < 0.0f)
+	//		theta += 2.0f * Pi; // in [0, 2*pi).
+	//}
+
+	//// Quadrant II or III
+	//else
+	//	theta = atan(y / x) + Pi; // in [0, 2*pi).
+
+	//return theta;
 }
 
 XMVECTOR Math::RandUnitVec3()
