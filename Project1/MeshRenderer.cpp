@@ -21,6 +21,7 @@ void MeshRenderer::BuildDescriptorHeaps()
 		IID_PPV_ARGS(&mCbvHeap)));
 }
 
+// Create constant buffer
 void MeshRenderer::BuildConstantBuffers()
 {
 	mObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
@@ -39,6 +40,9 @@ void MeshRenderer::BuildConstantBuffers()
 	md3dDevice->CreateConstantBufferView(
 		&cbvDesc,
 		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+	// Get upload buffer pointer
+	mUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mMappedData));
 }
 
 void MeshRenderer::Box() {
