@@ -134,22 +134,6 @@ void Render::Draw(const GameTimer& gt)
 				comp->DrawArgs["box"].IndexCount,
 				1, 0, 0, 0);
 		}
-		/*
-		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
-			Mesh* comp = m_Entities[i]->m_mComponents["cube"]->mBoxGeo;
-			D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
-			D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
-			mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
-			mCommandList->IASetIndexBuffer(&indexBuffer);
-			mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-			mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-
-			mCommandList->DrawIndexedInstanced(
-				comp->DrawArgs["box"].IndexCount,
-				1, 0, 0, 0);
-		}
-		*/
 	}
 
 	CD3DX12_RESOURCE_BARRIER resssourceState = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
