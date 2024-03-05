@@ -8,6 +8,7 @@
 #include "UploadBuffer.h"
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
+
 struct Vertex
 {
 	XMFLOAT3 Pos;
@@ -27,11 +28,15 @@ public :
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
+
 	void Box();
 	void BuildDescriptorHeaps();
 	void BuildConstantBuffers();
 private:
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
+
+	ComPtr<ID3D12Resource> mUploadBuffer;
+	BYTE* mMappedData = nullptr;
 };
 
