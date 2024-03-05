@@ -42,7 +42,7 @@ void MeshRenderer::BuildConstantBuffers()
 		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
 
 	// Get upload buffer pointer
-	mUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mMappedData));
+	//mUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mMappedData));
 }
 
 void MeshRenderer::Box() {
