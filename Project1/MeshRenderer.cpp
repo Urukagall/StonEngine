@@ -5,12 +5,11 @@
 MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
 
 	m_oEntity = pEntity;
-	this->md3dDevice = m_oEntity->md3dDevice;
-	this->mCommandList = m_oEntity->mCommandList;
+	md3dDevice = m_oEntity->md3dDevice;
+	mCommandList = m_oEntity->mCommandList;
 	Box();
 	BuildConstantBuffers();
 }
-
 
 void MeshRenderer::BuildConstantBuffers()
 {
@@ -32,9 +31,12 @@ void MeshRenderer::BuildConstantBuffers()
 	//	mCbvHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
-void MeshRenderer::Update()
+void MeshRenderer::Update(XMMATRIX worldViewProj)
 {
+	ObjectConstants objConstants;
+	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 
+	mObjectCB->CopyData(0, objConstants);
 }
 
 void MeshRenderer::Box() {

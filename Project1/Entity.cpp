@@ -12,7 +12,8 @@ Entity::~Entity() {
 }
 
 void Entity::CreateCube() {
-	Component* com = new MeshRenderer(this);
+	m_oMeshRenderer = new MeshRenderer(this);
+	Component* com = m_oMeshRenderer;
 	m_mComponents["cube"] = com;
 	
 }

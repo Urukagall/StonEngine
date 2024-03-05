@@ -69,11 +69,17 @@ void Render::Update(const GameTimer& gt)
 	// ============ il faut mettre ça dans le MeshRenderer::Update() ============
 
 	// Update the constant buffer with the latest worldViewProj matrix.
-	ObjectConstants objConstants;
+	/*ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 
-	mObjectCB->CopyData(0, objConstants);
+	mObjectCB->CopyData(0, objConstants);*/
 
+
+	for (int i = 0; i < m_Entities.size(); ++i) {
+		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
+			m_Entities[i]->m_oMeshRenderer->Update(worldViewProj);
+		}
+	}
 
 	//============ il faut juste appeller tout les update() des components ============
 }

@@ -23,10 +23,12 @@ public :
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
+	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
+
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
 	void Box();
 	void BuildConstantBuffers();
-	void Update();
+	void Update(XMMATRIX objConstants);
 };
 

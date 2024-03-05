@@ -22,6 +22,8 @@ public:
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 
+	MeshRenderer* m_oMeshRenderer = nullptr;
+
 	void CreateCube();
 	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList);
 	~Entity();
