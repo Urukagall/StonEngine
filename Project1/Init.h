@@ -6,7 +6,7 @@
 #endif
 
 #include "Tools.h"
-#include "GameTimer.h"
+#include "Timer.h"
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib,"d3dcompiler.lib")
@@ -41,8 +41,8 @@ public:
 protected:
     virtual void CreateRtvAndDsvDescriptorHeaps();
     virtual void OnResize();
-    virtual void Update(const GameTimer& gt) = 0;
-    virtual void Draw(const GameTimer& gt) = 0;
+    virtual void Update(const Timer& gt) = 0;
+    virtual void Draw(const Timer& gt) = 0;
 
     // Convenience overrides for handling mouse input.
     virtual void OnMouseDown(WPARAM btnState, int x, int y) { }
@@ -85,7 +85,7 @@ protected:
     UINT      m4xMsaaQuality = 0;      // quality level of 4X MSAA
 
     // Used to keep track of the “delta-time” and game time (§4.4).
-    GameTimer mTimer;
+    Timer mTimer;
 
     Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
     Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;

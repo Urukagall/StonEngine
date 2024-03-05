@@ -256,7 +256,7 @@ LRESULT Init::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		else
 		{
 			mAppPaused = false;
-			mTimer.Start();
+			mTimer.Resume();
 		}
 		return 0;
 
@@ -329,7 +329,7 @@ LRESULT Init::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_EXITSIZEMOVE:
 		mAppPaused = false;
 		mResizing = false;
-		mTimer.Start();
+		mTimer.Resume();
 		OnResize();
 		return 0;
 
@@ -590,7 +590,7 @@ void Init::CalculateFrameStats()
 	frameCnt++;
 
 	// Compute averages over one second period.
-	if ((mTimer.TotalTime() - timeElapsed) >= 1.0f)
+	if ((mTimer.Get() - timeElapsed) >= 1.0f)
 	{
 		float fps = (float)frameCnt; // fps = frameCnt / 1
 		float mspf = 1000.0f / fps;
