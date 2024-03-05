@@ -74,14 +74,14 @@ void Render::Update(const GameTimer& gt)
 
 	mObjectCB->CopyData(0, objConstants);*/
 
+	//============ il faut juste appeller tout les update() des components ============
 
 	for (int i = 0; i < m_Entities.size(); ++i) {
 		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
 			m_Entities[i]->m_oMeshRenderer->Update(worldViewProj);
+
 		}
 	}
-
-	//============ il faut juste appeller tout les update() des components ============
 }
 
 void Render::Draw(const GameTimer& gt)
@@ -305,7 +305,7 @@ void Render::BuildShadersAndInputLayout()
 }
 
 void Render::CreateEntity() {
-	Entity* en = new Entity(md3dDevice, mCommandList);
+	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
 	en->CreateCube();
 	m_Entities.push_back(en);
 }

@@ -21,11 +21,12 @@ public:
 
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
+	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 
 	MeshRenderer* m_oMeshRenderer = nullptr;
 
 	void CreateCube();
-	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList);
+	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap);
 	~Entity();
 
 

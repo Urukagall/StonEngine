@@ -7,6 +7,7 @@ MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
 	m_oEntity = pEntity;
 	md3dDevice = m_oEntity->md3dDevice;
 	mCommandList = m_oEntity->mCommandList;
+	mCbvHeap = m_oEntity->mCbvHeap;
 	Box();
 	BuildConstantBuffers();
 }
@@ -15,20 +16,20 @@ void MeshRenderer::BuildConstantBuffers()
 {
 	mObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
 
-	//UINT objCBByteSize = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-	//
-	//D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectCB->Resource()->GetGPUVirtualAddress();
-	//// Offset to the ith object constant buffer in the buffer.
-	//int boxCBufIndex = 0;
-	//cbAddress += boxCBufIndex * objCBByteSize;
-	//
-	//D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
-	//cbvDesc.BufferLocation = cbAddress;
-	//cbvDesc.SizeInBytes = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-	//
-	//md3dDevice->CreateConstantBufferView(
-	//	&cbvDesc,
-	//	mCbvHeap->GetCPUDescriptorHandleForHeapStart());
+	UINT objCBByteSize = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+	
+	D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectCB->Resource()->GetGPUVirtualAddress();
+	// Offset to the ith object constant buffer in the buffer.
+	int boxCBufIndex = 0;
+	cbAddress += boxCBufIndex * objCBByteSize;
+	
+	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+	cbvDesc.BufferLocation = cbAddress;
+	cbvDesc.SizeInBytes = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+	
+	md3dDevice->CreateConstantBufferView(
+		&cbvDesc,
+		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
 void MeshRenderer::Update(XMMATRIX worldViewProj)
