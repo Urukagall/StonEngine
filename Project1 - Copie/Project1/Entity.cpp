@@ -11,14 +11,14 @@ Entity::~Entity() {
 
 }
 
-void Entity::CreateCube() {
+void Entity::CreateCube(XMFLOAT4 oColor) {
 	MeshRenderer* com = new MeshRenderer(this);
-	com->Box();
+	com->Box(oColor);
 	m_mComponents["cube"] = com;
 }
 
-void Entity::CreatePyramid() {
+void Entity::CreatePyramid(XMFLOAT4 oColor) {
 	MeshRenderer* com = new MeshRenderer(this);
-	com->Pyramid();
+	com->Pyramid( oColor);
 	m_mComponents["pyr"] = com;
 }

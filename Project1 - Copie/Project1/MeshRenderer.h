@@ -21,7 +21,7 @@ public :
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
-	void Box();
-	void Pyramid();
+	void Box(XMFLOAT4 oColor);
+	void Pyramid(XMFLOAT4 oColor);
 };
 

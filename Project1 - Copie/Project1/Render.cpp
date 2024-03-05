@@ -306,8 +306,8 @@ void Render::BuildShadersAndInputLayout()
 
 void Render::CreateEntity() {
 	Entity* en = new Entity(md3dDevice, mCommandList);
-	en->CreateCube();
-	en->CreatePyramid();
+	en->CreateCube(XMFLOAT4(Colors::BlueViolet));
+	en->CreatePyramid(XMFLOAT4(Colors::Yellow));
 	m_Entities.push_back(en);
 }
 

@@ -8,17 +8,17 @@ MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
 	mCommandList = m_oEntity->mCommandList;
 }
 
-void MeshRenderer::Box() {
+void MeshRenderer::Box(XMFLOAT4 oColor) {
 	std::array<Vertex, 8> vertices =
 	{
-		Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-		Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-		Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-		Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-		Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-		Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-		Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-		Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+		Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f),oColor }),
+		Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), oColor })
 	};
 
 	std::array<std::uint16_t, 36> indices =
@@ -79,14 +79,14 @@ void MeshRenderer::Box() {
 	mBoxGeo->DrawArgs["box"] = submesh;
 }
 
-void MeshRenderer::Pyramid() {
+void MeshRenderer::Pyramid(XMFLOAT4 oColor) {
 	std::array<Vertex, 5> vertices =
 	{
-		Vertex({ XMFLOAT3(2.0f, 0.0f, 0.0f), XMFLOAT4(Colors::White) }),
-		Vertex({ XMFLOAT3(2.0f, 0.0f, 2.0f), XMFLOAT4(Colors::Black) }),
-		Vertex({ XMFLOAT3(+4.0f, 0.0f, 2.0f), XMFLOAT4(Colors::Red) }),
-		Vertex({ XMFLOAT3(+4.0f, 0.0f, 0.0f), XMFLOAT4(Colors::Green) }),
-		Vertex({ XMFLOAT3(3.0f, 1.0f, 1.0f), XMFLOAT4(Colors::Blue) }),
+		Vertex({ XMFLOAT3(2.0f, 0.0f, 0.0f), oColor }),
+		Vertex({ XMFLOAT3(2.0f, 0.0f, 2.0f), oColor }),
+		Vertex({ XMFLOAT3(+4.0f, 0.0f, 2.0f), oColor }),
+		Vertex({ XMFLOAT3(+4.0f, 0.0f, 0.0f), oColor }),
+		Vertex({ XMFLOAT3(3.0f, 1.0f, 1.0f), oColor }),
 
 	};
 
