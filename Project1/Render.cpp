@@ -75,9 +75,14 @@ void Render::Update(const Timer& gt)
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 	mObjectCB->CopyData(0, objConstants);
 
-	if (input.getKeyDown(ARROW_UP)) {
+	if (input.getKeyDown(pitchDown)) {
 		//OutputDebugStringA("ARROW UP PRESSED ");
+		/*XMVECTOR displacement = { 0.f,0.f,0.f,0.f };
+		XMVECTOR camPos = camera.getPosition();
+		XMVECTOR newPos = camPos + displacement;*/
+		camera.Pitch(1);
 	}
+	camera.updateViewMatrix();
 }
 
 void Render::Draw(const Timer& gt)

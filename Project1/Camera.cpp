@@ -3,6 +3,8 @@
 
 using namespace DirectX;
 
+Camera::Camera() {}
+
 #pragma region getMethods
 XMVECTOR Camera::getPosition()const {
 	return XMLoadFloat3(&m_mPosition);
@@ -31,6 +33,10 @@ float Camera::getFarWindowWidth()const {
 
 float Camera::getFarWindowHeight()const {
 	return m_fFarWindowHeight;
+}
+
+DirectX::XMFLOAT4X4	Camera::getView4x4f()const {
+	return m_mView;
 }
 #pragma endregion
 
@@ -102,7 +108,9 @@ void Camera::RotateY(float angle) {
 }
 
 void Camera::updateViewMatrix() {
-	if (m_bViewDirty) {
+	//OutputDebugStringA("nope");
+	//if (m_bViewDirty) {
+		//OutputDebugStringA("m_bViewDirty");
 		XMVECTOR Right = XMLoadFloat3(&m_mRight);
 		XMVECTOR Up = XMLoadFloat3(&m_mUp);
 		XMVECTOR Look = XMLoadFloat3(&m_mLook);
@@ -130,7 +138,10 @@ void Camera::updateViewMatrix() {
 		m_mView(2, 3) = 0.0f;
 		m_mView(3, 3) = 1.0f;
 
-		m_bViewDirty = false;
-	}
+		/*m_bViewDirty = false;
+	}*/
 }
+
 #pragma endregion
+
+Camera::~Camera(){}
