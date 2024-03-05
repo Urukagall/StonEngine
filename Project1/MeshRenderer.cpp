@@ -4,10 +4,11 @@
 #include "Entity.h"
 MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
 
-	md3dDevice = m_oEntity->md3dDevice;
-	mCommandList = m_oEntity->mCommandList;
-	mObjectCB = std::move(m_oEntity->mObjectCB);
+	m_oEntity = pEntity;
+	this->md3dDevice = m_oEntity->md3dDevice;
+	this->mCommandList = m_oEntity->mCommandList;
 	Box();
+	BuildConstantBuffers();
 }
 
 
@@ -29,6 +30,11 @@ void MeshRenderer::BuildConstantBuffers()
 	//md3dDevice->CreateConstantBufferView(
 	//	&cbvDesc,
 	//	mCbvHeap->GetCPUDescriptorHandleForHeapStart());
+}
+
+void MeshRenderer::Update()
+{
+
 }
 
 void MeshRenderer::Box() {

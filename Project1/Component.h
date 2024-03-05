@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include "Mesh.h"
 class Transform;
 class Entity;

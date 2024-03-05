@@ -19,7 +19,7 @@ bool Render::Initialize()
 	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
 	BuildDescriptorHeaps();
-	BuildConstantBuffers();
+	//BuildConstantBuffers(); //a retirer
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
 	CreateEntity();
@@ -47,6 +47,7 @@ void Render::OnResize()
 
 void Render::Update(const GameTimer& gt)
 {
+	//============ il faut mettre ça dans le camera component::Update() ============
 	// Convert Spherical to Cartesian coordinates.
 	float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
 	float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);
@@ -64,10 +65,17 @@ void Render::Update(const GameTimer& gt)
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
 	XMMATRIX worldViewProj = world * view * proj;
 
+
+	// ============ il faut mettre ça dans le MeshRenderer::Update() ============
+
 	// Update the constant buffer with the latest worldViewProj matrix.
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+
 	mObjectCB->CopyData(0, objConstants);
+
+
+	//============ il faut juste appeller tout les update() des components ============
 }
 
 void Render::Draw(const GameTimer& gt)
@@ -217,25 +225,25 @@ void Render::BuildDescriptorHeaps()
 		IID_PPV_ARGS(&mCbvHeap)));
 }
 
-void Render::BuildConstantBuffers()
-{
-	mObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
-
-	UINT objCBByteSize = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-
-	D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectCB->Resource()->GetGPUVirtualAddress();
-	// Offset to the ith object constant buffer in the buffer.
-	int boxCBufIndex = 0;
-	cbAddress += boxCBufIndex * objCBByteSize;
-
-	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
-	cbvDesc.BufferLocation = cbAddress;
-	cbvDesc.SizeInBytes = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-
-	md3dDevice->CreateConstantBufferView(
-		&cbvDesc,
-		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
-}
+//void Render::BuildConstantBuffers()
+//{
+//	mObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
+//
+//	UINT objCBByteSize = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+//
+//	D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectCB->Resource()->GetGPUVirtualAddress();
+//	// Offset to the ith object constant buffer in the buffer.
+//	int boxCBufIndex = 0;
+//	cbAddress += boxCBufIndex * objCBByteSize;
+//
+//	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+//	cbvDesc.BufferLocation = cbAddress;
+//	cbvDesc.SizeInBytes = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+//
+//	md3dDevice->CreateConstantBufferView(
+//		&cbvDesc,
+//		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
+//}
 
 void Render::BuildRootSignature()
 {
@@ -291,7 +299,7 @@ void Render::BuildShadersAndInputLayout()
 }
 
 void Render::CreateEntity() {
-	Entity* en = new Entity(md3dDevice, mCommandList, mObjectCB);
+	Entity* en = new Entity(md3dDevice, mCommandList);
 	en->CreateCube();
 	m_Entities.push_back(en);
 }

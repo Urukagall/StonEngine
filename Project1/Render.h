@@ -4,21 +4,11 @@
 #include "UploadBuffer.h"
 #include <vector>
 #include "Entity.h"
+#include "MeshRenderer.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
-
-struct Vertex
-{
-    XMFLOAT3 Pos;
-    XMFLOAT4 Color;
-};
-
-struct ObjectConstants
-{
-    XMFLOAT4X4 WorldViewProj = Math::Identity4x4();
-};
 
 class Render : public Init
 {
@@ -40,7 +30,7 @@ private:
     virtual void OnMouseMove(WPARAM btnState, int x, int y)override;
 
     void BuildDescriptorHeaps();
-    void BuildConstantBuffers();
+    //void BuildConstantBuffers();
     void BuildRootSignature();
     void BuildShadersAndInputLayout();
     void BuildPSO();

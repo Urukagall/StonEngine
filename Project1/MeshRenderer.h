@@ -6,14 +6,15 @@
 #include "Mesh.h"
 #include <array>
 #include "Tools.h"
+
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
+
 struct Vertex
 {
 	XMFLOAT3 Pos;
 	XMFLOAT4 Color;
 };
-
 
 struct ObjectConstants
 {
@@ -31,5 +32,6 @@ public :
 	~MeshRenderer();
 	void Box();
 	void BuildConstantBuffers();
+	void Update();
 };
 

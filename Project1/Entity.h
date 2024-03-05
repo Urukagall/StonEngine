@@ -1,14 +1,17 @@
 #pragma once
 #include "pch.h"
+#include "Init.h"
 #include "UploadBuffer.h"
 #include <iostream>
 #include <map>
-#include "Component.h"
 #include <string>
 #include "Transform.h"
+#include "MeshRenderer.h"
 
 using Microsoft::WRL::ComPtr;
+using namespace DirectX;
 
+class Component;
 
 class Entity
 {
@@ -18,10 +21,9 @@ public:
 
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
-	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
 
 	void CreateCube();
-	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB);
+	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList);
 	~Entity();
 
 
