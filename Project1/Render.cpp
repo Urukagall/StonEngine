@@ -157,6 +157,7 @@ void Render::Draw(const Timer& gt)
 	FlushCommandQueue();
 }
 
+/*
 void Render::OnMouseDown(WPARAM btnState, int x, int y)
 {
 	mLastMousePos.x = x;
@@ -201,6 +202,7 @@ void Render::OnMouseMove(WPARAM btnState, int x, int y)
 	mLastMousePos.x = x;
 	mLastMousePos.y = y;
 }
+*/
 
 void Render::BuildDescriptorHeaps()
 {

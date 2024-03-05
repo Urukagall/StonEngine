@@ -36,9 +36,9 @@ private:
     virtual void Update(const Timer& gt)override;
     virtual void Draw(const Timer& gt)override;
 
-    virtual void OnMouseDown(WPARAM btnState, int x, int y)override;
-    virtual void OnMouseUp(WPARAM btnState, int x, int y)override;
-    virtual void OnMouseMove(WPARAM btnState, int x, int y)override;
+    //virtual void OnMouseDown(WPARAM btnState, int x, int y)override;
+    //virtual void OnMouseUp(WPARAM btnState, int x, int y)override;
+    //virtual void OnMouseMove(WPARAM btnState, int x, int y)override;
 
     void BuildDescriptorHeaps();
     void BuildConstantBuffers();
