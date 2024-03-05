@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "Render.h"
+#include "defines.h"
+#include "Camera.h"
+
+Camera camera;
 
 Render::Render(HINSTANCE hInstance)
 	: Init(hInstance)
@@ -47,12 +51,14 @@ void Render::OnResize()
 
 void Render::Update(const Timer& gt)
 {
+
 	// Convert Spherical to Cartesian coordinates.
 	float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
 	float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);
 	float y = mRadius * DirectX::XMScalarCos(mPhi);
 
 	// Build the view matrix.
+	camera.setPosition(x, y, z);
 	XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
 	XMVECTOR target = XMVectorZero();
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -68,6 +74,10 @@ void Render::Update(const Timer& gt)
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 	mObjectCB->CopyData(0, objConstants);
+
+	if (input.getKeyDown(ARROW_UP)) {
+		//OutputDebugStringA("ARROW UP PRESSED ");
+	}
 }
 
 void Render::Draw(const Timer& gt)

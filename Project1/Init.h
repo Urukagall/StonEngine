@@ -7,6 +7,7 @@
 
 #include "Tools.h"
 #include "Timer.h"
+#include "input.h"
 
 // Link necessary d3d12 libraries.
 #pragma comment(lib,"d3dcompiler.lib")
@@ -71,6 +72,7 @@ protected:
 protected:
 
     static Init* mApp;
+    Input input;
 
     HINSTANCE mhAppInst = nullptr; // application instance handle
     HWND      mhMainWnd = nullptr; // main window handle

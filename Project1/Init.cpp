@@ -90,6 +90,7 @@ int Init::Run()
 
 			if (!mAppPaused)
 			{
+				input.Store();
 				CalculateFrameStats();
 				Update(mTimer);
 				Draw(mTimer);

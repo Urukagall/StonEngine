@@ -6,8 +6,8 @@ private:
 	DirectX::XMFLOAT3				m_mRight = { 1.0f, 0.0f, 0.0f };
 	DirectX::XMFLOAT3				m_mUp = { 0.0f, 1.0f, 0.0f };
 	DirectX::XMFLOAT3				m_mLook = { 0.0f, 0.0f, 1.0f };
-	DirectX::XMFLOAT4X4				m_mView = MathHelper::Identity4x4();
-	DirectX::XMFLOAT4X4				m_mProj = MathHelper::Identity4x4();
+	DirectX::XMFLOAT4X4				m_mView = Math::Identity4x4();
+	DirectX::XMFLOAT4X4				m_mProj = Math::Identity4x4();
 	float							m_fNearZ = 0.0f;
 	float							m_fFarZ = 0.0f;
 	float							m_fAspect = 0.0f;

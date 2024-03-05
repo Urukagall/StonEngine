@@ -133,11 +133,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="defines.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Init.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MeshRenderer.h" />
@@ -149,10 +152,13 @@
     <ClInclude Include="UploadBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="defines.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Init.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="MathHelper.cpp" />
