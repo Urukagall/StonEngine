@@ -16,6 +16,11 @@ struct Vertex
 	XMFLOAT4 Color;
 };
 
+struct ObjectConstants
+{
+	XMFLOAT4X4 WorldViewProj = Math::Identity4x4();
+};
+
 class MeshRenderer : public Component
 {
 public : 
@@ -27,6 +32,7 @@ public :
 
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
+
 	void Box();
 	void BuildConstantBuffers();
 	void Update(XMFLOAT4X4 objConstants);

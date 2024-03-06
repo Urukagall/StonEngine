@@ -5,6 +5,7 @@
 #include <vector>
 #include "Entity.h"
 #include "MeshRenderer.h"
+#include "Timer.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -22,12 +23,15 @@ public:
 
 private:
     virtual void OnResize()override;
-    virtual void Update(const GameTimer& gt)override;
-    virtual void Draw(const GameTimer& gt)override;
+    virtual void Update(Timer& gt)override;
+    virtual void Draw(const Timer& gt)override;
 
-    virtual void OnMouseDown(WPARAM btnState, int x, int y)override;
-    virtual void OnMouseUp(WPARAM btnState, int x, int y)override;
-    virtual void OnMouseMove(WPARAM btnState, int x, int y)override;
+    //virtual void OnMouseDown(WPARAM btnState, int x, int y)override;
+    //virtual void OnMouseUp(WPARAM btnState, int x, int y)override;
+    //virtual void OnMouseMove(WPARAM btnState, int x, int y)override;
+
+    void HandleInput(Timer& gt);
+    void UpdateCameraPosition();
 
     void BuildDescriptorHeaps();
     //void BuildConstantBuffers();
@@ -38,6 +42,11 @@ private:
     void CreateEntity();
 
 private:
+
+    float moveSpeed = 50.0f;
+    float cameraX = 0.0f;
+    float cameraY = 0.0f;
+    float cameraZ = 0.0f;
 
     std::vector<MeshGeometry*> m_vEntities;
     std::vector<Entity*> m_Entities;
@@ -62,6 +71,10 @@ private:
     float mTheta = 1.5f * XM_PI;
     float mPhi = XM_PIDIV4;
     float mRadius = 5.0f;
+
+    float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
+    float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);
+    float y = mRadius * DirectX::XMScalarCos(mPhi);
 
     POINT mLastMousePos;
 };

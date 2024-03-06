@@ -1,5 +1,10 @@
 #include "pch.h"
 #include "Render.h"
+#include "defines.h"
+#include "Camera.h"
+
+Camera camera;
+Defines defines;
 
 Render::Render(HINSTANCE hInstance)
 	: Init(hInstance)
@@ -45,25 +50,52 @@ void Render::OnResize()
 	XMStoreFloat4x4(&mProj, P);
 }
 
-void Render::Update(const GameTimer& gt)
+void Render::HandleInput(Timer& gt)
 {
-	//============ il faut mettre ça dans le camera component::Update() =============
-	// Convert Spherical to Cartesian coordinates.
-	float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
-	float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);
-	float y = mRadius * DirectX::XMScalarCos(mPhi);
+	float dT = gt.GetDT();
+	float speed = 0.001f;
+	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
+	if (input.getKey(pitchUp)) {
+		camera.Pitch(speed * dT);
+		
+	}
+	else if (input.getKey(pitchDown)) {
+		camera.Pitch((-speed)* dT);
+	}
 
-	// Build the view matrix.
-	XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-	XMVECTOR target = XMVectorZero();
-	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	if (input.getKey(yawLeft)) {
+		camera.Yaw((-speed) * dT);
+	}
+	else if (input.getKey(yawRight)) {
+		camera.Yaw(speed * dT);
+	}
 
-	XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
-	XMStoreFloat4x4(&mView, view);
+	if (input.getKey(rollLeft)) {
+		camera.Roll((-speed) * dT);
+	}
+	else if (input.getKey(rollRight)) {
+		camera.Roll(speed * dT);
+	}
+
+	if (input.getKey(ARROW_UP)) {
+		camera.Walk(speed * dT);
+	}
+	else if (input.getKey(ARROW_DOWN)) {
+		camera.Walk((-speed) * dT);
+	}
+}
+
+void Render::Update(Timer& gt)
+{
+	// Gérer les entrées utilisateur
+	HandleInput(gt);
+
+	camera.setPosition(x, y, z);
+	camera.setView();
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
-	XMMATRIX worldViewProj = world * view * proj;
+	XMMATRIX worldViewProj = world * camera.getView() * proj;
 
 
 	// ============ il faut mettre ça dans le MeshRenderer::Update() =================
@@ -85,7 +117,7 @@ void Render::Update(const GameTimer& gt)
 	}
 }
 
-void Render::Draw(const GameTimer& gt)
+void Render::Draw(const Timer& gt)
 {
 	// Reuse the memory associated with command recording.
 	// We can only reset when the associated command lists have finished execution on the GPU.
@@ -178,6 +210,7 @@ void Render::Draw(const GameTimer& gt)
 	FlushCommandQueue();
 }
 
+/*
 void Render::OnMouseDown(WPARAM btnState, int x, int y)
 {
 	mLastMousePos.x = x;
@@ -222,6 +255,7 @@ void Render::OnMouseMove(WPARAM btnState, int x, int y)
 	mLastMousePos.x = x;
 	mLastMousePos.y = y;
 }
+*/
 
 void Render::BuildDescriptorHeaps()
 {

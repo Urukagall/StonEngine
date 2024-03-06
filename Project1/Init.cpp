@@ -90,6 +90,7 @@ int Init::Run()
 
 			if (!mAppPaused)
 			{
+				input.Store();
 				CalculateFrameStats();
 				Update(mTimer);
 				Draw(mTimer);
@@ -256,7 +257,7 @@ LRESULT Init::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		else
 		{
 			mAppPaused = false;
-			mTimer.Start();
+			mTimer.Resume();
 		}
 		return 0;
 
@@ -329,7 +330,7 @@ LRESULT Init::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_EXITSIZEMOVE:
 		mAppPaused = false;
 		mResizing = false;
-		mTimer.Start();
+		mTimer.Resume();
 		OnResize();
 		return 0;
 
@@ -353,15 +354,15 @@ LRESULT Init::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-		OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		//OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_LBUTTONUP:
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
-		OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		//OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_MOUSEMOVE:
-		OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		//OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_KEYUP:
 		if (wParam == VK_ESCAPE)
@@ -590,7 +591,7 @@ void Init::CalculateFrameStats()
 	frameCnt++;
 
 	// Compute averages over one second period.
-	if ((mTimer.TotalTime() - timeElapsed) >= 1.0f)
+	if ((mTimer.Get() - timeElapsed) >= 1.0f)
 	{
 		float fps = (float)frameCnt; // fps = frameCnt / 1
 		float mspf = 1000.0f / fps;
