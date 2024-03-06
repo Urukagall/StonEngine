@@ -7,7 +7,7 @@ public:
     DirectX::XMFLOAT3 velocity;
     float life;
 
-    Atom(DirectX::XMFLOAT3 startPos, DirectX::XMFLOAT3 startVel, float startLife);
+    Atom( float startLife);
     void Update(float deltaTime);
 };
 

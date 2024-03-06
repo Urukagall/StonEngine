@@ -4,7 +4,7 @@
 #include "UploadBuffer.h"
 #include <vector>
 #include "Entity.h"
-
+#include "Particles.h"
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -46,11 +46,12 @@ private:
     void BuildPSO();
 
     void CreateEntity();
-
+    void CreateParticles();
 private:
 
     std::vector<MeshGeometry*> m_vEntities;
     std::vector<Entity*> m_Entities;
+    std::vector<Particles*> m_Particles;
     ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
     ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 

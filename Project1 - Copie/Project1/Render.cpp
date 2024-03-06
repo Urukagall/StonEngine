@@ -22,6 +22,7 @@ bool Render::Initialize()
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
 	CreateEntity();
+	CreateParticles();
 	BuildPSO();
 
 	// Execute the initialization commands.
@@ -134,6 +135,25 @@ void Render::Draw(const GameTimer& gt)
 				1, 0, 0, 0);
 		}
 	}
+	for (int i = 0; i < m_Particles.size(); ++i) {
+		for (const auto& pair : m_Particles[i]->m_oParticles->m_mComponents) {
+			// pair.first est la clé, pair.second est la valeur
+			std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
+			Mesh* comp = pair.second->mBoxGeo;
+			D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
+			D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
+			mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
+			mCommandList->IASetIndexBuffer(&indexBuffer);
+			mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+			mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+
+			mCommandList->DrawIndexedInstanced(
+				comp->DrawArgs["box"].IndexCount,
+				1, 0, 0, 0);
+		}
+	}
+
 
 	CD3DX12_RESOURCE_BARRIER resssourceState = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
@@ -292,6 +312,12 @@ void Render::CreateEntity() {
 	en->CreateCube(XMFLOAT4(Colors::BlueViolet));
 	en->CreatePyramid(XMFLOAT4(Colors::Yellow));
 	m_Entities.push_back(en);
+}
+
+void Render::CreateParticles() {
+	Entity* en = new Entity(md3dDevice, mCommandList);
+	Particles* par = new Particles(5,en);
+	m_Particles.push_back(par);
 }
 
 void Render::BuildPSO()
