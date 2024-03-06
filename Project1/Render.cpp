@@ -57,9 +57,14 @@ void Render::HandleInput(Timer& gt)
 {
 	float dT = gt.GetDT();
 	float speed = 0.001f;
+
+	if (input.getKey(SPRINT)) {
+		speed = 0.01f;
+	}
+
+	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
 	if (input.getKey(pitchUp)) {
 		camera.Pitch(speed * dT);
-		
 	}
 	else if (input.getKey(pitchDown)) {
 		camera.Pitch((-speed)* dT);

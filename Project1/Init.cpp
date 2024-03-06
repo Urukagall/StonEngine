@@ -115,7 +115,7 @@ bool Init::Initialize()
 
 	// Do the initial resize code.
 	OnResize();
-
+	//mTimer.SetSpeed(10.f);
 	return true;
 }
 
