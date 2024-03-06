@@ -8,7 +8,6 @@ MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
 	md3dDevice = m_oEntity->md3dDevice;
 	mCommandList = m_oEntity->mCommandList;
 	mCbvHeap = m_oEntity->mCbvHeap;
-	Box();
 	BuildConstantBuffers();
 }
 
@@ -48,17 +47,17 @@ void MeshRenderer::Update(XMFLOAT4X4 worldViewProj)
 	mObjectCB->CopyData(0, objConstants);
 }
 
-void MeshRenderer::Box() {
+void MeshRenderer::Box(XMFLOAT4 oColor) {
 	std::array<Vertex, 8> vertices =
 	{
-		Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-		Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-		Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-		Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-		Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-		Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-		Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-		Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+		Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), oColor })
 	};
 
 	std::array<std::uint16_t, 36> indices =

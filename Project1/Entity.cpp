@@ -12,8 +12,9 @@ Entity::~Entity() {
 
 }
 
-void Entity::CreateCube() {
+void Entity::CreateCube(XMFLOAT4 oColor) {
 	m_oMeshRenderer = new MeshRenderer(this);
+	m_oMeshRenderer->Box(oColor);
 	Component* com = m_oMeshRenderer;
 	m_mComponents["cube"] = com;
 }

@@ -25,7 +25,7 @@ public:
 
 	MeshRenderer* m_oMeshRenderer = nullptr;
 
-	void CreateCube();
+	void CreateCube(XMFLOAT4 oColor);
 	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap);
 	~Entity();
 

@@ -33,7 +33,7 @@ public :
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
 
-	void Box();
+	void Box(XMFLOAT4 oColor);
 	void BuildConstantBuffers();
 	void Update(XMFLOAT4X4 objConstants);
 };

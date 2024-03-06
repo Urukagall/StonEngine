@@ -344,7 +344,7 @@ void Render::BuildShadersAndInputLayout()
 
 void Render::CreateEntity() {
 	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	en->CreateCube();
+	en->CreateCube(XMFLOAT4(Colors::Azure));
 	m_Entities.push_back(en);
 }
 
