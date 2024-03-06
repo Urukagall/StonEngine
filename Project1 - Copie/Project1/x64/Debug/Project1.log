@@ -1,3 +1,18 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: Le répertoire intermédiaire (x64\Debug\) contient des fichiers partagés provenant d'un autre projet (Project1.vcxproj). Cela peut entraîner un comportement de nettoyage et de regénération incorrect.
+  pch.cpp
+  Atom.cpp
+  Component.cpp
+  DDSTextureLoader.cpp
+  Entity.cpp
+  GameTimer.cpp
+  Init.cpp
+  Main.cpp
+  Math.cpp
+  MathHelper.cpp
+  MeshRenderer.cpp
   Particles.cpp
+  Render.cpp
+  Tools.cpp
+  Transform.cpp
+  Génération de code en cours...
   Project1.vcxproj -> C:\Users\djorgeafonso\Source\Repos\Urukagall\StonEngine\Project1 - Copie\x64\Debug\StonEngine.exe
