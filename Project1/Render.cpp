@@ -27,7 +27,8 @@ bool Render::Initialize()
 	//BuildConstantBuffers(); //a retirer
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
-	CreateEntity();
+	//CreateEntity();
+	CreateParticles();
 	BuildPSO();
 
 	// Execute the initialization commands.
@@ -165,8 +166,10 @@ void Render::Draw(const Timer& gt)
 
 
 	for (int i = 0; i < m_Entities.size(); ++i) {
-		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
-			Mesh* comp = m_Entities[i]->m_mComponents["cube"]->mBoxGeo;
+		for (const auto& pair : m_Entities[i]->m_mComponents) {
+			// pair.first est la clé, pair.second est la valeur
+			std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
+			Mesh* comp = pair.second->mBoxGeo;
 
 			mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
 			mCommandList->SetPipelineState(mPSO.Get());
@@ -185,8 +188,51 @@ void Render::Draw(const Timer& gt)
 				comp->DrawArgs["box"].IndexCount,
 				1, 0, 0, 0);
 		}
-
 	}
+	for (int i = 0; i < m_Particles.size(); ++i) {
+		for (const auto& pair : m_Particles[i]->m_oParticles->m_mComponents) {
+			// pair.first est la clé, pair.second est la valeur
+			std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
+			Mesh* comp = pair.second->mBoxGeo;
+
+			mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+			mCommandList->SetPipelineState(mPSO.Get());
+
+			D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
+			D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
+			mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
+			mCommandList->IASetIndexBuffer(&indexBuffer);
+			mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+			mCommandList->SetGraphicsRootConstantBufferView(0, m_Entities[i]->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
+
+			mCommandList->DrawIndexedInstanced(
+				comp->DrawArgs["box"].IndexCount,
+				1, 0, 0, 0);
+		}
+	}
+
+
+	//for (int i = 0; i < m_Entities.size(); ++i) {
+	//	for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
+	//		Mesh* comp = m_Entities[i]->m_mComponents["cube"]->mBoxGeo;
+
+	//		D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
+	//		D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
+	//		mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
+	//		mCommandList->IASetIndexBuffer(&indexBuffer);
+	//		mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	//		mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+
+	//		mCommandList->DrawIndexedInstanced(
+	//			comp->DrawArgs["box"].IndexCount,
+	//			1, 0, 0, 0);
+	//	}
+
+	//}
 
 	CD3DX12_RESOURCE_BARRIER resssourceState = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
@@ -346,6 +392,12 @@ void Render::CreateEntity() {
 	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
 	en->CreateCube(XMFLOAT4(Colors::Azure));
 	m_Entities.push_back(en);
+}
+
+void Render::CreateParticles() {
+	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
+	Particles* par = new Particles(5, en);
+	m_Particles.push_back(par);
 }
 
 void Render::BuildPSO()

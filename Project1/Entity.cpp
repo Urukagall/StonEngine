@@ -18,3 +18,10 @@ void Entity::CreateCube(XMFLOAT4 oColor) {
 	Component* com = m_oMeshRenderer;
 	m_mComponents["cube"] = com;
 }
+
+void Entity::CreatePyramid(XMFLOAT4 oColor) {
+	m_oMeshRenderer = new MeshRenderer(this);
+	m_oMeshRenderer->Pyramid(oColor);
+	Component* com = m_oMeshRenderer;
+	m_mComponents["pyr"] = com;
+}

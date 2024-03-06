@@ -33,13 +33,13 @@ void MeshRenderer::BuildConstantBuffers()
 
 void MeshRenderer::Update(XMFLOAT4X4 worldViewProj)
 {
-	XMFLOAT4X4 f = m_oEntity->m_mTransform.GetMatrix();
+	//XMFLOAT4X4 f = m_oEntity->m_mTransform.GetMatrix();
 
-	XMMATRIX mSca = XMLoadFloat4x4(&f);
+	//XMMATRIX mSca = XMLoadFloat4x4(&f);
 
-	mSca = mSca * XMLoadFloat4x4(&f);
+	//mSca = mSca * XMLoadFloat4x4(&f);
 
-	XMStoreFloat4x4(&f, mSca);
+	//XMStoreFloat4x4(&f, mSca);
 
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(XMLoadFloat4x4(&worldViewProj)));
@@ -98,6 +98,65 @@ void MeshRenderer::Box(XMFLOAT4 oColor) {
 	//
 	//ThrowIfFailed(D3DCreateBlob(ibByteSize, &mBoxGeo->IndexBufferCPU));
 	//CopyMemory(mBoxGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	mBoxGeo->VertexBufferGPU = Tools::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), vertices.data(), vbByteSize, mBoxGeo->VertexBufferUploader);
+
+	mBoxGeo->IndexBufferGPU = Tools::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), indices.data(), ibByteSize, mBoxGeo->IndexBufferUploader);
+
+	mBoxGeo->VertexByteStride = sizeof(Vertex);
+	mBoxGeo->VertexBufferByteSize = vbByteSize;
+	mBoxGeo->IndexFormat = DXGI_FORMAT_R16_UINT;
+	mBoxGeo->IndexBufferByteSize = ibByteSize;
+
+	Submesh submesh;
+	submesh.IndexCount = (UINT)indices.size();
+	submesh.StartIndexLocation = 0;
+	submesh.BaseVertexLocation = 0;
+
+	mBoxGeo->DrawArgs["box"] = submesh;
+}
+
+void MeshRenderer::Pyramid(XMFLOAT4 oColor) {
+	std::array<Vertex, 5> vertices =
+	{
+		Vertex({ XMFLOAT3(2.0f, 0.0f, 0.0f), oColor }),
+		Vertex({ XMFLOAT3(2.0f, 0.0f, 2.0f), oColor }),
+		Vertex({ XMFLOAT3(+4.0f, 0.0f, 2.0f), oColor }),
+		Vertex({ XMFLOAT3(+4.0f, 0.0f, 0.0f), oColor }),
+		Vertex({ XMFLOAT3(3.0f, 1.0f, 1.0f), oColor }),
+
+	};
+
+	std::array<std::uint16_t, 18> indices =
+	{
+		// front face
+		0, 2, 1,
+		0, 3, 2,
+
+		// back face (ordre antihoraire)
+		0, 1, 4,
+		0, 4, 3,
+
+		// left face (ordre antihoraire)
+		2, 4, 1,
+		2, 3, 4,
+
+
+	};
+
+	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+	mBoxGeo = new Mesh();
+	mBoxGeo->Name = "boxGeo";
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeo->VertexBufferCPU));
+	CopyMemory(mBoxGeo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &mBoxGeo->IndexBufferCPU));
+	CopyMemory(mBoxGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
 
 	mBoxGeo->VertexBufferGPU = Tools::CreateDefaultBuffer(md3dDevice.Get(),
 		mCommandList.Get(), vertices.data(), vbByteSize, mBoxGeo->VertexBufferUploader);

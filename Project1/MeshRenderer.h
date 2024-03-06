@@ -34,6 +34,7 @@ public :
 	~MeshRenderer();
 
 	void Box(XMFLOAT4 oColor);
+	void Pyramid(XMFLOAT4 oColor);
 	void BuildConstantBuffers();
 	void Update(XMFLOAT4X4 objConstants);
 };

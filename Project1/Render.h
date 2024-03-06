@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "MeshRenderer.h"
 #include "Timer.h"
+#include "Particles.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -41,6 +42,8 @@ private:
 
     void CreateEntity();
 
+    void CreateParticles();
+
 private:
 
     float moveSpeed = 50.0f;
@@ -50,6 +53,7 @@ private:
 
     std::vector<MeshGeometry*> m_vEntities;
     std::vector<Entity*> m_Entities;
+    std::vector<Particles*> m_Particles;
     ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
     ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 
