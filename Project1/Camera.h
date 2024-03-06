@@ -35,16 +35,8 @@ public:
 	DirectX::XMMATRIX				getView()const;
 	DirectX::XMFLOAT3				getPosition3f()const;
 	DirectX::XMMATRIX				getRotationMatrix()const;
-	DirectX::XMMATRIX				getProj()const;		// Pas setup
 
-	DirectX::XMFLOAT4X4				getView4x4f()const; // Pas setup
-	DirectX::XMFLOAT4X4				getProj4x4f()const; // Pas setup
-
-	float							getNearZ()const;	// A setup en cas de besoin absolu
-	float							getFarZ()const;		// Idem
-	float							getAspect()const;	// Idem
-	float							getFovY()const;		// Idem
-	float							getFovX()const;		// Idem
+	DirectX::XMFLOAT4X4				getView4x4f()const;
 
 	float							getNearWindowWidth()const;
 	float							getNearWindowHeight()const;
@@ -55,15 +47,9 @@ public:
 #pragma region Other methods
 	void							updateViewMatrix();
 
-	void							Move(float dx, float dy, float dz);
-
 	void							Pitch(float angle);
 	void							Yaw(float angle);
 	void							Roll(float angle);
-
-	void							RotateX(float angle); // Potentiellement inutile donc non définit
-	void							RotateY(float angle); // Défini par défaut
-	void							RotateZ(float angle); // Potentiellement inutile donc non définit par défaut
 
 	void							Strafe(float d);
 	void							Walk(float d);

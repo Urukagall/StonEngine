@@ -34,11 +34,6 @@ XMMATRIX Camera::getRotationMatrix() const {
 	return XMMATRIX(rightVec, upVec, lookVec, XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
-float Camera::getFovX()const {
-	float halfWidth = 0.5f * getNearWindowWidth();
-	return 2.0f * atan(halfWidth / m_fNearZ);
-}
-
 float Camera::getNearWindowWidth()const {
 	return m_fAspect * m_fNearWindowHeight;
 }
@@ -137,73 +132,34 @@ void Camera::Roll(float angle) {
 	XMStoreFloat3(&m_mUp, XMVector3TransformNormal(XMLoadFloat3(&m_mUp), Rot));
 }
 
-void Camera::RotateY(float angle) {
-	XMMATRIX Rot = XMMatrixRotationY(angle);
-
-	XMStoreFloat3(&m_mRight, XMVector3Transform(XMLoadFloat3(&m_mRight), Rot));
-	XMStoreFloat3(&m_mUp, XMVector3TransformNormal(XMLoadFloat3(&m_mUp), Rot));
-	XMStoreFloat3(&m_mLook, XMVector3TransformNormal(XMLoadFloat3(&m_mLook), Rot));
-}
-
 void Camera::updateViewMatrix() {
-	//OutputDebugStringA("nope");
-	//if (m_bViewDirty) {
-		//OutputDebugStringA("m_bViewDirty");
-		XMVECTOR Right = XMLoadFloat3(&m_mRight);
-		XMVECTOR Up = XMLoadFloat3(&m_mUp);
-		XMVECTOR Look = XMLoadFloat3(&m_mLook);
-		XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
+	XMVECTOR Right = XMLoadFloat3(&m_mRight);
+	XMVECTOR Up = XMLoadFloat3(&m_mUp);
+	XMVECTOR Look = XMLoadFloat3(&m_mLook);
+	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
 
-		Look = XMVector3Normalize(Look);
-		Up = XMVector3Normalize(XMVector3Cross(Look, Right));
+	Look = XMVector3Normalize(Look);
+	Up = XMVector3Normalize(XMVector3Cross(Look, Right));
 
-		Right = XMVector3Cross(Up, Look);
+	Right = XMVector3Cross(Up, Look);
 
-		float x = XMVectorGetX(XMVector3Dot(Pos, Right));
-		float y = XMVectorGetX(XMVector3Dot(Pos, Up));
-		float z = XMVectorGetX(XMVector3Dot(Pos, Look));
+	float x = XMVectorGetX(XMVector3Dot(Pos, Right));
+	float y = XMVectorGetX(XMVector3Dot(Pos, Up));
+	float z = XMVectorGetX(XMVector3Dot(Pos, Look));
 
-		XMStoreFloat3(&m_mRight, Right);
-		XMStoreFloat3(&m_mUp, Up);
-		XMStoreFloat3(&m_mLook, Look);
-		m_mView(0, 0) = m_mRight.x;
-		m_mView(1, 0) = m_mRight.y;
-		m_mView(2, 0) = m_mRight.z;
-		m_mView(3, 0) = x;
+	XMStoreFloat3(&m_mRight, Right);
+	XMStoreFloat3(&m_mUp, Up);
+	XMStoreFloat3(&m_mLook, Look);
+	m_mView(0, 0) = m_mRight.x;
+	m_mView(1, 0) = m_mRight.y;
+	m_mView(2, 0) = m_mRight.z;
+	m_mView(3, 0) = x;
 
-		m_mView(0, 3) = 0.0f;
-		m_mView(1, 3) = 0.0f;
-		m_mView(2, 3) = 0.0f;
-		m_mView(3, 3) = 1.0f;
-
-		/*m_bViewDirty = false;
-	}*/
+	m_mView(0, 3) = 0.0f;
+	m_mView(1, 3) = 0.0f;
+	m_mView(2, 3) = 0.0f;
+	m_mView(3, 3) = 1.0f;
 }
-
-/*
-void Camera::Move(float dx, float dy, float dz) {
-	// Déplace la caméra dans la direction spécifiée par les valeurs dx, dy et dz
-	// dx : déplacement horizontal (gauche/droite)
-	// dy : déplacement vertical (haut/bas)
-	// dz : déplacement avant/arrière
-
-	// Obtenez les vecteurs de base de la caméra
-	DirectX::XMVECTOR right = XMLoadFloat3(&m_mRight);
-	DirectX::XMVECTOR up = XMLoadFloat3(&m_mUp);
-	DirectX::XMVECTOR look = XMLoadFloat3(&m_mLook);
-	DirectX::XMVECTOR position = XMLoadFloat3(&m_mPosition);
-
-	// Calcule le déplacement total
-	DirectX::XMVECTOR movement = dx * right + dy * up + dz * look;
-
-	// Met à jour la position de la caméra
-	position += movement;
-	XMStoreFloat3(&m_mPosition, position);
-
-	// Marque la vue comme étant sale pour que la matrice de vue soit mise à jour lors de l'appel à updateViewMatrix()
-	m_bViewDirty = true;
-}
-*/
 
 #pragma endregion
 
