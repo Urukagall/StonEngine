@@ -31,18 +31,23 @@ void MeshRenderer::BuildConstantBuffers()
 		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
-void MeshRenderer::Update(XMFLOAT4X4 worldViewProj)
+void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam)
 {
-	//XMFLOAT4X4 f = m_oEntity->m_mTransform.GetMatrix();
+	/*m_oEntity->m_mTransform.Rotate(5.f, 5.f, 5.f);
+	m_oEntity->m_mTransform.UpdateMatrix();*/
 
-	//XMMATRIX mSca = XMLoadFloat4x4(&f);
+	XMFLOAT4X4 world = m_oEntity->m_mTransform.GetMatrix();
 
-	//mSca = mSca * XMLoadFloat4x4(&f);
+	XMMATRIX worldM = XMLoadFloat4x4(&world);
+	XMMATRIX camM = XMLoadFloat4x4(&cam);
+	XMMATRIX projM = XMLoadFloat4x4(&proj);
 
-	//XMStoreFloat4x4(&f, mSca);
+	XMMATRIX worldViewProj = worldM * camM * projM;
+	XMStoreFloat4x4(&world, worldViewProj);
+
 
 	ObjectConstants objConstants;
-	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(XMLoadFloat4x4(&worldViewProj)));
+	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(XMLoadFloat4x4(&world)));
 
 	mObjectCB->CopyData(0, objConstants);
 }

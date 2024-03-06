@@ -88,6 +88,9 @@ void Render::HandleInput(Timer& gt)
 
 void Render::Update(Timer& gt)
 {
+	for (int i = 0; i < m_Particles.size(); i++) {
+		m_Particles[i]->Update(gt.GetDT());
+	}
 	// Gérer les entrées utilisateur
 	HandleInput(gt);
 
@@ -111,9 +114,21 @@ void Render::Update(Timer& gt)
 
 	for (int i = 0; i < m_Entities.size(); ++i) {
 		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
-			XMFLOAT4X4 m;
-			XMStoreFloat4x4(&m, worldViewProj);
-			m_Entities[i]->m_oMeshRenderer->Update(m);
+			XMFLOAT4X4 pr;
+			XMStoreFloat4x4(&pr, proj);
+			XMFLOAT4X4 cam;
+			XMStoreFloat4x4(&cam, camera.getView());
+			m_Entities[i]->m_oMeshRenderer->Update(pr, cam);	
+		}
+	}
+
+	for (int i = 0; i < m_Particles.size(); ++i) {
+		for (int j = 0; j < m_Particles[i]->m_oParticles->m_mComponents.size(); j++) {
+			XMFLOAT4X4 pr;
+			XMStoreFloat4x4(&pr, proj);
+			XMFLOAT4X4 cam;
+			XMStoreFloat4x4(&cam, camera.getView());
+			m_Particles[i]->m_oParticles->m_oMeshRenderer->Update(pr, cam);
 		}
 	}
 }
@@ -189,6 +204,7 @@ void Render::Draw(const Timer& gt)
 				1, 0, 0, 0);
 		}
 	}
+
 	for (int i = 0; i < m_Particles.size(); ++i) {
 		for (const auto& pair : m_Particles[i]->m_oParticles->m_mComponents) {
 			// pair.first est la clé, pair.second est la valeur
@@ -206,7 +222,7 @@ void Render::Draw(const Timer& gt)
 
 
 			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootConstantBufferView(0, m_Entities[i]->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
+			mCommandList->SetGraphicsRootConstantBufferView(0, m_Particles[i]->m_oParticles->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 			mCommandList->DrawIndexedInstanced(
 				comp->DrawArgs["box"].IndexCount,

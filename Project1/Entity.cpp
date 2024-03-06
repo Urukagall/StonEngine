@@ -15,13 +15,13 @@ Entity::~Entity() {
 void Entity::CreateCube(XMFLOAT4 oColor) {
 	m_oMeshRenderer = new MeshRenderer(this);
 	m_oMeshRenderer->Box(oColor);
-	Component* com = m_oMeshRenderer;
-	m_mComponents["cube"] = com;
+	MeshRenderer* com = m_oMeshRenderer;
+	m_mComponents.insert(std::make_pair("cube", com));
 }
 
 void Entity::CreatePyramid(XMFLOAT4 oColor) {
 	m_oMeshRenderer = new MeshRenderer(this);
 	m_oMeshRenderer->Pyramid(oColor);
-	Component* com = m_oMeshRenderer;
-	m_mComponents["pyr"] = com;
+	MeshRenderer* com = m_oMeshRenderer;
+	m_mComponents.insert(std::make_pair("pyr", com));
 }
