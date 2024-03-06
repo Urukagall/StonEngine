@@ -38,6 +38,9 @@ bool Render::Initialize()
 	// Wait until initialization is complete.
 	FlushCommandQueue();
 
+	//Set default position
+	camera.setPosition(x, y, z);
+
 	return true;
 }
 
@@ -71,10 +74,10 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(rollLeft)) {
-		camera.Roll((-speed) * dT);
+		camera.Roll(speed * dT);
 	}
 	else if (input.getKey(rollRight)) {
-		camera.Roll(speed * dT);
+		camera.Roll(-speed * dT);
 	}
 
 	if (input.getKey(ARROW_UP)) {
@@ -83,6 +86,13 @@ void Render::HandleInput(Timer& gt)
 	else if (input.getKey(ARROW_DOWN)) {
 		camera.Walk((-speed) * dT);
 	}
+
+	if (input.getKey(ARROW_RIGHT)) {
+		camera.Strafe(speed * dT);
+	}
+	else if (input.getKey(ARROW_LEFT)) {
+		camera.Strafe((-speed) * dT);
+	}
 }
 
 void Render::Update(Timer& gt)
@@ -90,7 +100,7 @@ void Render::Update(Timer& gt)
 	// Gérer les entrées utilisateur
 	HandleInput(gt);
 
-	camera.setPosition(x, y, z);
+	//camera.setPosition(x, y, z);
 	camera.setView();
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);

@@ -22,6 +22,10 @@ XMVECTOR Camera::getUp()const {
 	return XMLoadFloat3(&m_mUp);
 }
 
+XMVECTOR Camera::getRight()const {
+	return XMLoadFloat3(&m_mRight);
+}
+
 XMMATRIX Camera::getRotationMatrix() const {
 	XMVECTOR rightVec = XMLoadFloat3(&m_mRight);
 	XMVECTOR upVec = XMLoadFloat3(&m_mUp);
@@ -93,19 +97,23 @@ void Camera::setView() {
 
 #pragma region Other methods
 void Camera::Walk(float d) {
-	/*
-	XMVECTOR Walk = XMVectorReplicate(d);
-	XMVECTOR Look = XMLoadFloat3(&m_mLook);
-	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
-	XMStoreFloat3(&m_mPosition, XMVectorMultiplyAdd(Walk, Look, Pos
-	*/
+	XMVECTOR Look = getLook();
+	XMVECTOR Pos = getPosition();
+	XMFLOAT3 targetPos;
+
+	// add d to position
+	XMStoreFloat3(&targetPos, Pos + Look * d);
+	setPosition(targetPos);
 }
 
 void Camera::Strafe(float d) {
-	XMVECTOR Strafe = XMVectorReplicate(d);
-	XMVECTOR Right = XMLoadFloat3(&m_mRight);
-	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
-	XMStoreFloat3(&m_mPosition, XMVectorMultiplyAdd(Strafe, Right, Pos));
+	XMVECTOR Right = getRight();
+	XMVECTOR Pos = getPosition();
+	XMFLOAT3 targetPos;
+
+	// add d to position
+	XMStoreFloat3(&targetPos, Pos + Right * d);
+	setPosition(targetPos);
 }
 
 void Camera::Pitch(float angle) {

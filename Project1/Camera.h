@@ -31,6 +31,7 @@ public:
 	DirectX::XMVECTOR				getPosition()const;
 	DirectX::XMVECTOR				getLook()const;
 	DirectX::XMVECTOR				getUp()const;
+	DirectX::XMVECTOR				getRight()const;
 	DirectX::XMMATRIX				getView()const;
 	DirectX::XMFLOAT3				getPosition3f()const;
 	DirectX::XMMATRIX				getRotationMatrix()const;
