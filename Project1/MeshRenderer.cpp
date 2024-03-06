@@ -32,10 +32,10 @@ void MeshRenderer::BuildConstantBuffers()
 		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
-void MeshRenderer::Update(XMMATRIX worldViewProj)
+void MeshRenderer::Update(XMFLOAT4X4 worldViewProj)
 {
 	ObjectConstants objConstants;
-	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(XMLoadFloat4x4(&worldViewProj)));
 
 	mObjectCB->CopyData(0, objConstants);
 }

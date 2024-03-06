@@ -47,7 +47,7 @@ void Render::OnResize()
 
 void Render::Update(const GameTimer& gt)
 {
-	//============ il faut mettre ça dans le camera component::Update() ============
+	//============ il faut mettre ça dans le camera component::Update() =============
 	// Convert Spherical to Cartesian coordinates.
 	float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
 	float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);
@@ -66,7 +66,7 @@ void Render::Update(const GameTimer& gt)
 	XMMATRIX worldViewProj = world * view * proj;
 
 
-	// ============ il faut mettre ça dans le MeshRenderer::Update() ============
+	// ============ il faut mettre ça dans le MeshRenderer::Update() =================
 
 	// Update the constant buffer with the latest worldViewProj matrix.
 	/*ObjectConstants objConstants;
@@ -78,8 +78,9 @@ void Render::Update(const GameTimer& gt)
 
 	for (int i = 0; i < m_Entities.size(); ++i) {
 		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
-			m_Entities[i]->m_oMeshRenderer->Update(worldViewProj);
-
+			XMFLOAT4X4 m;
+			XMStoreFloat4x4(&m, worldViewProj);
+			m_Entities[i]->m_oMeshRenderer->Update(m);
 		}
 	}
 }
@@ -134,16 +135,19 @@ void Render::Draw(const GameTimer& gt)
 	for (int i = 0; i < m_Entities.size(); ++i) {
 		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
 			Mesh* comp = m_Entities[i]->m_mComponents["cube"]->mBoxGeo;
+
+			mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+			mCommandList->SetPipelineState(mPSO.Get());
+
 			D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
 			D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
 			mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
 			mCommandList->IASetIndexBuffer(&indexBuffer);
 			mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
 
-			mCommandList->SetPipelineState(mPSO.Get());
+			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+			mCommandList->SetGraphicsRootConstantBufferView(0, m_Entities[i]->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 			mCommandList->DrawIndexedInstanced(
 				comp->DrawArgs["box"].IndexCount,

@@ -29,6 +29,6 @@ public :
 	~MeshRenderer();
 	void Box();
 	void BuildConstantBuffers();
-	void Update(XMMATRIX objConstants);
+	void Update(XMFLOAT4X4 objConstants);
 };
 
