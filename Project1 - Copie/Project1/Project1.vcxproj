@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Atom.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DDSTextureLoader.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="UploadBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Atom.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Entity.cpp" />

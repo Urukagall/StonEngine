@@ -1,15 +1,16 @@
 #pragma once
-#include "MeshRenderer.h"
-#include "pch.h"
+#include "Atom.h"
 
-class Particles : public MeshRenderer
+class Particles
 {
 public:
-	float m_fVelocity = 2.0f;
-	float m_fLife = 2.0f;
-	float m_fSpawn = 1.0f;
-	Particles(Entity* pEntity);
+    Particles(int maxParticles);
+    ~Particles();
 
+    void Update(float deltaTime);
 
+private:
+    std::vector<Atom> particles;
 };
+
 

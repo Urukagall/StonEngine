@@ -137,3 +137,4 @@ void MeshRenderer::Pyramid(XMFLOAT4 oColor) {
 
 	mBoxGeo->DrawArgs["box"] = submesh;
 }
+

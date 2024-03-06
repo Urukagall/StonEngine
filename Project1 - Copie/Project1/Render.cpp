@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Render.h"
-
 Render::Render(HINSTANCE hInstance)
 	: Init(hInstance)
 {

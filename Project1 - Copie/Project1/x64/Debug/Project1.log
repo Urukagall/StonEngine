@@ -1,6 +1,3 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: Le répertoire intermédiaire (x64\Debug\) contient des fichiers partagés provenant d'un autre projet (Project1.vcxproj). Cela peut entraîner un comportement de nettoyage et de regénération incorrect.
-  Entity.cpp
-  Particles.cpp
-  Génération de code en cours...
-Particles.obj : error LNK2019: symbole externe non résolu "public: __cdecl MeshRenderer::~MeshRenderer(void)" (??1MeshRenderer@@QEAA@XZ) référencé dans la fonction "int `public: __cdecl Particles::Particles(class Entity *)'::`1'::dtor$0" (?dtor$0@?0???0Particles@@QEAA@PEAVEntity@@@Z@4HA)
-C:\Users\djorgeafonso\Source\Repos\Urukagall\StonEngine\Project1 - Copie\x64\Debug\StonEngine.exe : fatal error LNK1120: 1 externes non résolus
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Project1.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Render.cpp
+  Project1.vcxproj -> C:\Users\Utilisateur\Source\Repos\Urukagall\StonEngine\Project1 - Copie\x64\Debug\StonEngine.exe

@@ -37,6 +37,12 @@
     <Filter Include="Fichiers sources\Maths">
       <UniqueIdentifier>{720a3f51-9494-4512-8937-a526a3cc85fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Particles">
+      <UniqueIdentifier>{bb8df43b-32ab-42f5-a69c-d40561b3f94b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Particles">
+      <UniqueIdentifier>{dea69cde-1593-40bc-ac99-c7b76d75bc74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DDSTextureLoader.h">
@@ -66,9 +72,6 @@
     <ClInclude Include="Transform.h">
       <Filter>Fichiers d%27en-tête\Maths</Filter>
     </ClInclude>
-    <ClInclude Include="Particles.h">
-      <Filter>Fichiers d%27en-tête\Entity\Component</Filter>
-    </ClInclude>
     <ClInclude Include="d3dx12.h">
       <Filter>Fichiers d%27en-tête\Init</Filter>
     </ClInclude>
@@ -84,6 +87,12 @@
     <ClInclude Include="pch.h">
       <Filter>Fichiers d%27en-tête\Init</Filter>
     </ClInclude>
+    <ClInclude Include="Atom.h">
+      <Filter>Fichiers d%27en-tête\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles.h">
+      <Filter>Fichiers d%27en-tête\Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DDSTextureLoader.cpp">
@@ -97,9 +106,6 @@
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Fichiers sources\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Particles.cpp">
-      <Filter>Fichiers sources\Entity\Component</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderer.cpp">
       <Filter>Fichiers sources\Entity\Component</Filter>
@@ -127,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Fichiers sources\Init</Filter>
+    </ClCompile>
+    <ClCompile Include="Atom.cpp">
+      <Filter>Fichiers sources\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Particles.cpp">
+      <Filter>Fichiers sources\Particles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
