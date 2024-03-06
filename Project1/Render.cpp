@@ -53,7 +53,7 @@ void Render::OnResize()
 void Render::HandleInput(Timer& gt)
 {
 	float dT = gt.GetDT();
-	float speed = 10.0f;
+	float speed = 0.001f;
 	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
 	if (input.getKey(pitchUp)) {
 		camera.Pitch(speed * dT);
