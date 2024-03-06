@@ -4,6 +4,7 @@
 #include "Camera.h"
 
 Camera camera;
+Defines defines;
 
 Render::Render(HINSTANCE hInstance)
 	: Init(hInstance)
@@ -37,6 +38,9 @@ bool Render::Initialize()
 	// Wait until initialization is complete.
 	FlushCommandQueue();
 
+	//Set default position
+	camera.setPosition(x, y, z);
+
 	return true;
 }
 
@@ -49,40 +53,68 @@ void Render::OnResize()
 	XMStoreFloat4x4(&mProj, P);
 }
 
-void Render::Update(const Timer& gt)
+void Render::HandleInput(Timer& gt)
 {
+	float dT = gt.GetDT();
+	float speed = 0.001f;
 
-	// Convert Spherical to Cartesian coordinates.
-	float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
-	float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);
-	float y = mRadius * DirectX::XMScalarCos(mPhi);
+	if (input.getKey(SPRINT)) {
+		speed = 0.01f;
+	}
 
-	// Build the view matrix.
-	camera.setPosition(x, y, z);
-	XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-	XMVECTOR target = XMVectorZero();
-	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
+	if (input.getKey(pitchUp)) {
+		camera.Pitch(speed * dT);
+	}
+	else if (input.getKey(pitchDown)) {
+		camera.Pitch((-speed)* dT);
+	}
 
-	XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
-	XMStoreFloat4x4(&mView, view);
+	if (input.getKey(yawLeft)) {
+		camera.Yaw((-speed) * dT);
+	}
+	else if (input.getKey(yawRight)) {
+		camera.Yaw(speed * dT);
+	}
+
+	if (input.getKey(rollLeft)) {
+		camera.Roll(speed * dT);
+	}
+	else if (input.getKey(rollRight)) {
+		camera.Roll(-speed * dT);
+	}
+
+	if (input.getKey(ARROW_UP)) {
+		camera.Walk(speed * dT);
+	}
+	else if (input.getKey(ARROW_DOWN)) {
+		camera.Walk((-speed) * dT);
+	}
+
+	if (input.getKey(ARROW_RIGHT)) {
+		camera.Strafe(speed * dT);
+	}
+	else if (input.getKey(ARROW_LEFT)) {
+		camera.Strafe((-speed) * dT);
+	}
+}
+
+void Render::Update(Timer& gt)
+{
+	// Gérer les entrées utilisateur
+	HandleInput(gt);
+
+	//camera.setPosition(x, y, z);
+	camera.setView();
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
-	XMMATRIX worldViewProj = world * view * proj;
+	XMMATRIX worldViewProj = world * camera.getView() * proj;
 
 	// Update the constant buffer with the latest worldViewProj matrix.
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 	mObjectCB->CopyData(0, objConstants);
-
-	if (input.getKeyDown(pitchDown)) {
-		//OutputDebugStringA("ARROW UP PRESSED ");
-		/*XMVECTOR displacement = { 0.f,0.f,0.f,0.f };
-		XMVECTOR camPos = camera.getPosition();
-		XMVECTOR newPos = camPos + displacement;*/
-		camera.Pitch(1);
-	}
-	camera.updateViewMatrix();
 }
 
 void Render::Draw(const Timer& gt)
@@ -171,53 +203,6 @@ void Render::Draw(const Timer& gt)
 	// so we do not have to wait per frame.
 	FlushCommandQueue();
 }
-
-/*
-void Render::OnMouseDown(WPARAM btnState, int x, int y)
-{
-	mLastMousePos.x = x;
-	mLastMousePos.y = y;
-
-	SetCapture(mhMainWnd);
-}
-
-void Render::OnMouseUp(WPARAM btnState, int x, int y)
-{
-	ReleaseCapture();
-}
-
-void Render::OnMouseMove(WPARAM btnState, int x, int y)
-{
-	if ((btnState & MK_LBUTTON) != 0)
-	{
-		// Make each pixel correspond to a quarter of a degree.
-		float dx = XMConvertToRadians(0.25f * static_cast<float>(x - mLastMousePos.x));
-		float dy = XMConvertToRadians(0.25f * static_cast<float>(y - mLastMousePos.y));
-
-		// Update angles based on input to orbit camera around box.
-		mTheta += dx;
-		mPhi += dy;
-
-		// Restrict the angle mPhi.
-		mPhi = Math::Clamp(mPhi, 0.1f, Math::Pi - 0.1f);
-	}
-	else if ((btnState & MK_RBUTTON) != 0)
-	{
-		// Make each pixel correspond to 0.005 unit in the scene.
-		float dx = 0.005f * static_cast<float>(x - mLastMousePos.x);
-		float dy = 0.005f * static_cast<float>(y - mLastMousePos.y);
-
-		// Update the camera radius based on input.
-		mRadius += dx - dy;
-
-		// Restrict the radius.
-		mRadius = Math::Clamp(mRadius, 3.0f, 15.0f);
-	}
-
-	mLastMousePos.x = x;
-	mLastMousePos.y = y;
-}
-*/
 
 void Render::BuildDescriptorHeaps()
 {

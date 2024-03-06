@@ -16,4 +16,10 @@
 #define ARROW_DOWN "DOWN"
 #define ARROW_LEFT "LEFT"
 #define ARROW_RIGHT "RIGHT"
+#define SPRINT "SHIFT"
+
+class Defines {
+public:
+	float		degreesToRadians(float degrees);
+};
 

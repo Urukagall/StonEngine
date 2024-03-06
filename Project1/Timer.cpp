@@ -17,7 +17,7 @@ float Timer::Get() {
 	return fGameTime * 0.001f;
 }
 
-float Timer::GetDT() {
+float Timer::GetDT()const {
 	return fDeltaTime; //* 0.001f;
 }
 
@@ -47,13 +47,13 @@ void Timer::Tick() {
 	while (fDeltaTime < fMinDelta) {
 		fSystemTime = timeGetTime();
 
-		fDeltaTime = fSystemTime - fPreviousSystemTime;
+		fDeltaTime = (fSystemTime - fPreviousSystemTime) * fSpeed;
 	}
 	if (fDeltaTime > fMaxDelta) {
 		fDeltaTime = fMaxDelta;
 	}
 
-	fGameTime += fDeltaTime * fSpeed;
+	fGameTime += fDeltaTime; //* fSpeed;
 
 	fPreviousSystemTime = fSystemTime;
 	//OutputDebugStringA("\n");

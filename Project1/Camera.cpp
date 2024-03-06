@@ -14,9 +14,24 @@ XMFLOAT3 Camera::getPosition3f()const {
 	return m_mPosition;
 }
 
-float Camera::getFovX()const {
-	float halfWidth = 0.5f * getNearWindowWidth();
-	return 2.0f * atan(halfWidth / m_fNearZ);
+XMVECTOR Camera::getLook()const {
+	return XMLoadFloat3(&m_mLook);
+}
+
+XMVECTOR Camera::getUp()const {
+	return XMLoadFloat3(&m_mUp);
+}
+
+XMVECTOR Camera::getRight()const {
+	return XMLoadFloat3(&m_mRight);
+}
+
+XMMATRIX Camera::getRotationMatrix() const {
+	XMVECTOR rightVec = XMLoadFloat3(&m_mRight);
+	XMVECTOR upVec = XMLoadFloat3(&m_mUp);
+	XMVECTOR lookVec = XMLoadFloat3(&m_mLook);
+
+	return XMMATRIX(rightVec, upVec, lookVec, XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 float Camera::getNearWindowWidth()const {
@@ -35,9 +50,14 @@ float Camera::getFarWindowHeight()const {
 	return m_fFarWindowHeight;
 }
 
-DirectX::XMFLOAT4X4	Camera::getView4x4f()const {
+XMFLOAT4X4 Camera::getView4x4f()const {
 	return m_mView;
 }
+
+XMMATRIX Camera::getView()const {
+	return m_mCameraView;
+}
+
 #pragma endregion
 
 #pragma region setMethods
@@ -61,21 +81,34 @@ void Camera::setLens(float fovY, float aspect, float zn, float zf) {
 	XMMATRIX Persp = XMMatrixPerspectiveFovLH(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
 	XMStoreFloat4x4(&m_mProj, Persp);
 }
+
+void Camera::setView() {
+	XMVECTOR target = getPosition() + getLook();
+	XMFLOAT4X4 camView = getView4x4f();
+	m_mCameraView = XMMatrixLookAtLH(getPosition(), target, getUp());
+	updateViewMatrix();
+}
 #pragma endregion
 
 #pragma region Other methods
 void Camera::Walk(float d) {
-	XMVECTOR Walk = XMVectorReplicate(d);
-	XMVECTOR Look = XMLoadFloat3(&m_mLook);
-	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
-	XMStoreFloat3(&m_mPosition, XMVectorMultiplyAdd(Walk, Look, Pos));
+	XMVECTOR Look = getLook();
+	XMVECTOR Pos = getPosition();
+	XMFLOAT3 targetPos;
+
+	// add d to position
+	XMStoreFloat3(&targetPos, Pos + Look * d);
+	setPosition(targetPos);
 }
 
 void Camera::Strafe(float d) {
-	XMVECTOR Strafe = XMVectorReplicate(d);
-	XMVECTOR Right = XMLoadFloat3(&m_mRight);
-	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
-	XMStoreFloat3(&m_mPosition, XMVectorMultiplyAdd(Strafe, Right, Pos));
+	XMVECTOR Right = getRight();
+	XMVECTOR Pos = getPosition();
+	XMFLOAT3 targetPos;
+
+	// add d to position
+	XMStoreFloat3(&targetPos, Pos + Right * d);
+	setPosition(targetPos);
 }
 
 void Camera::Pitch(float angle) {
@@ -99,47 +132,33 @@ void Camera::Roll(float angle) {
 	XMStoreFloat3(&m_mUp, XMVector3TransformNormal(XMLoadFloat3(&m_mUp), Rot));
 }
 
-void Camera::RotateY(float angle) {
-	XMMATRIX Rot = XMMatrixRotationY(angle);
-
-	XMStoreFloat3(&m_mRight, XMVector3Transform(XMLoadFloat3(&m_mRight), Rot));
-	XMStoreFloat3(&m_mUp, XMVector3TransformNormal(XMLoadFloat3(&m_mUp), Rot));
-	XMStoreFloat3(&m_mLook, XMVector3TransformNormal(XMLoadFloat3(&m_mLook), Rot));
-}
-
 void Camera::updateViewMatrix() {
-	//OutputDebugStringA("nope");
-	//if (m_bViewDirty) {
-		//OutputDebugStringA("m_bViewDirty");
-		XMVECTOR Right = XMLoadFloat3(&m_mRight);
-		XMVECTOR Up = XMLoadFloat3(&m_mUp);
-		XMVECTOR Look = XMLoadFloat3(&m_mLook);
-		XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
+	XMVECTOR Right = XMLoadFloat3(&m_mRight);
+	XMVECTOR Up = XMLoadFloat3(&m_mUp);
+	XMVECTOR Look = XMLoadFloat3(&m_mLook);
+	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
 
-		Look = XMVector3Normalize(Look);
-		Up = XMVector3Normalize(XMVector3Cross(Look, Right));
+	Look = XMVector3Normalize(Look);
+	Up = XMVector3Normalize(XMVector3Cross(Look, Right));
 
-		Right = XMVector3Cross(Up, Look);
+	Right = XMVector3Cross(Up, Look);
 
-		float x = XMVectorGetX(XMVector3Dot(Pos, Right));
-		float y = XMVectorGetX(XMVector3Dot(Pos, Up));
-		float z = XMVectorGetX(XMVector3Dot(Pos, Look));
+	float x = XMVectorGetX(XMVector3Dot(Pos, Right));
+	float y = XMVectorGetX(XMVector3Dot(Pos, Up));
+	float z = XMVectorGetX(XMVector3Dot(Pos, Look));
 
-		XMStoreFloat3(&m_mRight, Right);
-		XMStoreFloat3(&m_mUp, Up);
-		XMStoreFloat3(&m_mLook, Look);
-		m_mView(0, 0) = m_mRight.x;
-		m_mView(1, 0) = m_mRight.y;
-		m_mView(2, 0) = m_mRight.z;
-		m_mView(3, 0) = x;
+	XMStoreFloat3(&m_mRight, Right);
+	XMStoreFloat3(&m_mUp, Up);
+	XMStoreFloat3(&m_mLook, Look);
+	m_mView(0, 0) = m_mRight.x;
+	m_mView(1, 0) = m_mRight.y;
+	m_mView(2, 0) = m_mRight.z;
+	m_mView(3, 0) = x;
 
-		m_mView(0, 3) = 0.0f;
-		m_mView(1, 3) = 0.0f;
-		m_mView(2, 3) = 0.0f;
-		m_mView(3, 3) = 1.0f;
-
-		/*m_bViewDirty = false;
-	}*/
+	m_mView(0, 3) = 0.0f;
+	m_mView(1, 3) = 0.0f;
+	m_mView(2, 3) = 0.0f;
+	m_mView(3, 3) = 1.0f;
 }
 
 #pragma endregion
