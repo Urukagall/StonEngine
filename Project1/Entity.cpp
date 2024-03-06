@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Entity.h"
-#include "MeshRenderer.h"
+
 Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap) {
 	m_mTransform = Transform();
 	this->md3dDevice = md3dDevice;
@@ -16,5 +16,4 @@ void Entity::CreateCube() {
 	m_oMeshRenderer = new MeshRenderer(this);
 	Component* com = m_oMeshRenderer;
 	m_mComponents["cube"] = com;
-	
 }

@@ -34,6 +34,14 @@ void MeshRenderer::BuildConstantBuffers()
 
 void MeshRenderer::Update(XMFLOAT4X4 worldViewProj)
 {
+	XMFLOAT4X4 f = m_oEntity->m_mTransform.GetMatrix();
+
+	XMMATRIX mSca = XMLoadFloat4x4(&f);
+
+	mSca = mSca * XMLoadFloat4x4(&f);
+
+	XMStoreFloat4x4(&f, mSca);
+
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(XMLoadFloat4x4(&worldViewProj)));
 

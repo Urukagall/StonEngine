@@ -32,6 +32,7 @@ public:
 	void Identity();
 	void UpdateMatrix();
 	void Rotate(float yaw, float pitch, float roll);
+	XMFLOAT4X4 GetMatrix();
 
 
 };

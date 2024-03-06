@@ -72,3 +72,8 @@ void Transform::Rotate(float yaw, float pitch, float roll) {
 	m_vDir.y = matRot.r[2].m128_f32[1];
 	m_vDir.z = matRot.r[2].m128_f32[2];
 }
+
+XMFLOAT4X4 Transform::GetMatrix()
+{
+	return m_mTransform;
+}
