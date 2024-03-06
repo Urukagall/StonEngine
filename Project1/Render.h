@@ -40,6 +40,9 @@ private:
     //virtual void OnMouseUp(WPARAM btnState, int x, int y)override;
     //virtual void OnMouseMove(WPARAM btnState, int x, int y)override;
 
+    void HandleInput();
+    void UpdateCameraPosition();
+
     void BuildDescriptorHeaps();
     void BuildConstantBuffers();
     void BuildRootSignature();
@@ -49,6 +52,11 @@ private:
     void CreateEntity();
 
 private:
+
+    float moveSpeed = 50.0f;
+    float cameraX = 0.0f;
+    float cameraY = 0.0f;
+    float cameraZ = 0.0f;
 
     std::vector<MeshGeometry*> m_vEntities;
     std::vector<Entity*> m_Entities;
@@ -73,6 +81,10 @@ private:
     float mTheta = 1.5f * XM_PI;
     float mPhi = XM_PIDIV4;
     float mRadius = 5.0f;
+
+    float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
+    float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);
+    float y = mRadius * DirectX::XMScalarCos(mPhi);
 
     POINT mLastMousePos;
 };

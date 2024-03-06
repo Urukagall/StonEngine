@@ -4,6 +4,7 @@
 #include "Camera.h"
 
 Camera camera;
+Defines defines;
 
 Render::Render(HINSTANCE hInstance)
 	: Init(hInstance)
@@ -49,20 +50,70 @@ void Render::OnResize()
 	XMStoreFloat4x4(&mProj, P);
 }
 
+void Render::HandleInput()
+{
+	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
+	if (input.getKey(pitchUp)) {
+		cameraY += moveSpeed; // Déplacer vers le haut
+	}
+	else if (input.getKey(pitchDown)) {
+		cameraY -= moveSpeed; // Déplacer vers le bas
+	}
+	else {
+		cameraY = 0.0f;
+	}
+
+	if (input.getKey(yawLeft)) {
+		cameraX -= moveSpeed; // Déplacer vers la gauche
+	}
+	else if (input.getKey(yawRight)) {
+		cameraX += moveSpeed; // Déplacer vers la droite
+	}
+	else {
+		cameraX = 0.0f;
+	}
+
+	if (input.getKey(rollLeft)) {
+		cameraZ -= moveSpeed; // Incliner à gauche
+	}
+	else if (input.getKey(rollRight)) {
+		cameraZ += moveSpeed; // Incliner à droite
+	}
+	else {
+		cameraZ = 0.0f;
+	}
+
+	// Normalisez les valeurs de déplacement si nécessaire
+	// (pour s'assurer que le mouvement diagonal est à la même vitesse que le mouvement horizontal/vertical)
+	float length = sqrt(cameraX * cameraX + cameraY * cameraY + cameraZ * cameraZ);
+	if (length > 0.0f) {
+		cameraX /= length;
+		cameraY /= length;
+		cameraZ /= length;
+	}
+}
+
+
+void Render::UpdateCameraPosition() {
+	// Utilisez les valeurs de la caméra mises à jour
+	x += cameraX;
+	y += cameraY;
+	z += cameraZ;
+}
+
 void Render::Update(const Timer& gt)
 {
+	// Gérer les entrées utilisateur
+	HandleInput();
 
-	// Convert Spherical to Cartesian coordinates.
-	float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
-	float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);
-	float y = mRadius * DirectX::XMScalarCos(mPhi);
+	UpdateCameraPosition();
 
 	// Build the view matrix.
-	camera.setPosition(x, y, z);
 	XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
 	XMVECTOR target = XMVectorZero();
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
+	// Recalculate the view matrix
 	XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
 	XMStoreFloat4x4(&mView, view);
 
@@ -74,15 +125,6 @@ void Render::Update(const Timer& gt)
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 	mObjectCB->CopyData(0, objConstants);
-
-	if (input.getKeyDown(pitchDown)) {
-		//OutputDebugStringA("ARROW UP PRESSED ");
-		/*XMVECTOR displacement = { 0.f,0.f,0.f,0.f };
-		XMVECTOR camPos = camera.getPosition();
-		XMVECTOR newPos = camPos + displacement;*/
-		camera.Pitch(1);
-	}
-	camera.updateViewMatrix();
 }
 
 void Render::Draw(const Timer& gt)

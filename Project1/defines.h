@@ -17,3 +17,8 @@
 #define ARROW_LEFT "LEFT"
 #define ARROW_RIGHT "RIGHT"
 
+class Defines {
+public:
+	float		degreesToRadians(float degrees);
+};
+

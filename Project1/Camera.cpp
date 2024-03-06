@@ -14,6 +14,14 @@ XMFLOAT3 Camera::getPosition3f()const {
 	return m_mPosition;
 }
 
+XMMATRIX Camera::getRotationMatrix() const {
+	XMVECTOR rightVec = XMLoadFloat3(&m_mRight);
+	XMVECTOR upVec = XMLoadFloat3(&m_mUp);
+	XMVECTOR lookVec = XMLoadFloat3(&m_mLook);
+
+	return XMMATRIX(rightVec, upVec, lookVec, XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f));
+}
+
 float Camera::getFovX()const {
 	float halfWidth = 0.5f * getNearWindowWidth();
 	return 2.0f * atan(halfWidth / m_fNearZ);
@@ -141,6 +149,30 @@ void Camera::updateViewMatrix() {
 		/*m_bViewDirty = false;
 	}*/
 }
+
+void Camera::Move(float dx, float dy, float dz) {
+	// Déplace la caméra dans la direction spécifiée par les valeurs dx, dy et dz
+	// dx : déplacement horizontal (gauche/droite)
+	// dy : déplacement vertical (haut/bas)
+	// dz : déplacement avant/arrière
+
+	// Obtenez les vecteurs de base de la caméra
+	DirectX::XMVECTOR right = XMLoadFloat3(&m_mRight);
+	DirectX::XMVECTOR up = XMLoadFloat3(&m_mUp);
+	DirectX::XMVECTOR look = XMLoadFloat3(&m_mLook);
+	DirectX::XMVECTOR position = XMLoadFloat3(&m_mPosition);
+
+	// Calcule le déplacement total
+	DirectX::XMVECTOR movement = dx * right + dy * up + dz * look;
+
+	// Met à jour la position de la caméra
+	position += movement;
+	XMStoreFloat3(&m_mPosition, position);
+
+	// Marque la vue comme étant sale pour que la matrice de vue soit mise à jour lors de l'appel à updateViewMatrix()
+	m_bViewDirty = true;
+}
+
 
 #pragma endregion
 

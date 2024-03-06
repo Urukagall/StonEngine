@@ -28,6 +28,7 @@ public:
 #pragma region getMethods
 	DirectX::XMVECTOR				getPosition()const;
 	DirectX::XMFLOAT3				getPosition3f()const;
+	DirectX::XMMATRIX				getRotationMatrix()const;
 	DirectX::XMMATRIX				getView()const;		// Pas setup
 	DirectX::XMMATRIX				getProj()const;		// Pas setup
 
@@ -48,6 +49,8 @@ public:
 
 #pragma region Other methods
 	void							updateViewMatrix();
+
+	void							Move(float dx, float dy, float dz);
 
 	void							Pitch(float angle);
 	void							Yaw(float angle);
