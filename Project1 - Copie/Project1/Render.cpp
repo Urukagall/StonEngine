@@ -21,7 +21,7 @@ bool Render::Initialize()
 	BuildConstantBuffers();
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
-	CreateEntity();
+	//CreateEntity();
 	CreateParticles();
 	BuildPSO();
 
@@ -47,6 +47,9 @@ void Render::OnResize()
 
 void Render::Update(const GameTimer& gt)
 {
+	for (int i = 0; i < m_Particles.size(); i++) {
+		m_Particles[i]->Update(gt.DeltaTime());
+	}
 	// Convert Spherical to Cartesian coordinates.
 	float x = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarCos(mTheta);
 	float z = mRadius * DirectX::XMScalarSin(mPhi) * DirectX::XMScalarSin(mTheta);

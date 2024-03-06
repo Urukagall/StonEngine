@@ -4,7 +4,7 @@
 
 Particles::Particles(int maxParticles, Entity* pEntity) {
     m_oParticles = pEntity;
-    float startLife = 5.0f;
+    float startLife = 2.0f;
     for (int i = 0; i < maxParticles; i++) {
         particles.push_back(Atom(startLife));
         m_oParticles->CreateCube(XMFLOAT4(Colors::Black));
