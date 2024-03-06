@@ -4,7 +4,7 @@ class Timer
 public:
 	Timer();
 	float Get();
-	float GetDT();
+	float GetDT()const;
 	void Reset();
 	void Stop();
 	void Resume();

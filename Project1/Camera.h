@@ -27,9 +27,10 @@ public:
 
 #pragma region getMethods
 	DirectX::XMVECTOR				getPosition()const;
+	DirectX::XMVECTOR				getLook()const;
+	DirectX::XMVECTOR				getUp()const;
 	DirectX::XMFLOAT3				getPosition3f()const;
 	DirectX::XMMATRIX				getRotationMatrix()const;
-	DirectX::XMMATRIX				getView()const;		// Pas setup
 	DirectX::XMMATRIX				getProj()const;		// Pas setup
 
 	DirectX::XMFLOAT4X4				getView4x4f()const; // Pas setup

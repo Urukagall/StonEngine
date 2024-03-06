@@ -14,6 +14,14 @@ XMFLOAT3 Camera::getPosition3f()const {
 	return m_mPosition;
 }
 
+XMVECTOR Camera::getLook()const {
+	return XMLoadFloat3(&m_mLook);
+}
+
+XMVECTOR Camera::getUp()const {
+	return XMLoadFloat3(&m_mUp);
+}
+
 XMMATRIX Camera::getRotationMatrix() const {
 	XMVECTOR rightVec = XMLoadFloat3(&m_mRight);
 	XMVECTOR upVec = XMLoadFloat3(&m_mUp);
@@ -73,10 +81,12 @@ void Camera::setLens(float fovY, float aspect, float zn, float zf) {
 
 #pragma region Other methods
 void Camera::Walk(float d) {
+	/*
 	XMVECTOR Walk = XMVectorReplicate(d);
 	XMVECTOR Look = XMLoadFloat3(&m_mLook);
 	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
-	XMStoreFloat3(&m_mPosition, XMVectorMultiplyAdd(Walk, Look, Pos));
+	XMStoreFloat3(&m_mPosition, XMVectorMultiplyAdd(Walk, Look, Pos
+	*/
 }
 
 void Camera::Strafe(float d) {
@@ -150,6 +160,7 @@ void Camera::updateViewMatrix() {
 	}*/
 }
 
+/*
 void Camera::Move(float dx, float dy, float dz) {
 	// Déplace la caméra dans la direction spécifiée par les valeurs dx, dy et dz
 	// dx : déplacement horizontal (gauche/droite)
@@ -172,7 +183,7 @@ void Camera::Move(float dx, float dy, float dz) {
 	// Marque la vue comme étant sale pour que la matrice de vue soit mise à jour lors de l'appel à updateViewMatrix()
 	m_bViewDirty = true;
 }
-
+*/
 
 #pragma endregion
 

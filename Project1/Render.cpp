@@ -50,63 +50,47 @@ void Render::OnResize()
 	XMStoreFloat4x4(&mProj, P);
 }
 
-void Render::HandleInput()
+void Render::HandleInput(Timer& gt)
 {
+	float dT = gt.GetDT();
+	float speed = 10.0f;
 	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
 	if (input.getKey(pitchUp)) {
-		cameraY += moveSpeed; // Déplacer vers le haut
+		camera.Pitch(speed * dT);
+		
 	}
 	else if (input.getKey(pitchDown)) {
-		cameraY -= moveSpeed; // Déplacer vers le bas
-	}
-	else {
-		cameraY = 0.0f;
+		camera.Pitch((-speed)*dT);
 	}
 
 	if (input.getKey(yawLeft)) {
-		cameraX -= moveSpeed; // Déplacer vers la gauche
+		camera.Yaw((-speed) * dT);
 	}
 	else if (input.getKey(yawRight)) {
-		cameraX += moveSpeed; // Déplacer vers la droite
-	}
-	else {
-		cameraX = 0.0f;
+		camera.Yaw(speed * dT);
 	}
 
 	if (input.getKey(rollLeft)) {
-		cameraZ -= moveSpeed; // Incliner à gauche
+		camera.Roll((-speed) * dT);
 	}
 	else if (input.getKey(rollRight)) {
-		cameraZ += moveSpeed; // Incliner à droite
-	}
-	else {
-		cameraZ = 0.0f;
+		camera.Roll(speed * dT);
 	}
 
-	// Normalisez les valeurs de déplacement si nécessaire
-	// (pour s'assurer que le mouvement diagonal est à la même vitesse que le mouvement horizontal/vertical)
-	float length = sqrt(cameraX * cameraX + cameraY * cameraY + cameraZ * cameraZ);
-	if (length > 0.0f) {
-		cameraX /= length;
-		cameraY /= length;
-		cameraZ /= length;
+	if (input.getKey(ARROW_UP)) {
+		camera.Walk(speed * dT);
+	}
+	else if (input.getKey(ARROW_DOWN)) {
+		camera.Walk((-speed) * dT);
 	}
 }
 
-
-void Render::UpdateCameraPosition() {
-	// Utilisez les valeurs de la caméra mises à jour
-	x += cameraX;
-	y += cameraY;
-	z += cameraZ;
-}
-
-void Render::Update(const Timer& gt)
+void Render::Update(Timer& gt)
 {
 	// Gérer les entrées utilisateur
-	HandleInput();
+	HandleInput(gt);
 
-	UpdateCameraPosition();
+	camera.setPosition(x, y, z);
 
 	// Build the view matrix.
 	XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
@@ -114,14 +98,16 @@ void Render::Update(const Timer& gt)
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 	// Recalculate the view matrix
-	XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
-	XMStoreFloat4x4(&mView, view);
+	XMFLOAT4X4 camView = camera.getView4x4f();
+	XMMATRIX view = XMMatrixLookAtLH(camera.getPosition(), camera.getLook(), camera.getUp());	//XMMatrixLookAtLH(pos, target, up);
+	XMStoreFloat4x4(&camView, view);
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
 	XMMATRIX worldViewProj = world * view * proj;
 
 	// Update the constant buffer with the latest worldViewProj matrix.
+	camera.updateViewMatrix();
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 	mObjectCB->CopyData(0, objConstants);

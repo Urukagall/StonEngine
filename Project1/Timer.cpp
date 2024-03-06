@@ -17,7 +17,7 @@ float Timer::Get() {
 	return fGameTime * 0.001f;
 }
 
-float Timer::GetDT() {
+float Timer::GetDT()const {
 	return fDeltaTime; //* 0.001f;
 }
 

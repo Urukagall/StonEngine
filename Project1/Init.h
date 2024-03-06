@@ -42,7 +42,7 @@ public:
 protected:
     virtual void CreateRtvAndDsvDescriptorHeaps();
     virtual void OnResize();
-    virtual void Update(const Timer& gt) = 0;
+    virtual void Update(Timer& gt) = 0;
     virtual void Draw(const Timer& gt) = 0;
 
     // Convenience overrides for handling mouse input.
