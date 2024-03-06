@@ -51,9 +51,14 @@ float Camera::getFarWindowHeight()const {
 	return m_fFarWindowHeight;
 }
 
-DirectX::XMFLOAT4X4	Camera::getView4x4f()const {
+XMFLOAT4X4 Camera::getView4x4f()const {
 	return m_mView;
 }
+
+XMMATRIX Camera::getView()const {
+	return m_mCameraView;
+}
+
 #pragma endregion
 
 #pragma region setMethods
@@ -76,6 +81,13 @@ void Camera::setLens(float fovY, float aspect, float zn, float zf) {
 
 	XMMATRIX Persp = XMMatrixPerspectiveFovLH(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
 	XMStoreFloat4x4(&m_mProj, Persp);
+}
+
+void Camera::setView() {
+	XMVECTOR target = getPosition() + getLook();
+	XMFLOAT4X4 camView = getView4x4f();
+	m_mCameraView = XMMatrixLookAtLH(getPosition(), target, getUp());
+	updateViewMatrix();
 }
 #pragma endregion
 

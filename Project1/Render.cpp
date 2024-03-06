@@ -91,23 +91,13 @@ void Render::Update(Timer& gt)
 	HandleInput(gt);
 
 	camera.setPosition(x, y, z);
-
-	// Build the view matrix.
-	XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-	XMVECTOR target = XMVectorZero();
-	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-	// Recalculate the view matrix
-	XMFLOAT4X4 camView = camera.getView4x4f();
-	XMMATRIX view = XMMatrixLookAtLH(camera.getPosition(), camera.getLook(), camera.getUp());	//XMMatrixLookAtLH(pos, target, up);
-	XMStoreFloat4x4(&camView, view);
+	camera.setView();
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
-	XMMATRIX worldViewProj = world * view * proj;
+	XMMATRIX worldViewProj = world * camera.getView() * proj;
 
 	// Update the constant buffer with the latest worldViewProj matrix.
-	camera.updateViewMatrix();
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
 	mObjectCB->CopyData(0, objConstants);

@@ -2,6 +2,7 @@
 
 class Camera {
 private:
+	DirectX::XMMATRIX				m_mCameraView;
 	DirectX::XMFLOAT3				m_mPosition = { 0.0f, 0.0f, 0.0f };
 	DirectX::XMFLOAT3				m_mRight = { 1.0f, 0.0f, 0.0f };
 	DirectX::XMFLOAT3				m_mUp = { 0.0f, 1.0f, 0.0f };
@@ -23,12 +24,14 @@ public:
 	void							setPosition(float x, float y, float z);
 	void							setPosition(const DirectX::XMFLOAT3& v);
 	void							setLens(float fovY, float aspect, float zn, float zf);
+	void							setView();
 #pragma endregion
 
 #pragma region getMethods
 	DirectX::XMVECTOR				getPosition()const;
 	DirectX::XMVECTOR				getLook()const;
 	DirectX::XMVECTOR				getUp()const;
+	DirectX::XMMATRIX				getView()const;
 	DirectX::XMFLOAT3				getPosition3f()const;
 	DirectX::XMMATRIX				getRotationMatrix()const;
 	DirectX::XMMATRIX				getProj()const;		// Pas setup
