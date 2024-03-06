@@ -33,8 +33,10 @@ void MeshRenderer::BuildConstantBuffers()
 
 void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam)
 {
-	/*m_oEntity->m_mTransform.Rotate(5.f, 5.f, 5.f);
-	m_oEntity->m_mTransform.UpdateMatrix();*/
+	m_oEntity->m_mTransform.Translation(0.0f,0.0f,0.0f);
+
+
+
 
 	XMFLOAT4X4 world = m_oEntity->m_mTransform.GetMatrix();
 

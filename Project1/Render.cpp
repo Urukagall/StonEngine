@@ -27,8 +27,8 @@ bool Render::Initialize()
 	//BuildConstantBuffers(); //a retirer
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
-	//CreateEntity();
-	CreateParticles();
+	CreateEntity();
+	//CreateParticles();
 	BuildPSO();
 
 	// Execute the initialization commands.
@@ -131,6 +131,8 @@ void Render::Update(Timer& gt)
 			m_Particles[i]->m_oParticles->m_oMeshRenderer->Update(pr, cam);
 		}
 	}
+	m_Entities[0]->m_mComponents["cube"]->m_oEntity->m_mTransform.Rotate(0.0f, 0.1f, 0.0f);
+	m_Entities[1]->m_mComponents["pyr"]->m_oEntity->m_mTransform.Rotate(0.0f, 0.0f, 0.1f);
 }
 
 void Render::Draw(const Timer& gt)
@@ -406,8 +408,13 @@ void Render::BuildShadersAndInputLayout()
 
 void Render::CreateEntity() {
 	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	en->CreateCube(XMFLOAT4(Colors::Azure));
+	en->CreateCube(XMFLOAT4(Colors::Blue));
+	en->m_mTransform.Scale(1.0f,0.5f,0.5f);
 	m_Entities.push_back(en);
+	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
+	py->CreatePyramid(XMFLOAT4(Colors::GreenYellow));
+	py->m_mTransform.Scale(1.0f, 0.5f, 0.5f);
+	m_Entities.push_back(py);
 }
 
 void Render::CreateParticles() {
