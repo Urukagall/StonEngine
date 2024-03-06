@@ -60,7 +60,7 @@ void Render::HandleInput(Timer& gt)
 		
 	}
 	else if (input.getKey(pitchDown)) {
-		camera.Pitch((-speed)*dT);
+		camera.Pitch((-speed)* dT);
 	}
 
 	if (input.getKey(yawLeft)) {
