@@ -28,7 +28,7 @@ bool Render::Initialize()
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
 	CreateEntity();
-	//CreateParticles();
+	CreateParticles();
 	BuildPSO();
 
 	// Execute the initialization commands.
@@ -123,12 +123,12 @@ void Render::Update(Timer& gt)
 	}
 
 	for (int i = 0; i < m_Particles.size(); ++i) {
-		for (int j = 0; j < m_Particles[i]->m_oParticles->m_mComponents.size(); j++) {
+		for (int j = 0; j < m_Particles[i]->particles.size(); j++) {
 			XMFLOAT4X4 pr;
 			XMStoreFloat4x4(&pr, proj);
 			XMFLOAT4X4 cam;
 			XMStoreFloat4x4(&cam, camera.getView());
-			m_Particles[i]->m_oParticles->m_oMeshRenderer->Update(pr, cam);
+			m_Particles[i]->particles[j].m_oEntity->m_oMeshRenderer->Update(pr, cam);
 		}
 	}
 	m_Entities[0]->m_mComponents["cube"]->m_oEntity->m_mTransform.Rotate(0.0f, 0.1f, 0.0f);
@@ -208,28 +208,31 @@ void Render::Draw(const Timer& gt)
 	}
 
 	for (int i = 0; i < m_Particles.size(); ++i) {
-		for (const auto& pair : m_Particles[i]->m_oParticles->m_mComponents) {
-			// pair.first est la clé, pair.second est la valeur
-			std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
-			Mesh* comp = pair.second->mBoxGeo;
+		for (int j = 0; j < m_Particles[i]->particles.size(); ++j) {
+			for (const auto& pair : m_Particles[i]->particles[j].m_oEntity->m_mComponents) {
+				// pair.first est la clé, pair.second est la valeur
+				std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
+				Mesh* comp = pair.second->mBoxGeo;
 
-			mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
-			mCommandList->SetPipelineState(mPSO.Get());
+				mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+				mCommandList->SetPipelineState(mPSO.Get());
 
-			D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
-			D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
-			mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
-			mCommandList->IASetIndexBuffer(&indexBuffer);
-			mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
+				D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
+				mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
+				mCommandList->IASetIndexBuffer(&indexBuffer);
+				mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootConstantBufferView(0, m_Particles[i]->m_oParticles->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
+				//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+				mCommandList->SetGraphicsRootConstantBufferView(0, m_Particles[i]->particles[j].m_oEntity->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
 
-			mCommandList->DrawIndexedInstanced(
-				comp->DrawArgs["box"].IndexCount,
-				1, 0, 0, 0);
+				mCommandList->DrawIndexedInstanced(
+					comp->DrawArgs["box"].IndexCount,
+					1, 0, 0, 0);
+			}
 		}
+
 	}
 
 
@@ -418,8 +421,7 @@ void Render::CreateEntity() {
 }
 
 void Render::CreateParticles() {
-	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	Particles* par = new Particles(5, en);
+	Particles* par = new Particles(5, md3dDevice, mCommandList, mCbvHeap);
 	m_Particles.push_back(par);
 }
 
