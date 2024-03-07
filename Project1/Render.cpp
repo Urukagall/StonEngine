@@ -112,27 +112,27 @@ void Render::Update(Timer& gt)
 
 	//============ il faut juste appeller tout les update() des components ============
 
+	XMFLOAT4X4 pr;
+	XMStoreFloat4x4(&pr, proj);
+	XMFLOAT4X4 cam;
+	XMStoreFloat4x4(&cam, camera.getView());
+
 	for (int i = 0; i < m_Entities.size(); ++i) {
-		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
-			XMFLOAT4X4 pr;
-			XMStoreFloat4x4(&pr, proj);
-			XMFLOAT4X4 cam;
-			XMStoreFloat4x4(&cam, camera.getView());
-			m_Entities[i]->m_oMeshRenderer->Update(pr, cam);	
+		for (const auto& pair : m_Entities[i]->m_oMeshRenderers) {
+			pair.second->Update(pr, cam);	
 		}
+		
 	}
 
 	for (int i = 0; i < m_Particles.size(); ++i) {
 		for (int j = 0; j < m_Particles[i]->particles.size(); j++) {
-			XMFLOAT4X4 pr;
-			XMStoreFloat4x4(&pr, proj);
-			XMFLOAT4X4 cam;
-			XMStoreFloat4x4(&cam, camera.getView());
-			m_Particles[i]->particles[j].m_oEntity->m_oMeshRenderer->Update(pr, cam);
+			for (const auto& pair : m_Particles[i]->particles[j].m_oEntity->m_oMeshRenderers) {
+				pair.second->Update(pr, cam);
+			}
 		}
 	}
-	m_Entities[0]->m_mComponents["cube"]->m_oEntity->m_mTransform.Rotate(0.0f, 0.1f, 0.0f);
-	m_Entities[1]->m_mComponents["pyr"]->m_oEntity->m_mTransform.Rotate(0.0f, 0.0f, 0.1f);
+	m_Entities[0]->m_oMeshRenderers["cube"]->m_oEntity->m_mTransform.Rotate(0.0f, 0.1f, 0.0f);
+	m_Entities[1]->m_oMeshRenderers["pyr"]->m_oEntity->m_mTransform.Rotate(0.0f, 0.0f, 0.1f);
 }
 
 void Render::Draw(const Timer& gt)
@@ -183,7 +183,7 @@ void Render::Draw(const Timer& gt)
 
 
 	for (int i = 0; i < m_Entities.size(); ++i) {
-		for (const auto& pair : m_Entities[i]->m_mComponents) {
+		for (const auto& pair : m_Entities[i]->m_oMeshRenderers) {
 			// pair.first est la clé, pair.second est la valeur
 			std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
 			Mesh* comp = pair.second->mBoxGeo;
@@ -199,7 +199,7 @@ void Render::Draw(const Timer& gt)
 
 
 			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootConstantBufferView(0, m_Entities[i]->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
+			mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 			mCommandList->DrawIndexedInstanced(
 				comp->DrawArgs["box"].IndexCount,
@@ -209,7 +209,7 @@ void Render::Draw(const Timer& gt)
 
 	for (int i = 0; i < m_Particles.size(); ++i) {
 		for (int j = 0; j < m_Particles[i]->particles.size(); ++j) {
-			for (const auto& pair : m_Particles[i]->particles[j].m_oEntity->m_mComponents) {
+			for (const auto& pair : m_Particles[i]->particles[j].m_oEntity->m_oMeshRenderers) {
 				// pair.first est la clé, pair.second est la valeur
 				std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
 				Mesh* comp = pair.second->mBoxGeo;
@@ -225,7 +225,7 @@ void Render::Draw(const Timer& gt)
 
 
 				//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-				mCommandList->SetGraphicsRootConstantBufferView(0, m_Particles[i]->particles[j].m_oEntity->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
+				mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 				mCommandList->DrawIndexedInstanced(
 					comp->DrawArgs["box"].IndexCount,
