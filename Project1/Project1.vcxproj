@@ -139,6 +139,7 @@
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="defines.h" />
+    <ClInclude Include="DirectXHelpers.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Init.h" />
     <ClInclude Include="input.h" />
@@ -147,7 +148,9 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Particles.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlatformHelpers.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Tools.h" />
     <ClInclude Include="Transform.h" />
@@ -159,6 +162,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="defines.cpp" />
+    <ClCompile Include="DirectXHelpers.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Init.cpp" />
     <ClCompile Include="input.cpp" />
@@ -172,6 +176,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Render.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -179,7 +184,17 @@
   <ItemGroup>
     <Image Include="img\rocks.dds" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\directxtk12_uwp.2024.2.22.1\build\native\directxtk12_uwp.targets" Condition="Exists('..\packages\directxtk12_uwp.2024.2.22.1\build\native\directxtk12_uwp.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\directxtk12_uwp.2024.2.22.1\build\native\directxtk12_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk12_uwp.2024.2.22.1\build\native\directxtk12_uwp.targets'))" />
+  </Target>
 </Project>
