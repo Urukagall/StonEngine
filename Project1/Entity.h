@@ -17,13 +17,13 @@ class Entity
 {
 public: 
 	std::map<std::string, Component*> m_mComponents;
+	std::map<std::string, MeshRenderer*> m_oMeshRenderers;
 	Transform m_mTransform;
 
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 
-	MeshRenderer* m_oMeshRenderer = nullptr;
 
 	void CreateCube(XMFLOAT4 oColor);
 	void CreatePyramid(XMFLOAT4 oColor);
