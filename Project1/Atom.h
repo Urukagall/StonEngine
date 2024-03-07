@@ -4,7 +4,7 @@
 class Atom
 {
 public:
-    DirectX::XMFLOAT3 position;
+    DirectX::XMFLOAT3 rotate;
     DirectX::XMFLOAT3 scale;
     float life;
     Entity* m_oEntity;

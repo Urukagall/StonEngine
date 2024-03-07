@@ -9,7 +9,7 @@ public:
 
     void Update(float deltaTime);
 
-    std::vector<Atom> particles;
+    std::vector<Atom*> particles;
    
 };
 

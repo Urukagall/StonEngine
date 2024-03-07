@@ -69,6 +69,16 @@ void Transform::Rotate(float yaw, float pitch, float roll) {
 	UpdateMatrix();
 }
 
+void Transform::Walk(float velocity, float deltaTime) {
+	m_vPos.x += m_vDir.x * velocity * deltaTime;
+	m_vPos.y += m_vDir.y * velocity * deltaTime;
+	m_vPos.z += m_vDir.z * velocity * deltaTime;
+
+	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMStoreFloat4x4(&m_mPos, matrix);
+	UpdateMatrix();
+}
+
 
 void Transform::Translation(float x, float y, float z)
 {
