@@ -27,6 +27,11 @@ public:
 
 	void CreateCube(XMFLOAT4 oColor);
 	void CreatePyramid(XMFLOAT4 oColor);
+	void SetScale(float x, float y, float z);
+	void SetPosition(float x, float y, float z);
+	void SetRotate(float yaw, float pitch, float roll);
+	void SetDirection(float velocity, float deltaTime);
+	bool DeleteComponent(std::string name);
 	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap);
 	~Entity();
 

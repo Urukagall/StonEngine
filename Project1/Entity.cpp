@@ -23,3 +23,34 @@ void Entity::CreatePyramid(XMFLOAT4 oColor) {
 	com->Pyramid(oColor);
 	m_oMeshRenderers.insert(std::make_pair("pyr", com));
 }
+
+void Entity::SetScale(float x, float y, float z) {
+	m_mTransform.SetScale(x, y, z);
+}
+
+void Entity::SetPosition(float x, float y, float z) {
+	m_mTransform.Translation(x, y, z);
+}
+
+void Entity::SetRotate(float yaw, float pitch, float roll) {
+	m_mTransform.Rotate(yaw, pitch, roll);
+}
+
+void Entity::SetDirection(float velocity, float deltaTime) {
+	m_mTransform.Walk(velocity, deltaTime);
+}
+
+bool Entity::DeleteComponent(std::string name) {
+	auto it = m_oMeshRenderers.find(name);
+
+	if (it != m_oMeshRenderers.end()) {
+		// Element found, so delete it
+		delete(m_oMeshRenderers[name]);
+		m_oMeshRenderers.erase(name);
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}

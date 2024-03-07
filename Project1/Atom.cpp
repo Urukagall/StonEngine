@@ -4,7 +4,7 @@
 #include "Math.h"
 
 
-Atom::Atom(XMFLOAT4 oColor, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap) {
+Atom::Atom(XMFLOAT4 oColor, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, XMFLOAT3 pos) {
     life = Math::Rand(2000,3000);
     lifeMax = life;
 
@@ -15,9 +15,9 @@ Atom::Atom(XMFLOAT4 oColor, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12Graphi
     velocity = Math::Rand(10,200) * 0.00001 ;
     m_oEntity = new Entity(md3dDevice, mCommandList, mCbvHeap);
     m_oEntity->CreateCube(oColor);
-    m_oEntity->m_mTransform.Translation(1.0f, 2.0f, 2.0f);
-    m_oEntity->m_mTransform.Scale(scale.x,scale.y,scale.z);
-    m_oEntity->m_mTransform.Rotate(rotate.x, rotate.y, rotate.z);
+    m_oEntity->SetPosition(pos.x, pos.y, pos.z);
+    m_oEntity->SetScale(scale.x,scale.y,scale.z);
+    m_oEntity->SetRotate(rotate.x, rotate.y, rotate.z);
 }
 
 void Atom::Update(float deltaTime) {
@@ -28,7 +28,7 @@ void Atom::Update(float deltaTime) {
     scale.x = (life * scaleMax.x) / lifeMax ;
     scale.y = (life * scaleMax.y) / lifeMax ;
     scale.z = (life * scaleMax.z) / lifeMax ;
-    m_oEntity->m_mTransform.SetScale(scale.x, scale.y, scale.z);
-    m_oEntity->m_mTransform.Walk(velocity, deltaTime);
+    m_oEntity->SetScale(scale.x, scale.y, scale.z);
+    m_oEntity->SetDirection(velocity, deltaTime);
 }
 

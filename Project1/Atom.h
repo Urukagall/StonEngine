@@ -12,7 +12,7 @@ public:
     float life;
     float lifeMax;
 
-    Atom(XMFLOAT4 oColor, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap);
+    Atom(XMFLOAT4 oColor, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, XMFLOAT3 pos);
     void Update(float deltaTime);
 };
 

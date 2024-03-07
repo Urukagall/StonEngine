@@ -11,6 +11,10 @@ MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
 	BuildConstantBuffers();
 }
 
+MeshRenderer::~MeshRenderer(){
+
+}
+
 void MeshRenderer::BuildConstantBuffers()
 {
 	mObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
@@ -128,11 +132,11 @@ void MeshRenderer::Box(XMFLOAT4 oColor) {
 void MeshRenderer::Pyramid(XMFLOAT4 oColor) {
 	std::array<Vertex, 5> vertices =
 	{
-		Vertex({ XMFLOAT3(0.0f, -2.0f, -2.0f), oColor }),
-		Vertex({ XMFLOAT3(0.0f, -2.0f, 0.0f), oColor }),
-		Vertex({ XMFLOAT3(2.0f, -2.0f, 0.0f), oColor }),
-		Vertex({ XMFLOAT3(0.0f, -2.0f, -2.0f), oColor }),
-		Vertex({ XMFLOAT3(1.0f, -1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, 0.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, 0.0f, 1.0f), oColor }),
+		Vertex({ XMFLOAT3(1.0f, 0.0f, 1.0f), oColor }),
+		Vertex({ XMFLOAT3(1.0f, 0.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(0.0f, 1.0f, 0.0f), oColor }),
 
 	};
 
