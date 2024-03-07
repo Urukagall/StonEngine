@@ -155,7 +155,7 @@ void Render::Draw(const Timer& gt)
 	mCommandList->ResourceBarrier(1, &targetState);
 
 	// Clear the back buffer and depth buffer.
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
+	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to.
@@ -413,16 +413,22 @@ void Render::CreateEntity() {
 	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
 	en->CreateCube(XMFLOAT4(Colors::Blue));
 	en->m_mTransform.Scale(1.0f,0.5f,0.5f);
+	en->m_mTransform.Translation(1.0f,2.0f,2.0f);
 	m_Entities.push_back(en);
 	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
 	py->CreatePyramid(XMFLOAT4(Colors::GreenYellow));
 	py->m_mTransform.Scale(1.0f, 0.5f, 0.5f);
+	py->m_mTransform.Translation(1.0f, 2.0f, 2.0f);
 	m_Entities.push_back(py);
 }
 
 void Render::CreateParticles() {
-	Particles* par = new Particles(100000, md3dDevice, mCommandList, mCbvHeap);
-	m_Particles.push_back(par);
+	Particles* par1 = new Particles(XMFLOAT4(Colors::Red), 150, md3dDevice, mCommandList, mCbvHeap);
+	Particles* par2 = new Particles(XMFLOAT4(Colors::Orange), 100, md3dDevice, mCommandList, mCbvHeap);
+	Particles* par3 = new Particles(XMFLOAT4(Colors::Yellow), 50, md3dDevice, mCommandList, mCbvHeap);
+	m_Particles.push_back(par1);
+	m_Particles.push_back(par2);
+	m_Particles.push_back(par3);
 }
 
 void Render::BuildPSO()

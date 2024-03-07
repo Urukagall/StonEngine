@@ -34,6 +34,7 @@ public:
 	void Rotate(float yaw, float pitch, float roll);
 	void Translation(float x, float y, float z);
 	void Scale(float x, float y, float z);
+	void SetScale(float x, float y, float z);
 	void SetPosition(float x, float y, float z);
 	void Walk(float velocity, float deltaTime);
 	XMFLOAT4X4 GetMatrix();

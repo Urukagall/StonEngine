@@ -102,6 +102,16 @@ void Transform::Scale(float x, float y, float z)
 	UpdateMatrix();
 }
 
+void Transform::SetScale(float x, float y, float z)
+{
+	m_vSca.x = x;
+	m_vSca.y = y;
+	m_vSca.z = z;
+
+	XMMATRIX matrix = XMMatrixScaling(m_vSca.x, m_vSca.y, m_vSca.z);
+	XMStoreFloat4x4(&m_mSca, matrix);
+	UpdateMatrix();
+}
 
 void Transform::SetPosition(float x, float y, float z) {
 
