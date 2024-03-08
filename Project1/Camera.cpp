@@ -83,9 +83,10 @@ void Camera::setLens(float fovY, float aspect, float zn, float zf) {
 }
 
 void Camera::setView() {
-	XMVECTOR target = getPosition() + getLook();
+	XMVECTOR target = m_transform->GetPos() + m_transform->GetDir();
+	//XMVECTOR target = getPosition() + getLook();
 	XMFLOAT4X4 camView = getView4x4f();
-	m_mCameraView = XMMatrixLookAtLH(getPosition(), target, getUp());
+	m_mCameraView = XMMatrixLookAtLH(m_transform->GetPos() /*getPosition()*/, target, m_transform->GetUp() /*getUp()*/);
 	updateViewMatrix();
 }
 #pragma endregion

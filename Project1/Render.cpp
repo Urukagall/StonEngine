@@ -67,10 +67,12 @@ void Render::HandleInput(Timer& gt)
 
 	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
 	if (input.getKey(pitchUp)) {
-		camera.Pitch(speed * dT);
+		camera.m_transform->Rotate(0, speed * dT, 0);
+		//camera.Pitch(speed * dT);
 	}
 	else if (input.getKey(pitchDown)) {
-		camera.Pitch((-speed)* dT);
+		camera.m_transform->Rotate(0, -speed * dT, 0);
+		//camera.Pitch((-speed)* dT);
 	}
 
 	if (input.getKey(yawLeft)) {
@@ -83,10 +85,12 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(rollLeft)) {
-		camera.Roll(speed * dT);
+		camera.m_transform->Rotate(0, 0, speed * dT);
+		//camera.Roll(speed * dT);
 	}
 	else if (input.getKey(rollRight)) {
-		camera.Roll(-speed * dT);
+		camera.m_transform->Rotate(0, 0, -speed * dT);
+		//camera.Roll(-speed * dT);
 	}
 
 	if (input.getKey(ARROW_UP)) {
@@ -111,10 +115,12 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(ARROW_RIGHT)) {
-		camera.Strafe(speed * dT);
+		// MISSILE
+		//camera.Strafe(speed * dT);
 	}
 	else if (input.getKey(ARROW_LEFT)) {
-		camera.Strafe((-speed) * dT);
+		// SHOOT
+		//camera.Strafe((-speed) * dT);
 	}
 }
 
