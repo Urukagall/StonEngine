@@ -19,7 +19,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         Render theApp(hInstance);
         if (!theApp.Initialize())
             return 0;
-
+        theApp.CreateEntityCube(2.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
         return theApp.Run();
     }
     catch (DxException& e)
@@ -27,4 +27,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         MessageBox(nullptr, e.ToString().c_str(), L"HR Failed", MB_OK);
         return 0;
     }
+
 }

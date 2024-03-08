@@ -21,6 +21,11 @@ public:
     ~Render();
 
     virtual bool Initialize()override;
+    void CreateEntity(float x, float y, float z);
+    void CreateEntityCube(float x, float y, float z, XMFLOAT4 oColor);
+    void CreateEntituPyramid(float x, float y, float z, XMFLOAT4 oColor);
+    void CreateParticle(float x, float y, float z, XMFLOAT4 color, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed);
+    void CreateParticlesExplosion(float x, float y, float z);
 
 private:
     virtual void OnResize()override;
@@ -36,11 +41,7 @@ private:
     void BuildShadersAndInputLayout();
     void BuildPSO();
 
-    void CreateEntity(float x, float y, float z);
-    void CreateEntityCube(float x, float y, float z, XMFLOAT4 oColor);
-    void CreateEntituPyramid(float x, float y, float z, XMFLOAT4 oColor);
-    void CreateParticle(float x, float y, float z, XMFLOAT4 color, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed);
-    void CreateParticlesExplosion(float x, float y, float z);
+
 
 private:
 

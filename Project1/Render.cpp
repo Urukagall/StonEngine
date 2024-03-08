@@ -27,11 +27,11 @@ bool Render::Initialize()
 	BuildShadersAndInputLayout();
 
 	//CreateEntityCube(2.0,2.0,2.0, XMFLOAT4(Colors::Aquamarine));
-	CreateEntituPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
+	//CreateEntituPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
 
-	CreateParticlesExplosion(2.0, 2.0, 2.0);
-	CreateParticlesExplosion(3.0, 3.0, 3.0);
-	CreateParticlesExplosion(4.0, 4.0, 4.0);
+	//CreateParticlesExplosion(2.0, 2.0, 2.0);
+	//CreateParticlesExplosion(3.0, 3.0, 3.0);
+	//CreateParticlesExplosion(4.0, 4.0, 4.0);
 
 	BuildPSO();
 
@@ -157,9 +157,7 @@ void Render::Update(Timer& gt)
 		}
 
 	}
-	m_Entities[0]->SetRotate(0.0, 0.01, 0.01);
-	m_Entities[0]->SetScale(2.0,2.0,2.0);
-
+	m_Entities[0]->SetRotate(0.1,0.0,0.0);
 }
 
 void Render::Draw(const Timer& gt)
