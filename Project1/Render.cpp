@@ -41,6 +41,9 @@ bool Render::Initialize()
 
 	FlushCommandQueue();
 
+	//Set default position
+	camera.setPosition(x, y, z);
+
 	return true;
 }
 
@@ -58,9 +61,13 @@ void Render::HandleInput(Timer& gt)
 	float dT = gt.GetDT();
 	float speed = 0.001f;
 
+	if (input.getKey(SPRINT)) {
+		speed = 0.01f;
+	}
+
+	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
 	if (input.getKey(pitchUp)) {
 		camera.Pitch(speed * dT);
-		
 	}
 	else if (input.getKey(pitchDown)) {
 		camera.Pitch((-speed)* dT);
@@ -74,10 +81,10 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(rollLeft)) {
-		camera.Roll((-speed) * dT);
+		camera.Roll(speed * dT);
 	}
 	else if (input.getKey(rollRight)) {
-		camera.Roll(speed * dT);
+		camera.Roll(-speed * dT);
 	}
 
 	if (input.getKey(ARROW_UP)) {
@@ -85,6 +92,13 @@ void Render::HandleInput(Timer& gt)
 	}
 	else if (input.getKey(ARROW_DOWN)) {
 		camera.Walk((-speed) * dT);
+	}
+
+	if (input.getKey(ARROW_RIGHT)) {
+		camera.Strafe(speed * dT);
+	}
+	else if (input.getKey(ARROW_LEFT)) {
+		camera.Strafe((-speed) * dT);
 	}
 }
 
@@ -96,7 +110,7 @@ void Render::Update(Timer& gt)
 	// Gérer les entrées utilisateur
 	HandleInput(gt);
 
-	camera.setPosition(x, y, z);
+	//camera.setPosition(x, y, z);
 	camera.setView();
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
@@ -144,10 +158,13 @@ void Render::Update(Timer& gt)
 
 void Render::Draw(const Timer& gt)
 {
-
+	// Reuse the memory associated with command recording.
+	// We can only reset when the associated command lists have finished execution on the GPU.
 	ThrowIfFailed(mDirectCmdListAlloc->Reset());
 
-	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
+	// A command list can be reset after it has been added to the command queue via ExecuteCommandList.
+	// Reusing the command list reuses memory.
+	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), mPSO.Get()));
 
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
@@ -155,11 +172,14 @@ void Render::Draw(const Timer& gt)
 
 	CD3DX12_RESOURCE_BARRIER targetState = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
+	// Indicate a state transition on the resource usage.
 	mCommandList->ResourceBarrier(1, &targetState);
 
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
+	// Clear the back buffer and depth buffer.
+	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
+	// Specify the buffers we are going to render to.
 
 	D3D12_CPU_DESCRIPTOR_HANDLE backBuffer = CurrentBackBufferView();
 	D3D12_CPU_DESCRIPTOR_HANDLE depthStencil = DepthStencilView();
@@ -228,20 +248,25 @@ void Render::Draw(const Timer& gt)
 
 	CD3DX12_RESOURCE_BARRIER resssourceState = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
+	// Indicate a state transition on the resource usage.
 	mCommandList->ResourceBarrier(1, &resssourceState);
 
+	// Done recording commands.
 	ThrowIfFailed(mCommandList->Close());
 
+	// Add the command list to the queue for execution.
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
+	// swap the back and front buffers
 	ThrowIfFailed(mSwapChain->Present(0, 0));
 	mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
 
+	// Wait until frame commands are complete.  This waiting is inefficient and is
+	// done for simplicity.  Later we will show how to organize our rendering code
+	// so we do not have to wait per frame.
 	FlushCommandQueue();
 }
-
-
 
 void Render::BuildDescriptorHeaps()
 {
