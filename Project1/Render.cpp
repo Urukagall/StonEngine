@@ -127,15 +127,21 @@ void Render::Update(Timer& gt)
 	}
 
 	for (int i = 0; i < m_Particles.size(); ++i) {
-		for (int j = 0; j < m_Particles[i]->particles.size(); j++) {
-			XMFLOAT4X4 pr;
-			XMStoreFloat4x4(&pr, proj);
-			XMFLOAT4X4 cam;
-			XMStoreFloat4x4(&cam, camera.getView());
-			for (const auto& pair : m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderers) {
-				pair.second->Update(pr, cam);
+		if (m_Particles[i]->particles.size() == 0) {
+			m_Particles.erase(m_Particles.begin() + i);
+		}
+		else {
+			for (int j = 0; j < m_Particles[i]->particles.size(); j++) {
+				XMFLOAT4X4 pr;
+				XMStoreFloat4x4(&pr, proj);
+				XMFLOAT4X4 cam;
+				XMStoreFloat4x4(&cam, camera.getView());
+				for (const auto& pair : m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderers) {
+					pair.second->Update(pr, cam);
+				}
 			}
 		}
+
 	}
 	m_Entities[0]->SetRotate(0.0, 0.01, 0.01);
 	m_Entities[0]->SetScale(2.0,2.0,2.0);

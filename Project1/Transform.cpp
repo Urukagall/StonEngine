@@ -82,9 +82,9 @@ void Transform::Walk(float velocity, float deltaTime) {
 
 void Transform::Translation(float x, float y, float z)
 {
-	m_vPos.x += x;
-	m_vPos.y += y;
-	m_vPos.z += z;
+	m_vPos.x *= x;
+	m_vPos.y *= y;
+	m_vPos.z *= z;
 
 	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	XMStoreFloat4x4(&m_mPos, matrix);
@@ -115,7 +115,13 @@ void Transform::SetScale(float x, float y, float z)
 
 void Transform::SetPosition(float x, float y, float z) {
 
+	m_vPos.x += x;
+	m_vPos.y += y;
+	m_vPos.z += z;
 
+	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMStoreFloat4x4(&m_mPos, matrix);
+	UpdateMatrix();
 }
 
 XMFLOAT4X4 Transform::GetMatrix()
