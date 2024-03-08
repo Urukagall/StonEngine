@@ -37,8 +37,6 @@ void MeshRenderer::BuildConstantBuffers()
 
 void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam)
 {
-	m_oEntity->m_mTransform.Translation(0.0f,0.0f,0.0f);
-
 
 
 

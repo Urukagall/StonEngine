@@ -8,7 +8,7 @@ public:
 	void Reset();
 	void Stop();
 	void Resume();
-	void SetSpeed(float speed);
+	void SetSpeed(float speed); // truc de golmon ne pas utiliser
 	void Tick();
 	~Timer();
 private:
