@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Init.h"
-#include "Math.h"
+#include "CustomMath.h"
 #include "UploadBuffer.h"
 #include <vector>
 #include "Entity.h"

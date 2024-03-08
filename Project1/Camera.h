@@ -1,5 +1,5 @@
 #pragma once
-
+#include "CustomMath.h"
 class Camera {
 private:
 	DirectX::XMMATRIX				m_mCameraView;

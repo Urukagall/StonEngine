@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Atom.h"
 #include <string>
-#include "Math.h"
+#include "CustomMath.h"
 
 
 Atom::Atom(XMFLOAT4 oColor, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, XMFLOAT3 pos) {
