@@ -5,7 +5,7 @@ Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList
 	m_mTransform = Transform();
 	
 	// Create new collider assigned to this entity
-	m_collider = Collider(this);
+	m_collider = new Collider(this);
 
 	this->md3dDevice = md3dDevice;
 	this->mCommandList = mCommandList;
