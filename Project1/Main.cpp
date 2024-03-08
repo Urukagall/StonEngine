@@ -7,6 +7,12 @@
 //   Hold the left mouse button down and move the mouse to rotate.
 //   Hold the right mouse button down and move the mouse to zoom in and out.
 //***************************************************************************************
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
+    // debut du programme
+
+
 #include "pch.h"
 
 #include "Init.h"
