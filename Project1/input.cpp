@@ -15,6 +15,7 @@ Input::Input() {
 	inputs["DOWN"] = 0;				// throttleDown
 	inputs["LEFT"] = 0;				// Gun
 	inputs["RIGHT"] = 0;			// Missile
+	inputs["SHIFT"] = 0;			// Sprint
 }
 
 Input::~Input() {}
@@ -52,6 +53,7 @@ void Input::Store() {
 	keyState(VK_DOWN, ARROW_DOWN);
 	keyState(VK_LEFT, ARROW_LEFT);
 	keyState(VK_RIGHT, ARROW_RIGHT);
+	keyState(VK_SHIFT, SPRINT);
 }
 
 #pragma region getKeys Methods
