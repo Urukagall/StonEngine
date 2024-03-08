@@ -41,8 +41,25 @@ void MeshRenderer::BuildConstantBuffers()
 		&cbvDesc,
 		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
 
-	// Get upload buffer pointer
-	//mUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mMappedData));
+void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam, float dt)
+{
+	//m_oEntity->m_mTransform.Translation(0.0f,0.0f,0.0f);
+	m_oEntity->m_mTransform.ApplyVelocity(dt);
+
+	XMFLOAT4X4 world = m_oEntity->m_mTransform.GetMatrix();
+
+	XMMATRIX worldM = XMLoadFloat4x4(&world);
+	XMMATRIX camM = XMLoadFloat4x4(&cam);
+	XMMATRIX projM = XMLoadFloat4x4(&proj);
+
+	XMMATRIX worldViewProj = worldM * camM * projM;
+	XMStoreFloat4x4(&world, worldViewProj);
+
+
+	ObjectConstants objConstants;
+	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(XMLoadFloat4x4(&world)));
+
+	mObjectCB->CopyData(0, objConstants);
 }
 
 void MeshRenderer::Box() {

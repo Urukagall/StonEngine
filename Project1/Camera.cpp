@@ -3,7 +3,9 @@
 
 using namespace DirectX;
 
-Camera::Camera() {}
+Camera::Camera() {
+	m_transform->SetPos(0.0f, 0.0f, 0.0f);
+}
 
 #pragma region getMethods
 XMVECTOR Camera::getPosition()const {
@@ -62,11 +64,13 @@ XMMATRIX Camera::getView()const {
 
 #pragma region setMethods
 void Camera::setPosition(float x, float y, float z) {
-	m_mPosition = XMFLOAT3(x, y, z);
+	m_transform->SetPos(x, y, z);
+	//m_mPosition = XMFLOAT3(x, y, z);
 }
 
 void Camera::setPosition(const XMFLOAT3& v) {
-	m_mPosition = v;
+	m_transform->SetPos(v);
+	//m_mPosition = v;
 }
 
 void Camera::setLens(float fovY, float aspect, float zn, float zf) {
@@ -83,7 +87,8 @@ void Camera::setLens(float fovY, float aspect, float zn, float zf) {
 }
 
 void Camera::setView() {
-	XMVECTOR target = getPosition() + getLook();
+	XMVECTOR target = m_transform->GetPos() + m_transform->GetDir();
+	//XMVECTOR target = getPosition() + getLook();
 	XMFLOAT4X4 camView = getView4x4f();
 	m_mCameraView = XMMatrixLookAtLH(getPosition(), target, getUp());
 	updateViewMatrix();
@@ -133,19 +138,24 @@ void Camera::Roll(float angle) {
 }
 
 void Camera::updateViewMatrix() {
-	XMVECTOR Right = XMLoadFloat3(&m_mRight);
+	/*XMVECTOR Right = XMLoadFloat3(&m_mRight);
 	XMVECTOR Up = XMLoadFloat3(&m_mUp);
 	XMVECTOR Look = XMLoadFloat3(&m_mLook);
-	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
+	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);*/
+	XMVECTOR Look = m_transform->GetDir();
+	XMVECTOR Pos = m_transform->GetPos();
+	XMVECTOR Right = m_transform->GetRight();
+	XMVECTOR Up = m_transform->GetUp();
 
 	Look = XMVector3Normalize(Look);
 	Up = XMVector3Normalize(XMVector3Cross(Look, Right));
 
 	Right = XMVector3Cross(Up, Look);
 
-	float x = XMVectorGetX(XMVector3Dot(Pos, Right));
+	/*float x = XMVectorGetX(XMVector3Dot(Pos, Right));
 	float y = XMVectorGetX(XMVector3Dot(Pos, Up));
-	float z = XMVectorGetX(XMVector3Dot(Pos, Look));
+	float z = XMVectorGetX(XMVector3Dot(Pos, Look));*/
+	float x = m_transform->m_vPos.x;
 
 	XMStoreFloat3(&m_mRight, Right);
 	XMStoreFloat3(&m_mUp, Up);

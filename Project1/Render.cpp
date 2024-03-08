@@ -85,10 +85,12 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(ARROW_UP)) {
-		camera.Walk(speed * dT);
+		//camera.Walk(speed * dT);
+		camera.m_transform->Walk(speed, dT);
 	}
 	else if (input.getKey(ARROW_DOWN)) {
-		camera.Walk((-speed) * dT);
+		//camera.Walk((-speed) * dT);
+		camera.m_transform->Walk(-speed, dT);
 	}
 
 	if (input.getKey(ARROW_RIGHT)) {
@@ -114,7 +116,23 @@ void Render::Update(Timer& gt)
 	// Update the constant buffer with the latest worldViewProj matrix.
 	ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-	mObjectCB->CopyData(0, objConstants);
+
+	mObjectCB->CopyData(0, objConstants);*/
+
+	//============ il faut juste appeller tout les update() des components ============
+
+	XMFLOAT4X4 pr;
+	XMStoreFloat4x4(&pr, proj);
+	XMFLOAT4X4 cam;
+	XMStoreFloat4x4(&cam, camera.getView());
+
+	float dT = gt.GetDT();
+
+	for (int i = 0; i < m_Entities.size(); ++i) {
+		for (const auto& pair : m_Entities[i]->m_oMeshRenderers) {
+			pair.second->Update(pr, cam, dT);
+		}
+	}
 }
 
 void Render::Draw(const Timer& gt)

@@ -1,12 +1,13 @@
 #pragma once
+#include "Transform.h"
 
 class Camera {
 private:
 	DirectX::XMMATRIX				m_mCameraView;
-	DirectX::XMFLOAT3				m_mPosition = { 0.0f, 0.0f, 0.0f };
-	DirectX::XMFLOAT3				m_mRight = { 1.0f, 0.0f, 0.0f };
-	DirectX::XMFLOAT3				m_mUp = { 0.0f, 1.0f, 0.0f };
-	DirectX::XMFLOAT3				m_mLook = { 0.0f, 0.0f, 1.0f };
+	DirectX::XMFLOAT3				m_mPosition = { 0.0f, 0.0f, 0.0f};
+	DirectX::XMFLOAT3				m_mRight = { 1.0f, 0.0f, 0.0f};
+	DirectX::XMFLOAT3				m_mUp = { 0.0f, 1.0f, 0.0f};
+	DirectX::XMFLOAT3				m_mLook = { 0.0f, 0.0f, 1.0f};
 	DirectX::XMFLOAT4X4				m_mView = Math::Identity4x4();
 	DirectX::XMFLOAT4X4				m_mProj = Math::Identity4x4();
 	float							m_fNearZ = 0.0f;
@@ -18,6 +19,7 @@ private:
 	bool							m_bViewDirty = true;
 public:
 									Camera(); // Constructor
+									Transform * m_transform = new Transform();
 									~Camera();
 
 #pragma region setMethods

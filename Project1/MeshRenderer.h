@@ -32,6 +32,7 @@ public :
 	void Box();
 	void BuildDescriptorHeaps();
 	void BuildConstantBuffers();
+	void Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam, float dt = 1.0f);
 private:
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
