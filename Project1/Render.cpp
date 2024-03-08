@@ -94,9 +94,9 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(ARROW_UP)) {
-		camera.m_transform->Walk(speed, dT);
+		camera.m_transform->Walk(speed*10, dT);
 
-		OutputDebugStringA("\nx: ");
+		/*OutputDebugStringA("\nx: ");
 		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.x).c_str());
 		OutputDebugStringA("\ny: ");
 		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.y).c_str());
@@ -105,12 +105,12 @@ void Render::HandleInput(Timer& gt)
 		OutputDebugStringA("\nSpeed: ");
 		OutputDebugStringA(std::to_string(speed).c_str());
 		OutputDebugStringA("\ndT: ");
-		OutputDebugStringA(std::to_string(dT).c_str());
+		OutputDebugStringA(std::to_string(dT).c_str());*/
 
 		//camera.Walk(speed * dT);
 	}
 	else if (input.getKey(ARROW_DOWN)) {
-		camera.m_transform->Walk(-speed, dT);
+		camera.m_transform->Walk(-speed*10, dT);
 		//camera.Walk((-speed) * dT);
 	}
 
