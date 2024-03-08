@@ -12,6 +12,13 @@ Entity::~Entity() {
 
 }
 
+void Entity::CreatePlane(XMFLOAT4 oColor)
+{
+	MeshRenderer* com = new MeshRenderer(this);
+	com->Plane(oColor);
+	m_oMeshRenderers.insert(std::make_pair("plane", com));
+}
+
 void Entity::CreateCube(XMFLOAT4 oColor) {
 	MeshRenderer* com = new MeshRenderer(this);
 	com->Box(oColor);

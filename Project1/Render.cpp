@@ -243,7 +243,7 @@ void Render::Draw(const Timer& gt)
 				mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 				mCommandList->DrawIndexedInstanced(
-					comp->DrawArgs["box"].IndexCount,
+					comp->DrawArgs["plane"].IndexCount,
 					1, 0, 0, 0);
 			}
 		}
@@ -349,6 +349,12 @@ void Render::CreateEntituPyramid(float x, float y, float z, XMFLOAT4 oColor) {
 	py->CreatePyramid(XMFLOAT4(Colors::GreenYellow));
 	py->SetPosition(x, y, z);
 	m_Entities.push_back(py);
+}
+
+void Render::CreateParticle(float x, float y, float z, XMFLOAT4 color, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
+	XMFLOAT3 pos = XMFLOAT3(x, y, z);
+	Particles* par = new Particles(XMFLOAT4(color), 150, md3dDevice, mCommandList, mCbvHeap, pos, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed);
+	m_Particles.push_back(par);
 }
 
 void Render::CreateParticlesExplosion(float x, float y, float z) {

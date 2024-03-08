@@ -38,5 +38,6 @@ public :
 	void Pyramid(XMFLOAT4 oColor);
 	void BuildConstantBuffers();
 	void Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam);
+	void Plane(XMFLOAT4 oColor);
 };
 

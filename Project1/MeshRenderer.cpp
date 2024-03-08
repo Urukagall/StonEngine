@@ -56,6 +56,53 @@ void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam)
 	mObjectCB->CopyData(0, objConstants);
 }
 
+void MeshRenderer::Plane(XMFLOAT4 oColor) {
+	std::array<Vertex, 4> vertices =
+	{
+		Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), oColor }),
+		Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), oColor })
+	};
+
+	std::array<std::uint16_t, 6> indices =
+	{
+		// front face
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+	mBoxGeo = new Mesh();
+	mBoxGeo->Name = "boxGeo";
+
+	//ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeo->VertexBufferCPU));
+	//CopyMemory(mBoxGeo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+	//
+	//ThrowIfFailed(D3DCreateBlob(ibByteSize, &mBoxGeo->IndexBufferCPU));
+	//CopyMemory(mBoxGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	mBoxGeo->VertexBufferGPU = Tools::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), vertices.data(), vbByteSize, mBoxGeo->VertexBufferUploader);
+
+	mBoxGeo->IndexBufferGPU = Tools::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), indices.data(), ibByteSize, mBoxGeo->IndexBufferUploader);
+
+	mBoxGeo->VertexByteStride = sizeof(Vertex);
+	mBoxGeo->VertexBufferByteSize = vbByteSize;
+	mBoxGeo->IndexFormat = DXGI_FORMAT_R16_UINT;
+	mBoxGeo->IndexBufferByteSize = ibByteSize;
+
+	Submesh submesh;
+	submesh.IndexCount = (UINT)indices.size();
+	submesh.StartIndexLocation = 0;
+	submesh.BaseVertexLocation = 0;
+
+	mBoxGeo->DrawArgs["plane"] = submesh;
+}
+
 void MeshRenderer::Box(XMFLOAT4 oColor) {
 	std::array<Vertex, 8> vertices =
 	{

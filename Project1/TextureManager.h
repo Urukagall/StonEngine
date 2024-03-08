@@ -22,7 +22,7 @@ class TextureManager
 
 		enum Descriptors
 		{
-			Cat,
+			Rocks,
 			Count
 		};
 };

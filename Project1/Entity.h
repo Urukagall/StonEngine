@@ -25,6 +25,7 @@ public:
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 
 
+	void CreatePlane(XMFLOAT4 oColor);
 	void CreateCube(XMFLOAT4 oColor);
 	void CreatePyramid(XMFLOAT4 oColor);
 	void SetScale(float x, float y, float z);

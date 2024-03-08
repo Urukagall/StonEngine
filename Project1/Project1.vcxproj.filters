@@ -24,9 +24,6 @@
     <ClInclude Include="Init.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="MathHelper.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -81,6 +78,12 @@
     <ClInclude Include="PlatformHelpers.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="CustomMath.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="StonEngine.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DDSTextureLoader.cpp">
@@ -90,9 +93,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Math.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="MathHelper.cpp">
@@ -141,6 +141,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="DirectXHelpers.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomMath.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
