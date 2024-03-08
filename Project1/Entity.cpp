@@ -3,6 +3,10 @@
 
 Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap) {
 	m_mTransform = Transform();
+	
+	// Create new collider assigned to this entity
+	m_collider = Collider(this);
+
 	this->md3dDevice = md3dDevice;
 	this->mCommandList = mCommandList;
 	this->mCbvHeap = mCbvHeap;

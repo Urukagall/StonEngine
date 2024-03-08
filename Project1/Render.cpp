@@ -156,10 +156,17 @@ void Render::Update(Timer& gt)
 	XMStoreFloat4x4(&cam, camera.getView());
 
 	for (int i = 0; i < m_Entities.size(); ++i) {
-		for (const auto& pair : m_Entities[i]->m_oMeshRenderers) {
-			pair.second->Update(pr, cam);	
+		// Check collisions with other objects
+		auto colliderA = m_Entities[i]->m_mTransform;
+		for (int i = 0; i < m_Entities.size(); ++i) {
+			auto colliderB = m_Entities[i]->m_mTransform;
+			// Collider
 		}
-		
+
+		// Update renderer
+		for (const auto& pair : m_Entities[i]->m_oMeshRenderers) {
+			pair.second->Update(pr, cam);
+		}
 	}
 
 	for (int i = 0; i < m_Particles.size(); ++i) {
