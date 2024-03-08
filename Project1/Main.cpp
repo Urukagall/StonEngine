@@ -7,6 +7,12 @@
 //   Hold the left mouse button down and move the mouse to rotate.
 //   Hold the right mouse button down and move the mouse to zoom in and out.
 //***************************************************************************************
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
+    // debut du programme
+
+
 #include "pch.h"
 
 #include "Init.h"
@@ -18,8 +24,13 @@ using namespace DirectX::PackedVector;
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
+
     PSTR cmdLine, int showCmd)
 {
+    /*#ifdef _DEBUG
+        _CrtMemState memStateInit;
+        _CrtMemCheckpoint(&memStateInit);
+    #endif*/
     // Enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -38,4 +49,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         MessageBox(nullptr, e.ToString().c_str(), L"HR Failed", MB_OK);
         return 0;
     }
+    /*#ifdef _DEBUG
+        _CrtMemState memStateEnd, memStateDiff;
+        _CrtMemCheckpoint(&memStateEnd);
+        if (_CrtMemDifference(&memStateDiff, &memStateInit, &memStateEnd))
+        {
+            MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
+        }
+    #endif */
 }
+

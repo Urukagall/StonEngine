@@ -13,7 +13,8 @@ using Microsoft::WRL::ComPtr;
 struct Vertex
 {
 	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
+	XMFLOAT4 Normal;
+	XMFLOAT2 TexC;
 };
 
 struct ObjectConstants
