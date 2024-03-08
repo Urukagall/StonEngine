@@ -133,10 +133,10 @@ void Camera::Roll(float angle) {
 }
 
 void Camera::updateViewMatrix() {
-	XMVECTOR Right = XMLoadFloat3(&m_mRight);
-	XMVECTOR Up = XMLoadFloat3(&m_mUp);
-	XMVECTOR Look = XMLoadFloat3(&m_mLook);
-	XMVECTOR Pos = XMLoadFloat3(&m_mPosition);
+	XMVECTOR Right = m_transform->GetRight(); //XMLoadFloat3(&m_mRight);
+	XMVECTOR Up = m_transform->GetUp(); //XMLoadFloat3(&m_mUp);
+	XMVECTOR Look = m_transform->GetDir(); //XMLoadFloat3(&m_mLook);
+	XMVECTOR Pos = m_transform->GetPos(); //XMLoadFloat3(&m_mPosition);
 
 	Look = XMVector3Normalize(Look);
 	Up = XMVector3Normalize(XMVector3Cross(Look, Right));

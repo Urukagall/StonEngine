@@ -29,7 +29,7 @@ void Entity::SetScale(float x, float y, float z) {
 }
 
 void Entity::SetPosition(float x, float y, float z) {
-	m_mTransform.SetPosition(x, y, z);
+	m_mTransform.SetPos(x, y, z);
 }
 
 void Entity::SetRotate(float yaw, float pitch, float roll) {

@@ -113,15 +113,39 @@ void Transform::SetScale(float x, float y, float z)
 	UpdateMatrix();
 }
 
-void Transform::SetPosition(float x, float y, float z) {
-
-	m_vPos.x += x;
-	m_vPos.y += y;
-	m_vPos.z += z;
+void Transform::SetPos(float x, float y, float z)
+{
+	m_vPos.x = x;
+	m_vPos.y = y;
+	m_vPos.z = z;
 
 	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	XMStoreFloat4x4(&m_mPos, matrix);
 	UpdateMatrix();
+}
+
+void Transform::SetPos(const XMFLOAT3& v) {
+	m_vPos = v;
+
+	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMStoreFloat4x4(&m_mPos, matrix);
+	UpdateMatrix();
+}
+
+XMVECTOR Transform::GetPos() {
+	return XMLoadFloat3(&m_vPos);
+}
+
+XMVECTOR Transform::GetDir() {
+	return XMLoadFloat3(&m_vDir);
+}
+
+XMVECTOR Transform::GetRight() {
+	return XMLoadFloat3(&m_vRight);
+}
+
+XMVECTOR Transform::GetUp() {
+	return XMLoadFloat3(&m_vUp);
 }
 
 XMFLOAT4X4 Transform::GetMatrix()

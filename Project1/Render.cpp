@@ -74,10 +74,12 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(yawLeft)) {
-		camera.Yaw((-speed) * dT);
+		camera.m_transform->Rotate(-speed * dT, 0, 0);
+		//camera.Yaw((-speed) * dT);
 	}
 	else if (input.getKey(yawRight)) {
-		camera.Yaw(speed * dT);
+		camera.m_transform->Rotate(speed * dT, 0, 0);
+		//camera.Yaw(speed * dT);
 	}
 
 	if (input.getKey(rollLeft)) {
@@ -88,10 +90,24 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(ARROW_UP)) {
-		camera.Walk(speed * dT);
+		camera.m_transform->Walk(speed, dT);
+
+		OutputDebugStringA("\nx: ");
+		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.x).c_str());
+		OutputDebugStringA("\ny: ");
+		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.y).c_str());
+		OutputDebugStringA("\nz: ");
+		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.z).c_str());
+		OutputDebugStringA("\nSpeed: ");
+		OutputDebugStringA(std::to_string(speed).c_str());
+		OutputDebugStringA("\ndT: ");
+		OutputDebugStringA(std::to_string(dT).c_str());
+
+		//camera.Walk(speed * dT);
 	}
 	else if (input.getKey(ARROW_DOWN)) {
-		camera.Walk((-speed) * dT);
+		camera.m_transform->Walk(-speed, dT);
+		//camera.Walk((-speed) * dT);
 	}
 
 	if (input.getKey(ARROW_RIGHT)) {

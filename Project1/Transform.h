@@ -33,12 +33,18 @@ public:
 	void UpdateMatrix();
 	void Rotate(float yaw, float pitch, float roll);
 	void Translation(float x, float y, float z);
+	void SetPos(float x, float y, float z);
+	void SetPos(const XMFLOAT3& v);
+	XMVECTOR GetPos();
+	XMVECTOR GetDir();
+	XMVECTOR GetRight();
+	XMVECTOR GetUp();
 	void Scale(float x, float y, float z);
 	void SetScale(float x, float y, float z);
-	void SetPosition(float x, float y, float z);
-	void Walk(float velocity, float deltaTime);
+	void Walk(float speed, float deltaTime);
+	void AddVelocity(float x, float y, float z);
+	void SetVelocity(float x, float y, float z);
+	void ApplyVelocity(float deltaTime);
 	XMFLOAT4X4 GetMatrix();
-
-
 };
 

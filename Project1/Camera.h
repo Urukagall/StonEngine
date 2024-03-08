@@ -1,4 +1,5 @@
 #pragma once
+#include "Transform.h"
 
 class Camera {
 private:
@@ -18,6 +19,7 @@ private:
 	bool							m_bViewDirty = true;
 public:
 									Camera(); // Constructor
+									Transform* m_transform = new Transform();
 									~Camera();
 
 #pragma region setMethods
