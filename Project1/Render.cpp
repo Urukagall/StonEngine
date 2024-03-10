@@ -45,6 +45,8 @@ bool Render::Initialize()
 	//Set default position
 	camera.setPosition(x, y, z);
 
+	m_Entities[0]->SetPosition(2, 0, 3);
+
 	return true;
 }
 
@@ -166,7 +168,10 @@ void Render::Update(Timer& gt)
 				OutputDebugStringA(std::to_string(b).c_str());*/
 				//Check collision
 				if (m_Entities[a]->m_collider->CheckColl(m_Entities[b])) {
-					OutputDebugStringA("\nCollision");
+					OutputDebugStringA("\nCollision");					
+				}
+				else {
+					OutputDebugStringA("\nNOPE");
 				}
 			}
 		}

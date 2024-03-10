@@ -53,14 +53,15 @@ bool Collider::CheckColl(Entity* b) {
 	XMFLOAT4 distF; //the float where we copy the up vector members
 	XMStoreFloat4(&distF, dist); //the function used to copy
 
-	/*OutputDebugStringA("\nx: ");
-	OutputDebugStringA(std::to_string(distF.x).c_str());
+	OutputDebugStringA("\nx: ");
+	OutputDebugStringA(std::to_string(fabs(distF.x)).c_str());
 	OutputDebugStringA("y: ");
-	OutputDebugStringA(std::to_string(distF.y).c_str());
+	OutputDebugStringA(std::to_string(fabs(distF.y)).c_str());
 	OutputDebugStringA("z: ");
-	OutputDebugStringA(std::to_string(distF.z).c_str());*/
+	OutputDebugStringA(std::to_string(fabs(distF.z)).c_str());
 
-	if (distF.x < collisionDistance || distF.y < collisionDistance || distF.z < collisionDistance) {
+
+	if (fabs(distF.x) < collisionDistance && fabs(distF.y) < collisionDistance && fabs(distF.z) < collisionDistance) {
 		return true;
 	}
 	return false;
