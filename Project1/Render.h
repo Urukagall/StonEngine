@@ -38,7 +38,7 @@ private:
 
     void CreateEntity(float x, float y, float z);
     void CreateEntityCube(float x, float y, float z, XMFLOAT4 oColor);
-    void CreateEntituPyramid(float x, float y, float z, XMFLOAT4 oColor);
+    void CreateEntityPyramid(float x, float y, float z, XMFLOAT4 oColor);
     void CreateParticlesExplosion(float x, float y, float z);
 
 private:

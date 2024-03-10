@@ -4,10 +4,14 @@ class Collider
 {
 private:
 	Entity * m_entity;
-	XMINT3 Chunk;
+	//XMINT3 Chunk;
 public:
+	Collider();
 	Collider(Entity * entity);
 	~Collider();
-
-	DirectX::XMINT3 FindChunk();
+	void BindEntity(Entity* entity);
+	// Check collision between two entities
+	bool CheckColl(Entity* b);
+	// Will be usefull for complex collisions with bounding boxes
+	//DirectX::XMINT3 FindChunk();
 };

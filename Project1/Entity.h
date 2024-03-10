@@ -21,7 +21,7 @@ public:
 	std::map<std::string, Component*> m_mComponents;
 	std::map<std::string, MeshRenderer*> m_oMeshRenderers;
 	Transform m_mTransform;
-	Collider *m_collider;
+	Collider* m_collider;
 	
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;

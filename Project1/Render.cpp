@@ -27,7 +27,9 @@ bool Render::Initialize()
 	BuildShadersAndInputLayout();
 
 	//CreateEntityCube(2.0,2.0,2.0, XMFLOAT4(Colors::Aquamarine));
-	CreateEntituPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
+	CreateEntityPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
+	CreateEntityPyramid(1.0, 1.0, 1.0, XMFLOAT4(Colors::Red));
+
 
 	CreateParticlesExplosion(2.0, 2.0, 2.0);
 	CreateParticlesExplosion(3.0, 3.0, 3.0);
@@ -155,16 +157,23 @@ void Render::Update(Timer& gt)
 	XMFLOAT4X4 cam;
 	XMStoreFloat4x4(&cam, camera.getView());
 
-	for (int i = 0; i < m_Entities.size(); ++i) {
+	for (int a = 0; a < m_Entities.size(); ++a) {
 		// Check collisions with other objects
-		auto colliderA = m_Entities[i]->m_mTransform;
-		for (int i = 0; i < m_Entities.size(); ++i) {
-			auto colliderB = m_Entities[i]->m_mTransform;
-			// Collider
+		for (int b = 0; b < m_Entities.size(); ++b) {
+			if(a!=b){
+				/*OutputDebugStringA("\nChecking collisions between ");
+				OutputDebugStringA(std::to_string(a).c_str());
+				OutputDebugStringA(" and ");
+				OutputDebugStringA(std::to_string(b).c_str());*/
+				//Check collision
+				if (m_Entities[a]->m_collider->CheckColl(m_Entities[b])) {
+					OutputDebugStringA("\nCollision");
+				}
+			}
 		}
 
 		// Update renderer
-		for (const auto& pair : m_Entities[i]->m_oMeshRenderers) {
+		for (const auto& pair : m_Entities[a]->m_oMeshRenderers) {
 			pair.second->Update(pr, cam);
 		}
 	}
@@ -373,7 +382,7 @@ void Render::CreateEntityCube(float x, float y, float z, XMFLOAT4 oColor) {
 	m_Entities.push_back(en);
 }
 
-void Render::CreateEntituPyramid(float x, float y, float z, XMFLOAT4 oColor) {
+void Render::CreateEntityPyramid(float x, float y, float z, XMFLOAT4 oColor) {
 	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
 	py->CreatePyramid(XMFLOAT4(Colors::GreenYellow));
 	py->SetPosition(x, y, z);
