@@ -29,8 +29,13 @@ void Entity::CreatePyramid(XMFLOAT4 oColor) {
 	m_oMeshRenderers.insert(std::make_pair("pyr", com));
 }
 
-void Entity::SetScale(float x, float y, float z) {
+void Entity::SetScale(float x, float y, float z, bool scaleColliderSize) {
 	m_mTransform.SetScale(x, y, z);
+	if (scaleColliderSize) {
+		float maxXY = Math::Max(x, y);
+		float maxXYZ = Math::Max(maxXY, z);
+		m_collider->SetScale(maxXYZ);
+	}
 }
 
 void Entity::SetPosition(float x, float y, float z) {

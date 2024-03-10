@@ -28,8 +28,7 @@ bool Render::Initialize()
 
 	//CreateEntityCube(2.0,2.0,2.0, XMFLOAT4(Colors::Aquamarine));
 	CreateEntityPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
-	CreateEntityPyramid(1.0, 1.0, 1.0, XMFLOAT4(Colors::Red));
-
+	CreateEntityPyramid(1.0, 2.0, 5.0, XMFLOAT4(Colors::Red));
 
 	CreateParticlesExplosion(2.0, 2.0, 2.0);
 	CreateParticlesExplosion(3.0, 3.0, 3.0);
@@ -197,7 +196,6 @@ void Render::Update(Timer& gt)
 	}
 	m_Entities[0]->SetRotate(0.0, 0.01, 0.01);
 	m_Entities[0]->SetScale(2.0,2.0,2.0);
-
 }
 
 void Render::Draw(const Timer& gt)
@@ -368,29 +366,28 @@ void Render::BuildShadersAndInputLayout()
 	};
 }
 
-void Render::CreateEntity(float x, float y, float z) {
-
+void Render::CreateEntity(float posx, float posy, float posz) {
 	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	en->SetPosition(x, y, z);
+	en->SetPosition(posx, posy, posz);
 	m_Entities.push_back(en);
 }
 
-void Render::CreateEntityCube(float x, float y, float z, XMFLOAT4 oColor) {
+void Render::CreateEntityCube(float posx, float posy, float posz, XMFLOAT4 oColor) {
 	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
 	en->CreateCube(oColor);
-	en->SetPosition(x, y, z);
+	en->SetPosition(posx, posy, posz);
 	m_Entities.push_back(en);
 }
 
-void Render::CreateEntityPyramid(float x, float y, float z, XMFLOAT4 oColor) {
+void Render::CreateEntityPyramid(float posx, float posy, float posz, XMFLOAT4 oColor) {
 	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
 	py->CreatePyramid(XMFLOAT4(Colors::GreenYellow));
-	py->SetPosition(x, y, z);
+	py->SetPosition(posx, posy, posz);
 	m_Entities.push_back(py);
 }
 
-void Render::CreateParticlesExplosion(float x, float y, float z) {
-	XMFLOAT3 pos = XMFLOAT3(x, y, z);
+void Render::CreateParticlesExplosion(float posx, float posy, float posz) {
+	XMFLOAT3 pos = XMFLOAT3(posx, posy, posz);
 	Particles* par1 = new Particles(XMFLOAT4(Colors::Red), 150, md3dDevice, mCommandList, mCbvHeap, pos);
 	Particles* par2 = new Particles(XMFLOAT4(Colors::Orange), 100, md3dDevice, mCommandList, mCbvHeap, pos);
 	Particles* par3 = new Particles(XMFLOAT4(Colors::Yellow), 50, md3dDevice, mCommandList, mCbvHeap, pos);
