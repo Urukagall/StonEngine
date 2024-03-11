@@ -172,6 +172,10 @@ void Transform::SetVelocity(XMFLOAT3 vector) {
 	m_vVelocity = XMLoadFloat3(&vector);
 }
 
+void Transform::SetDeceleration(float speed) {
+	m_fDeceleration = speed;
+}
+
 void Transform::ApplyVelocity(float deltaTime) {
 	XMFLOAT3 fVelocity;
 	XMStoreFloat3(&fVelocity, m_vVelocity);
