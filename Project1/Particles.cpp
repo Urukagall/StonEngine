@@ -2,10 +2,10 @@
 #include "Particles.h"
 
 
-Particles::Particles(XMFLOAT4 oColor,int maxParticles, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, XMFLOAT3 pos, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
+Particles::Particles(string sColor, MeshCreator* mc, int maxParticles, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, XMFLOAT3 pos, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
     
     for (int i = 0; i < maxParticles; i++) {
-        particles.push_back(new Atom(oColor, pos, md3dDevice, mCommandList, mCbvHeap, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed));
+        particles.push_back(new Atom(sColor, mc, pos, md3dDevice, mCommandList, mCbvHeap, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed));
     }
 }
 

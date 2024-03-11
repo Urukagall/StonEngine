@@ -22,11 +22,16 @@ bool Render::Initialize()
 
 	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
+
 	BuildDescriptorHeaps();
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
 
-	//CreateEntityCube(2.0,2.0,2.0, XMFLOAT4(Colors::Aquamarine));
+	mc = new MeshCreator(mCommandList, md3dDevice);
+	
+	mc->Init();
+
+	//CreateEntityCube(2.0, 2.0, 2.0, "red");
 	//CreateEntituPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
 
 	//CreateParticlesExplosion(2.0, 2.0, 2.0);
@@ -34,6 +39,7 @@ bool Render::Initialize()
 	//CreateParticlesExplosion(4.0, 4.0, 4.0);
 
 	BuildPSO();
+
 
 	ThrowIfFailed(mCommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
@@ -335,31 +341,31 @@ void Render::CreateEntity(float x, float y, float z) {
 	m_Entities.push_back(en);
 }
 
-void Render::CreateEntityCube(float x, float y, float z, XMFLOAT4 oColor) {
+void Render::CreateEntityCube(float x, float y, float z, string sColor) {
 	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	en->CreateCube(oColor);
+	en->CreateCube(sColor, mc);
 	en->SetPosition(x, y, z);
 	m_Entities.push_back(en);
 }
 
-void Render::CreateEntituPyramid(float x, float y, float z, XMFLOAT4 oColor) {
+void Render::CreateEntituPyramid(float x, float y, float z, string sColor) {
 	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	py->CreatePyramid(XMFLOAT4(Colors::GreenYellow));
+	py->CreatePyramid(sColor, mc);
 	py->SetPosition(x, y, z);
 	m_Entities.push_back(py);
 }
 
-void Render::CreateParticle(float x, float y, float z, XMFLOAT4 color, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
+void Render::CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
 	XMFLOAT3 pos = XMFLOAT3(x, y, z);
-	Particles* par = new Particles(XMFLOAT4(color), 150, md3dDevice, mCommandList, mCbvHeap, pos, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed);
+	Particles* par = new Particles(sColor, mc, 150, md3dDevice, mCommandList, mCbvHeap, pos, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed);
 	m_Particles.push_back(par);
 }
 
 void Render::CreateParticlesExplosion(float x, float y, float z) {
 	XMFLOAT3 pos = XMFLOAT3(x, y, z);
-	Particles* par1 = new Particles(XMFLOAT4(Colors::Red), 150, md3dDevice, mCommandList, mCbvHeap, pos);
-	Particles* par2 = new Particles(XMFLOAT4(Colors::Orange), 100, md3dDevice, mCommandList, mCbvHeap, pos);
-	Particles* par3 = new Particles(XMFLOAT4(Colors::Yellow), 50, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par1 = new Particles("red", mc, 150, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par2 = new Particles("orange", mc, 100, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par3 = new Particles("yellow", mc, 50, md3dDevice, mCommandList, mCbvHeap, pos);
 	m_Particles.push_back(par1);
 	m_Particles.push_back(par2);
 	m_Particles.push_back(par3);

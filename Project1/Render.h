@@ -7,6 +7,7 @@
 #include "MeshRenderer.h"
 #include "Timer.h"
 #include "Particles.h"
+#include "MeshCreator.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -22,11 +23,12 @@ public:
 
     virtual bool Initialize()override;
     void CreateEntity(float x, float y, float z);
-    void CreateEntityCube(float x, float y, float z, XMFLOAT4 oColor);
-    void CreateEntituPyramid(float x, float y, float z, XMFLOAT4 oColor);
-    void CreateParticle(float x, float y, float z, XMFLOAT4 color, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed);
+    void CreateEntityCube(float x, float y, float z, string sColor);
+    void CreateEntituPyramid(float x, float y, float z, string sColor);
+    void CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed);
     void CreateParticlesExplosion(float x, float y, float z);
 
+    MeshCreator* mc = nullptr;
 private:
     virtual void OnResize()override;
     virtual void Update(Timer& gt)override;

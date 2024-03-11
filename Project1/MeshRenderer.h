@@ -10,13 +10,6 @@
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
 
-struct Vertex
-{
-	XMFLOAT3 Pos;
-	XMFLOAT4 Normal;
-	XMFLOAT2 TexC;
-};
-
 struct ObjectConstants
 {
 	XMFLOAT4X4 WorldViewProj = Math::Identity4x4();
@@ -34,10 +27,7 @@ public :
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
 
-	void Box(XMFLOAT4 oColor);
-	void Pyramid(XMFLOAT4 oColor);
 	void BuildConstantBuffers();
 	void Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam);
-	void Plane(XMFLOAT4 oColor);
 };
 

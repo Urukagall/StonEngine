@@ -19,7 +19,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         Render theApp(hInstance);
         if (!theApp.Initialize())
             return 0;
-        theApp.CreateEntityCube(2.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
+        theApp.CreateParticlesExplosion(3.0, 3.0, 3.0);
+        theApp.CreateEntityCube(2.0, 2.0, 2.0, "blue");
         return theApp.Run();
     }
     catch (DxException& e)

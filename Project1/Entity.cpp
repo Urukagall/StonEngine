@@ -12,22 +12,31 @@ Entity::~Entity() {
 
 }
 
-void Entity::CreatePlane(XMFLOAT4 oColor)
+void Entity::CreatePlane(string sColor, MeshCreator* mc)
 {
+	string sMesh = "plane_" + sColor;
+
 	MeshRenderer* com = new MeshRenderer(this);
-	com->Plane(oColor);
+	com->mBoxGeo = mc->m_mMesh[sMesh];
+	//com->Plane(oColor);
 	m_oMeshRenderers.insert(std::make_pair("plane", com));
 }
 
-void Entity::CreateCube(XMFLOAT4 oColor) {
+void Entity::CreateCube(string sColor, MeshCreator* mc) {
+	string sMesh = "box_" + sColor;
+
 	MeshRenderer* com = new MeshRenderer(this);
-	com->Box(oColor);
+	com->mBoxGeo = mc->m_mMesh[sMesh];
+	//com->Box(oColor);
 	m_oMeshRenderers.insert(std::make_pair("cube", com));
 }
 
-void Entity::CreatePyramid(XMFLOAT4 oColor) {
+void Entity::CreatePyramid(string sColor, MeshCreator* mc) {
+	string sMesh = "pyramid_" + sColor;
+
 	MeshRenderer* com = new MeshRenderer(this);
-	com->Pyramid(oColor);
+	com->mBoxGeo = mc->m_mMesh[sMesh];
+	//com->Pyramid(oColor);
 	m_oMeshRenderers.insert(std::make_pair("pyr", com));
 }
 
