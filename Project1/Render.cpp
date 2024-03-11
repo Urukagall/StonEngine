@@ -96,14 +96,15 @@ void Render::HandleInput(Timer& gt)
 	}
 	else if (input.getKey(rollRight)) {
 		camera.m_transform->Rotate(0, 0, -speed * dT);
-		//camera.Roll(-speed * dT);
 	}
 
 	if (input.getKey(ARROW_UP)) {
-		camera.m_transform->Walk(speed*10, dT);
+		//camera.m_transform->Walk(speed*10, dT);
+		camera.m_transform->VelocityWalk(speed * 0.05, dT);
 	}
 	else if (input.getKey(ARROW_DOWN)) {
-		camera.m_transform->Walk(-speed*10, dT);
+		//camera.m_transform->Walk(-speed*10, dT);
+		camera.m_transform->VelocityWalk(-speed * 0.05, dT);
 	}
 
 	if (input.getKey(ARROW_RIGHT)) {

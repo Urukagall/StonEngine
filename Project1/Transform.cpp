@@ -81,8 +81,7 @@ void Transform::Walk(float speed, float deltaTime) {
 
 void Transform::VelocityWalk(float speed, float deltaTime) {
 	//TODO
-	//AddVelocity(m_vDir.x * speed * deltaTime, m_vDir.y * speed * deltaTime, m_vDir.z * speed * deltaTime)
-	//ApplyVelocity(deltaTime);
+	AddVelocity(m_vDir.x * speed * deltaTime, m_vDir.y * speed * deltaTime, m_vDir.z * speed * deltaTime);
 }
 
 
@@ -218,9 +217,9 @@ void Transform::ApplyVelocity(float deltaTime) {
 	OutputDebugStringA(std::to_string(fVelocity.z).c_str());
 	OutputDebugStringA("}");
 
-	m_vPos.x += m_vDir.x * deltaTime * fVelocity.x;
-	m_vPos.y += m_vDir.y * deltaTime * fVelocity.y;
-	m_vPos.z += m_vDir.z * deltaTime * fVelocity.z;
+	m_vPos.x += deltaTime * fVelocity.x;
+	m_vPos.y += deltaTime * fVelocity.y;
+	m_vPos.z += deltaTime * fVelocity.z;
 
 	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	XMStoreFloat4x4(&m_mPos, matrix);
