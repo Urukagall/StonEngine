@@ -398,9 +398,16 @@ void Render::CreateEntityMissiles(float x, float y, float z) {
 	m_Entities.push_back(en);
 }
 
-void Render::CreateEntituPyramid(float x, float y, float z, string sColor) {
+void Render::CreateEntityPyramid(float x, float y, float z, string sColor) {
 	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
 	py->CreatePyramid(sColor, mc);
+	py->SetPosition(x, y, z);
+	m_Entities.push_back(py);
+}
+
+void Render::CreateEntityEnemy(float x, float y, float z) {
+	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
+	py->CreateEnemy(mc);
 	py->SetPosition(x, y, z);
 	m_Entities.push_back(py);
 }

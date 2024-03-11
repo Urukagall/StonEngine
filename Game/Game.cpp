@@ -22,6 +22,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         theApp.CreateParticlesExplosion(3.0, 3.0, 3.0);
         theApp.CreateEntityCube(2.0, 2.0, 2.0, "blue");
         theApp.CreateEntityMissiles(3.0, 3.0, 3.0);
+        theApp.CreateEntityEnemy(5.0, 5.0, 5.0);
         return theApp.Run();
     }
     catch (DxException& e)

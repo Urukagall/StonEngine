@@ -27,6 +27,8 @@ class MeshCreator
 
 	Mesh* Plane(XMFLOAT4 oColor);
 
+	Mesh* Enemy();
+
 	Mesh* Box(XMFLOAT4 oColor);
 
 	Mesh* Pyramid(XMFLOAT4 oColor);

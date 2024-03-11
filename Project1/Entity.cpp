@@ -40,7 +40,7 @@ void Entity::CreateMissiles(MeshCreator* mc) {
 	MeshRenderer* com = new MeshRenderer(this);
 	com->mBoxGeo = mc->m_mMesh["missiles"];
 	//com->Box(oColor);
-	m_oMeshRenderers.insert(std::make_pair("cube", com));
+	m_oMeshRenderers.insert(std::make_pair("missile", com));
 }
 
 void Entity::CreatePyramid(string sColor, MeshCreator* mc) {
@@ -50,6 +50,13 @@ void Entity::CreatePyramid(string sColor, MeshCreator* mc) {
 	com->mBoxGeo = mc->m_mMesh[sMesh];
 	//com->Pyramid(oColor);
 	m_oMeshRenderers.insert(std::make_pair("pyr", com));
+}
+
+void Entity::CreateEnemy(MeshCreator* mc) {
+	MeshRenderer* com = new MeshRenderer(this);
+	com->mBoxGeo = mc->m_mMesh["enemy"];
+	//com->Pyramid(oColor);
+	m_oMeshRenderers.insert(std::make_pair("enemy", com));
 }
 
 void Entity::SetScale(float x, float y, float z, bool scaleColliderSize) {
