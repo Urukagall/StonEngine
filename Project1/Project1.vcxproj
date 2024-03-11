@@ -151,6 +151,8 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlatformHelpers.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="SpriteBatch.h" />
+    <ClInclude Include="SpriteFont.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Tools.h" />
