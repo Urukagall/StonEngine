@@ -70,15 +70,19 @@ void Transform::Rotate(float yaw, float pitch, float roll) {
 }
 
 void Transform::Walk(float speed, float deltaTime) {
-	AddVelocity(m_vDir.x * speed * deltaTime, m_vDir.y * speed * deltaTime, m_vDir.z * speed * deltaTime);
-
-	/*m_vPos.x += m_vDir.x * speed * deltaTime;
+	m_vPos.x += m_vDir.x * speed * deltaTime;
 	m_vPos.y += m_vDir.y * speed * deltaTime;
-	m_vPos.z += m_vDir.z * speed * deltaTime;*/
+	m_vPos.z += m_vDir.z * speed * deltaTime;
 
 	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	XMStoreFloat4x4(&m_mPos, matrix);
 	UpdateMatrix();
+}
+
+void Transform::VelocityWalk(float speed, float deltaTime) {
+	//TODO
+	//AddVelocity(m_vDir.x * speed * deltaTime, m_vDir.y * speed * deltaTime, m_vDir.z * speed * deltaTime)
+	//ApplyVelocity(deltaTime);
 }
 
 
@@ -177,6 +181,7 @@ void Transform::SetDeceleration(float speed) {
 }
 
 void Transform::ApplyVelocity(float deltaTime) {
+	// Load velocity
 	XMFLOAT3 fVelocity;
 	XMStoreFloat3(&fVelocity, m_vVelocity);
 

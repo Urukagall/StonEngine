@@ -47,10 +47,13 @@ public:
 	void Scale(float x, float y, float z);
 	void SetScale(float x, float y, float z);
 	void Walk(float speed, float deltaTime);
+
+	void VelocityWalk(float speed, float deltaTime);
 	void AddVelocity(float x, float y, float z);
 	void SetVelocity(float x, float y, float z);
 	void SetVelocity(XMFLOAT3 vector);
 	void ApplyVelocity(float deltaTime);
+
 	XMFLOAT4X4 GetMatrix();
 };
 
