@@ -97,7 +97,7 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(ARROW_UP)) {
-		camera.m_transform->Walk(speed*0.1, dT);
+		camera.m_transform->Walk(speed*0.05, dT);
 		//camera.m_transform->AddVelocity(speed * 10, dT);
 
 		/*OutputDebugStringA("\nx: ");
@@ -114,7 +114,7 @@ void Render::HandleInput(Timer& gt)
 		//camera.Walk(speed * dT);
 	}
 	else if (input.getKey(ARROW_DOWN)) {
-		camera.m_transform->Walk(-speed*0.1, dT);
+		camera.m_transform->Walk(-speed*0.05, dT);
 		//camera.Walk((-speed) * dT);
 	}
 
