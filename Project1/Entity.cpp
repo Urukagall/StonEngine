@@ -31,6 +31,13 @@ void Entity::CreateCube(string sColor, MeshCreator* mc) {
 	m_oMeshRenderers.insert(std::make_pair("cube", com));
 }
 
+void Entity::CreateMissiles(MeshCreator* mc) {
+	MeshRenderer* com = new MeshRenderer(this);
+	com->mBoxGeo = mc->m_mMesh["missiles"];
+	//com->Box(oColor);
+	m_oMeshRenderers.insert(std::make_pair("cube", com));
+}
+
 void Entity::CreatePyramid(string sColor, MeshCreator* mc) {
 	string sMesh = "pyramid_" + sColor;
 

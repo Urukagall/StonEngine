@@ -31,6 +31,8 @@ class MeshCreator
 
 	Mesh* Pyramid(XMFLOAT4 oColor);
 
+	Mesh* Missiles();
+
 
 
 	/*Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCommandQueue;

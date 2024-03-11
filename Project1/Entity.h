@@ -28,6 +28,7 @@ public:
 
 	void CreatePlane(string sColor, MeshCreator* mc);
 	void CreateCube(string sColor, MeshCreator* mc);
+	void CreateMissiles(MeshCreator* mc);
 	void CreatePyramid(string sColor, MeshCreator* mc);
 	void SetScale(float x, float y, float z);
 	void SetPosition(float x, float y, float z);

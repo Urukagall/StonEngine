@@ -24,6 +24,7 @@ public:
     virtual bool Initialize()override;
     void CreateEntity(float x, float y, float z);
     void CreateEntityCube(float x, float y, float z, string sColor);
+    void CreateEntityMissiles(float x, float y, float z);
     void CreateEntituPyramid(float x, float y, float z, string sColor);
     void CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed);
     void CreateParticlesExplosion(float x, float y, float z);
