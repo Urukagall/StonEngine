@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "Game.h"
 #include "../Project1/StonEngine.h"
+#include "Script.h"
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
@@ -19,10 +20,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
         Render theApp(hInstance);
         if (!theApp.Initialize())
             return 0;
-        theApp.CreateParticlesExplosion(3.0, 3.0, 3.0);
-        theApp.CreateEntityCube(2.0, 2.0, 2.0, "blue");
-        theApp.CreateEntityMissiles(3.0, 3.0, 3.0);
-        theApp.CreateEntityEnemy(5.0, 5.0, 5.0);
+
+        Script script = Script(&theApp);
+
         return theApp.Run();
     }
     catch (DxException& e)
