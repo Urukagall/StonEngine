@@ -17,6 +17,9 @@ public:
 	//Position
 	XMFLOAT3 m_vPos;
 	XMFLOAT4X4 m_mPos;
+	XMVECTOR m_vVelocity = { 0, 0, 0 };
+	float m_fMaxVelocity = 0.2f;
+	float m_fDeceleration = m_fMaxVelocity * 0.0002f;
 
 	//Rotate
 	XMFLOAT3 m_vUp;
@@ -44,6 +47,7 @@ public:
 	void Walk(float speed, float deltaTime);
 	void AddVelocity(float x, float y, float z);
 	void SetVelocity(float x, float y, float z);
+	void SetVelocity(XMFLOAT3 vector);
 	void ApplyVelocity(float deltaTime);
 	XMFLOAT4X4 GetMatrix();
 };

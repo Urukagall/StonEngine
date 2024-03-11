@@ -97,7 +97,8 @@ void Render::HandleInput(Timer& gt)
 	}
 
 	if (input.getKey(ARROW_UP)) {
-		camera.m_transform->Walk(speed*10, dT);
+		camera.m_transform->Walk(speed*0.1, dT);
+		//camera.m_transform->AddVelocity(speed * 10, dT);
 
 		/*OutputDebugStringA("\nx: ");
 		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.x).c_str());
@@ -113,7 +114,7 @@ void Render::HandleInput(Timer& gt)
 		//camera.Walk(speed * dT);
 	}
 	else if (input.getKey(ARROW_DOWN)) {
-		camera.m_transform->Walk(-speed*10, dT);
+		camera.m_transform->Walk(-speed*0.1, dT);
 		//camera.Walk((-speed) * dT);
 	}
 
@@ -129,14 +130,18 @@ void Render::HandleInput(Timer& gt)
 
 void Render::Update(Timer& gt)
 {
+	float dT = gt.GetDT();
+
 	for (int i = 0; i < m_Particles.size(); i++) {
 		m_Particles[i]->Update(gt.GetDT());
 	}
 	// Gérer les entrées utilisateur
 	HandleInput(gt);
 
+	// Update camera
 	//camera.setPosition(x, y, z);
 	camera.setView();
+	camera.m_transform->ApplyVelocity(dT);
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
