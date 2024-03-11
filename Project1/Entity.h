@@ -33,7 +33,7 @@ public:
 	void CreateCube(string sColor, MeshCreator* mc);
 	void CreateMissiles(MeshCreator* mc);
 	void CreatePyramid(string sColor, MeshCreator* mc);
-	void SetScale(float x, float y, float z);
+	void SetScale(float x, float y, float z, bool scaleColliderSize=true);
 	void SetPosition(float x, float y, float z);
 	void SetRotate(float yaw, float pitch, float roll);
 	void SetDirection(float velocity, float deltaTime);
