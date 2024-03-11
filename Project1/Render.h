@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "Init.h"
-#include "Math.h"
+#include "CustomMath.h"
 #include "UploadBuffer.h"
 #include <vector>
 #include "Entity.h"
 #include "MeshRenderer.h"
 #include "Timer.h"
 #include "Particles.h"
+#include "MeshCreator.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -21,7 +22,14 @@ public:
     ~Render();
 
     virtual bool Initialize()override;
+    void CreateEntity(float x, float y, float z);
+    void CreateEntityCube(float x, float y, float z, string sColor);
+    void CreateEntityMissiles(float x, float y, float z);
+    void CreateEntituPyramid(float x, float y, float z, string sColor);
+    void CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed);
+    void CreateParticlesExplosion(float x, float y, float z);
 
+    MeshCreator* mc = nullptr;
 private:
     virtual void OnResize()override;
     virtual void Update(Timer& gt)override;
@@ -36,10 +44,7 @@ private:
     void BuildShadersAndInputLayout();
     void BuildPSO();
 
-    void CreateEntity(float x, float y, float z);
-    void CreateEntityCube(float x, float y, float z, XMFLOAT4 oColor);
-    void CreateEntityPyramid(float x, float y, float z, XMFLOAT4 oColor);
-    void CreateParticlesExplosion(float x, float y, float z);
+
 
 private:
 

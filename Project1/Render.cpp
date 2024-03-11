@@ -22,19 +22,24 @@ bool Render::Initialize()
 
 	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
+
 	BuildDescriptorHeaps();
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
 
-	//CreateEntityCube(2.0,2.0,2.0, XMFLOAT4(Colors::Aquamarine));
-	CreateEntityPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
-	CreateEntityPyramid(1.0, 2.0, 5.0, XMFLOAT4(Colors::Red));
+	mc = new MeshCreator(mCommandList, md3dDevice);
+	
+	mc->Init();
 
-	CreateParticlesExplosion(2.0, 2.0, 2.0);
-	CreateParticlesExplosion(3.0, 3.0, 3.0);
-	CreateParticlesExplosion(4.0, 4.0, 4.0);
+	//CreateEntityCube(2.0, 2.0, 2.0, "red");
+	//CreateEntituPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
+
+	//CreateParticlesExplosion(2.0, 2.0, 2.0);
+	//CreateParticlesExplosion(3.0, 3.0, 3.0);
+	//CreateParticlesExplosion(4.0, 4.0, 4.0);
 
 	BuildPSO();
+
 
 	ThrowIfFailed(mCommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
@@ -44,8 +49,6 @@ bool Render::Initialize()
 
 	//Set default position
 	camera.setPosition(x, y, z);
-
-	m_Entities[0]->SetPosition(2, 0, 3);
 
 	return true;
 }
@@ -204,8 +207,7 @@ void Render::Update(Timer& gt)
 		}
 
 	}
-	m_Entities[0]->SetRotate(0.0, 0.01, 0.01);
-	m_Entities[0]->SetScale(2.0,2.0,2.0);
+	m_Entities[0]->SetRotate(0.1,0.0,0.0);
 }
 
 void Render::Draw(const Timer& gt)
@@ -289,7 +291,7 @@ void Render::Draw(const Timer& gt)
 				mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 				mCommandList->DrawIndexedInstanced(
-					comp->DrawArgs["box"].IndexCount,
+					comp->DrawArgs["plane"].IndexCount,
 					1, 0, 0, 0);
 			}
 		}
@@ -382,25 +384,38 @@ void Render::CreateEntity(float posx, float posy, float posz) {
 	m_Entities.push_back(en);
 }
 
-void Render::CreateEntityCube(float posx, float posy, float posz, XMFLOAT4 oColor) {
+void Render::CreateEntityCube(float x, float y, float z, string sColor) {
 	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	en->CreateCube(oColor);
-	en->SetPosition(posx, posy, posz);
+	en->CreateCube(sColor, mc);
+	en->SetPosition(x, y, z);
 	m_Entities.push_back(en);
 }
 
-void Render::CreateEntityPyramid(float posx, float posy, float posz, XMFLOAT4 oColor) {
+void Render::CreateEntityMissiles(float x, float y, float z) {
+	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
+	en->CreateMissiles(mc);
+	en->SetPosition(x, y, z);
+	m_Entities.push_back(en);
+}
+
+void Render::CreateEntituPyramid(float x, float y, float z, string sColor) {
 	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	py->CreatePyramid(XMFLOAT4(Colors::GreenYellow));
-	py->SetPosition(posx, posy, posz);
+	py->CreatePyramid(sColor, mc);
+	py->SetPosition(x, y, z);
 	m_Entities.push_back(py);
 }
 
-void Render::CreateParticlesExplosion(float posx, float posy, float posz) {
-	XMFLOAT3 pos = XMFLOAT3(posx, posy, posz);
-	Particles* par1 = new Particles(XMFLOAT4(Colors::Red), 150, md3dDevice, mCommandList, mCbvHeap, pos);
-	Particles* par2 = new Particles(XMFLOAT4(Colors::Orange), 100, md3dDevice, mCommandList, mCbvHeap, pos);
-	Particles* par3 = new Particles(XMFLOAT4(Colors::Yellow), 50, md3dDevice, mCommandList, mCbvHeap, pos);
+void Render::CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
+	XMFLOAT3 pos = XMFLOAT3(x, y, z);
+	Particles* par = new Particles(sColor, mc, 150, md3dDevice, mCommandList, mCbvHeap, pos, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed);
+	m_Particles.push_back(par);
+}
+
+void Render::CreateParticlesExplosion(float x, float y, float z) {
+	XMFLOAT3 pos = XMFLOAT3(x, y, z);
+	Particles* par1 = new Particles("red", mc, 150, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par2 = new Particles("orange", mc, 100, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par3 = new Particles("yellow", mc, 50, md3dDevice, mCommandList, mCbvHeap, pos);
 	m_Particles.push_back(par1);
 	m_Particles.push_back(par2);
 	m_Particles.push_back(par3);

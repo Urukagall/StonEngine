@@ -1,4 +1,5 @@
 #pragma once
+#include "CustomMath.h"
 #include "Transform.h"
 
 class Camera {

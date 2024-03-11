@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "Collider.h"
+#include "MeshCreator.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -28,9 +29,11 @@ public:
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 
 
-	void CreateCube(XMFLOAT4 oColor);
-	void CreatePyramid(XMFLOAT4 oColor);
-	void SetScale(float x, float y, float z, bool scaleColliderSize = true);
+	void CreatePlane(string sColor, MeshCreator* mc);
+	void CreateCube(string sColor, MeshCreator* mc);
+	void CreateMissiles(MeshCreator* mc);
+	void CreatePyramid(string sColor, MeshCreator* mc);
+	void SetScale(float x, float y, float z);
 	void SetPosition(float x, float y, float z);
 	void SetRotate(float yaw, float pitch, float roll);
 	void SetDirection(float velocity, float deltaTime);

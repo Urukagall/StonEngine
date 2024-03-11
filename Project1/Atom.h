@@ -12,7 +12,7 @@ public:
     float life;
     float lifeMax;
 
-    Atom(XMFLOAT4 oColor, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, XMFLOAT3 pos);
+    Atom(string sColor, MeshCreator* mc, XMFLOAT3 pos, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, int minLife = 6000, int maxLife = 10000, int minScale = 10, int maxScale = 80, int minSpeed = 10, int maxSpeed = 200);
     void Update(float deltaTime);
 };
 

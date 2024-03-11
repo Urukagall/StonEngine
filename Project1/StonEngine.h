@@ -1,0 +1,13 @@
+#pragma once
+#include "pch.h"
+#include "Component.h"
+#include "defines.h"
+#include "Entity.h"
+#include "Init.h"
+#include "input.h"
+#include "CustomMath.h"
+#include "Mesh.h"
+#include "MeshRenderer.h"
+#include "Timer.h"
+#include "Render.h"
+#include "Transform.h"
