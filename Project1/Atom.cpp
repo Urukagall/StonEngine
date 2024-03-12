@@ -4,7 +4,7 @@
 #include "CustomMath.h"
 
 
-Atom::Atom(string sColor, MeshCreator* mc, XMFLOAT3 pos, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
+Atom::Atom(Render* pRender, string sColor, MeshCreator* mc, XMFLOAT3 pos, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
     life = Math::Rand(minLife,maxLife); //2000 - 3000
     lifeMax = life;
 
@@ -13,7 +13,7 @@ Atom::Atom(string sColor, MeshCreator* mc, XMFLOAT3 pos, ComPtr<ID3D12Device> md
     scale = XMFLOAT3(randomScale, randomScale , randomScale);
     scaleMax = scale;
     velocity = Math::Rand(minSpeed, maxSpeed) * 0.00001 ;// 10 - 200
-    m_oEntity = new Entity(md3dDevice, mCommandList, mCbvHeap);
+    m_oEntity = new Entity(md3dDevice, mCommandList, mCbvHeap, pRender);
     m_oEntity->CreatePlane(sColor, mc);
     m_oEntity->SetPosition(pos.x, pos.y, pos.z);
     m_oEntity->SetScale(scale.x,scale.y,scale.z);

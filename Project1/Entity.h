@@ -16,6 +16,7 @@ using namespace DirectX;
 
 class Component;
 class Collider;
+class Render;
 
 class Entity
 {
@@ -24,6 +25,7 @@ public:
 	std::map<std::string, MeshRenderer*> m_oMeshRenderers;
 	Transform m_mTransform;
 	Collider* m_collider;
+	Render* m_pRender;
 	
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
@@ -41,7 +43,7 @@ public:
 	void SetRotate(float yaw, float pitch, float roll);
 	void SetDirection(float velocity, float deltaTime);
 	bool DeleteComponent(std::string name);
-	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap);
+	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, Render* pRender);
 	~Entity();
 
 	void CreateScript(Script* pScript);

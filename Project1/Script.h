@@ -8,5 +8,6 @@ public:
 	Script(Entity* pEntity);
 	~Script();
 	virtual void Update(float dt);
+	virtual void OnLoad();
 };
 

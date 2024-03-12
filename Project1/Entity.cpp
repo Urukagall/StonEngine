@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Entity.h"
 
-Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap) {
+Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, Render* pRender) {
 	m_mTransform = Transform();
 	
 	// Create new collider assigned to this entity
@@ -11,6 +11,7 @@ Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList
 	this->md3dDevice = md3dDevice;
 	this->mCommandList = mCommandList;
 	this->mCbvHeap = mCbvHeap;
+	this->m_pRender = pRender;
 }
 
 Entity::~Entity() {
@@ -19,6 +20,7 @@ Entity::~Entity() {
 void Entity::CreateScript(Script* pScript)
 {
 	m_script = pScript;
+	m_script->OnLoad();
 }
 void Entity::CreatePlane(string sColor, MeshCreator* mc)
 {

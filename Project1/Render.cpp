@@ -136,7 +136,7 @@ void Render::Update(Timer& gt)
 	float dT = gt.GetDT();
 
 	for (int i = 0; i < m_Particles.size(); i++) {
-		m_Particles[i]->Update(gt.GetDT());
+		m_Particles[i]->Update(dT);
 	}
 	// Gérer les entrées utilisateur
 	HandleInput(gt);
@@ -212,7 +212,6 @@ void Render::Update(Timer& gt)
 		}
 
 	}
-	m_Entities[0]->SetRotate(0.1,0.0,0.0);
 }
 
 void Render::Draw(const Timer& gt)
@@ -383,51 +382,61 @@ void Render::BuildShadersAndInputLayout()
 	};
 }
 
-void Render::CreateEntity(float posx, float posy, float posz) {
-	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
+Entity* Render::CreateEntity(float posx, float posy, float posz) {
+	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
 	en->SetPosition(posx, posy, posz);
 	m_Entities.push_back(en);
+
+	return en;
 }
 
-void Render::CreateEntityCube(float x, float y, float z, string sColor) {
-	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	en->CreateCube(sColor, mc);
-	en->SetPosition(x, y, z);
-	m_Entities.push_back(en);
+Entity* Render::CreateEntityCube(float x, float y, float z, string sColor) {
+	Entity* cu = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
+	cu->CreateCube(sColor, mc);
+	cu->SetPosition(x, y, z);
+	m_Entities.push_back(cu);
+
+	return cu;
 }
 
-void Render::CreateEntityMissiles(float x, float y, float z) {
-	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	en->CreateMissiles(mc);
-	en->SetPosition(x, y, z);
-	m_Entities.push_back(en);
+Entity* Render::CreateEntityMissiles(float x, float y, float z) {
+	Entity* mi = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
+	mi->CreateMissiles(mc);
+	mi->SetPosition(x, y, z);
+	m_Entities.push_back(mi);
+
+	return mi;
 }
 
-void Render::CreateEntityPyramid(float x, float y, float z, string sColor) {
-	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
+Entity* Render::CreateEntityPyramid(float x, float y, float z, string sColor) {
+	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
 	py->CreatePyramid(sColor, mc);
 	py->SetPosition(x, y, z);
 	m_Entities.push_back(py);
+
+	return py;
 }
 
-void Render::CreateEntityEnemy(float x, float y, float z) {
-	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap);
-	py->CreateEnemy(mc);
-	py->SetPosition(x, y, z);
-	m_Entities.push_back(py);
+Entity* Render::CreateEntityEnemy(float x, float y, float z) {
+	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
+	en->CreateEnemy(mc);
+	en->SetPosition(x, y, z);
+	m_Entities.push_back(en);
+
+	return en;
 }
 
-void Render::CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed) {
+void Render::CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed, int particleNumber) {
 	XMFLOAT3 pos = XMFLOAT3(x, y, z);
-	Particles* par = new Particles(sColor, mc, 150, md3dDevice, mCommandList, mCbvHeap, pos, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed);
+	Particles* par = new Particles(this, sColor, mc, 150, md3dDevice, mCommandList, mCbvHeap, pos, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed);
 	m_Particles.push_back(par);
 }
 
 void Render::CreateParticlesExplosion(float x, float y, float z) {
 	XMFLOAT3 pos = XMFLOAT3(x, y, z);
-	Particles* par1 = new Particles("red", mc, 150, md3dDevice, mCommandList, mCbvHeap, pos);
-	Particles* par2 = new Particles("orange", mc, 100, md3dDevice, mCommandList, mCbvHeap, pos);
-	Particles* par3 = new Particles("yellow", mc, 50, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par1 = new Particles(this, "red", mc, 150, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par2 = new Particles(this, "orange", mc, 100, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par3 = new Particles(this, "yellow", mc, 50, md3dDevice, mCommandList, mCbvHeap, pos);
 	m_Particles.push_back(par1);
 	m_Particles.push_back(par2);
 	m_Particles.push_back(par3);

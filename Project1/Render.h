@@ -22,12 +22,12 @@ public:
     ~Render();
 
     virtual bool Initialize()override;
-    void CreateEntity(float x, float y, float z);
-    void CreateEntityCube(float x, float y, float z, string sColor);
-    void CreateEntityMissiles(float x, float y, float z);
-    void CreateEntityPyramid(float x, float y, float z, string sColor);
-    void CreateEntityEnemy(float x, float y, float z);
-    void CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed);
+    Entity* CreateEntity(float x, float y, float z);
+    Entity* CreateEntityCube(float x, float y, float z, string sColor);
+    Entity* CreateEntityMissiles(float x, float y, float z);
+    Entity* CreateEntityPyramid(float x, float y, float z, string sColor);
+    Entity* CreateEntityEnemy(float x, float y, float z);
+    void CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed, int particleNumber);
     void CreateParticlesExplosion(float x, float y, float z);
 
     MeshCreator* mc = nullptr;

@@ -7,5 +7,6 @@ public:
 	~Shoot();
 
 	void Update(float dt) override;
+	void OnLoad() override;
 };
 

@@ -4,6 +4,10 @@ Shoot::Shoot(Entity* pEntity) : Script(pEntity) {
 
 }
 
+void Shoot::OnLoad()
+{
+}
+
 void Shoot::Update(float dt) {
 	//OutputDebugStringA("aaaaaaaaa\n");
 	Input input;
@@ -11,4 +15,8 @@ void Shoot::Update(float dt) {
 		OutputDebugStringA("cccccccccccccc\n");
 	}
 
+}
+
+Shoot::~Shoot()
+{
 }
