@@ -81,7 +81,17 @@ void Transform::Walk(float speed, float deltaTime) {
 
 void Transform::VelocityWalk(float speed, float deltaTime) {
 	//TODO
-	AddVelocity(m_vDir.x * speed * deltaTime, m_vDir.y * speed * deltaTime, m_vDir.z * speed * deltaTime);
+	// Load velocity
+	XMFLOAT3 fVelocity;
+	XMStoreFloat3(&fVelocity, m_vVelocity);
+	fVelocity.x += m_vDir.x * speed;
+	fVelocity.y += m_vDir.y * speed;
+	fVelocity.z += m_vDir.z * speed;
+	
+	// Update pos
+	
+	SetVelocity(fVelocity);
+	//AddVelocity(fVelocity.x, fVelocity.y, fVelocity.z);
 }
 
 
@@ -195,14 +205,13 @@ void Transform::ApplyVelocity(float deltaTime) {
 	if (fVelocity.z < -m_fMaxVelocity) cappedVelocity.z = -m_fMaxVelocity;
 
 	// Decelerate
-	if (cappedVelocity.x > 0) cappedVelocity.x -= m_fDeceleration;
+	/*if (cappedVelocity.x > 0) cappedVelocity.x -= m_fDeceleration;
 	if (cappedVelocity.y > 0) cappedVelocity.y -= m_fDeceleration;
 	if (cappedVelocity.z > 0) cappedVelocity.z -= m_fDeceleration;
 
 	if (cappedVelocity.x < 0) cappedVelocity.x += m_fDeceleration;
 	if (cappedVelocity.y < 0) cappedVelocity.y += m_fDeceleration;
-	if (cappedVelocity.z < 0) cappedVelocity.z += m_fDeceleration;
-	
+	if (cappedVelocity.z < 0) cappedVelocity.z += m_fDeceleration;*/
 
 	SetVelocity(cappedVelocity);
 

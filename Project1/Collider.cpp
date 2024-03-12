@@ -46,19 +46,19 @@ bool Collider::CheckColl(Entity* b) {
 	Entity* a = m_entity;
 
 	float collisionDistance = GetSize() + b->m_collider->GetSize();
-	OutputDebugStringA("\ncollisionDistance: ");
-	OutputDebugStringA(std::to_string(collisionDistance).c_str());
+	//OutputDebugStringA("\ncollisionDistance: ");
+	//OutputDebugStringA(std::to_string(collisionDistance).c_str());
 
 	XMVECTOR dist = a->m_mTransform.GetPos() - b->m_mTransform.GetPos();
 	XMFLOAT4 distF; //the float where we copy the up vector members
 	XMStoreFloat4(&distF, dist); //the function used to copy
 
-	OutputDebugStringA("\nx: ");
+	/*OutputDebugStringA("\nx: ");
 	OutputDebugStringA(std::to_string(fabs(distF.x)).c_str());
 	OutputDebugStringA("y: ");
 	OutputDebugStringA(std::to_string(fabs(distF.y)).c_str());
 	OutputDebugStringA("z: ");
-	OutputDebugStringA(std::to_string(fabs(distF.z)).c_str());
+	OutputDebugStringA(std::to_string(fabs(distF.z)).c_str());*/
 
 
 	if (fabs(distF.x) < collisionDistance && fabs(distF.y) < collisionDistance && fabs(distF.z) < collisionDistance) {

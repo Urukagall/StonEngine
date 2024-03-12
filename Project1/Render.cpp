@@ -100,11 +100,13 @@ void Render::HandleInput(Timer& gt)
 
 	if (input.getKey(ARROW_UP)) {
 		//camera.m_transform->Walk(speed*10, dT);
-		camera.m_transform->VelocityWalk(speed * 0.05, dT);
+		camera.m_transform->VelocityWalk(speed * 0.5f, dT);
+		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, 0.05f});
 	}
 	else if (input.getKey(ARROW_DOWN)) {
 		//camera.m_transform->Walk(-speed*10, dT);
-		camera.m_transform->VelocityWalk(-speed * 0.05, dT);
+		camera.m_transform->VelocityWalk(-speed * 0.5f, dT);
+		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, -0.05f});
 	}
 
 	if (input.getKey(ARROW_RIGHT)) {
@@ -129,8 +131,8 @@ void Render::Update(Timer& gt)
 
 	// Update camera
 	//camera.setPosition(x, y, z);
-	camera.setView();
 	camera.m_transform->ApplyVelocity(dT);
+	camera.setView();
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
@@ -162,10 +164,10 @@ void Render::Update(Timer& gt)
 				OutputDebugStringA(std::to_string(b).c_str());*/
 				//Check collision
 				if (m_Entities[a]->m_collider->CheckColl(m_Entities[b])) {
-					OutputDebugStringA("\nCollision");					
+					//OutputDebugStringA("\nCollision");					
 				}
 				else {
-					OutputDebugStringA("\nNOPE");
+					//OutputDebugStringA("\nNOPE");
 				}
 			}
 		}
