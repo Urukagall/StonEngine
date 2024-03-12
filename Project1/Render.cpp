@@ -193,7 +193,6 @@ void Render::Update(Timer& gt)
 				}
 			}
 		}
-
 	}
 	m_Entities[0]->SetRotate(0.1,0.0,0.0);
 }

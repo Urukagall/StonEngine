@@ -20,6 +20,7 @@ public:
 	XMVECTOR m_vVelocity = { 0, 0, 0 };
 	float m_fMaxVelocity = 0.2f;
 	// Dampeners strenght
+	float m_fSpeedMultiplier = 1.0f;
 	float m_fDeceleration = 0.002f; //m_fMaxVelocity * 0.0002f;
 
 	//Rotate
