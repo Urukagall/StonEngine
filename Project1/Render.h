@@ -31,6 +31,7 @@ public:
     void CreateParticlesExplosion(float x, float y, float z);
 
     MeshCreator* mc = nullptr;
+    std::vector<Entity*> m_Entities;
 private:
     virtual void OnResize()override;
     virtual void Update(Timer& gt)override;
@@ -55,7 +56,7 @@ private:
     float cameraZ = 0.0f;
 
     std::vector<MeshGeometry*> m_vEntities;
-    std::vector<Entity*> m_Entities;
+
     std::vector<Particles*> m_Particles;
     ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
     ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;

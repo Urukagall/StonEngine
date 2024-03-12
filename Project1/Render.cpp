@@ -176,10 +176,10 @@ void Render::Update(Timer& gt)
 				OutputDebugStringA(std::to_string(b).c_str());*/
 				//Check collision
 				if (m_Entities[a]->m_collider->CheckColl(m_Entities[b])) {
-					OutputDebugStringA("\nCollision");					
+					//OutputDebugStringA("\nCollision");					
 				}
 				else {
-					OutputDebugStringA("\nNOPE");
+					//OutputDebugStringA("\nNOPE");
 				}
 			}
 		}
@@ -188,6 +188,11 @@ void Render::Update(Timer& gt)
 		for (const auto& pair : m_Entities[a]->m_oMeshRenderers) {
 			pair.second->Update(pr, cam);
 		}
+		if (m_Entities[a]->m_script !=nullptr) {
+			//OutputDebugStringA("bbbb\n");
+			m_Entities[a]->m_script->Update(dT);
+		}
+
 	}
 
 	for (int i = 0; i < m_Particles.size(); ++i) {

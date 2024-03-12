@@ -205,14 +205,6 @@ void Transform::ApplyVelocity(float deltaTime) {
 	// Reload velocity after speed cap
 	XMStoreFloat3(&fVelocity, m_vVelocity);
 
-	OutputDebugStringA("\nVelocity: {");
-	OutputDebugStringA(std::to_string(fVelocity.x).c_str());
-	OutputDebugStringA(", ");
-	OutputDebugStringA(std::to_string(fVelocity.y).c_str());
-	OutputDebugStringA(", ");
-	OutputDebugStringA(std::to_string(fVelocity.z).c_str());
-	OutputDebugStringA("}");
-
 	m_vPos.x += m_vDir.x * deltaTime * fVelocity.x;
 	m_vPos.y += m_vDir.y * deltaTime * fVelocity.y;
 	m_vPos.z += m_vDir.z * deltaTime * fVelocity.z;
