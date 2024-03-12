@@ -38,7 +38,7 @@ public:
 
     virtual bool Initialize();
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
+    Input input;
 protected:
     virtual void CreateRtvAndDsvDescriptorHeaps();
     virtual void OnResize();
@@ -72,7 +72,7 @@ protected:
 protected:
 
     static Init* mApp;
-    Input input;
+
 
     HINSTANCE mhAppInst = nullptr; // application instance handle
     HWND      mhMainWnd = nullptr; // main window handle

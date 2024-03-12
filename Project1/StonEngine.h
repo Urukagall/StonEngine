@@ -11,3 +11,4 @@
 #include "Timer.h"
 #include "Render.h"
 #include "Transform.h"
+#include "Script.h"

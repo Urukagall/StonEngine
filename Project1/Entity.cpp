@@ -16,7 +16,10 @@ Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList
 Entity::~Entity() {
 
 }
-
+void Entity::CreateScript(Script* pScript)
+{
+	m_script = pScript;
+}
 void Entity::CreatePlane(string sColor, MeshCreator* mc)
 {
 	string sMesh = "plane_" + sColor;

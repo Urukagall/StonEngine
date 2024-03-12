@@ -9,9 +9,10 @@
 #include "MeshRenderer.h"
 #include "Collider.h"
 #include "MeshCreator.h"
-
+#include "Script.h"
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
+
 
 class Component;
 class Collider;
@@ -28,6 +29,7 @@ public:
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 
+	Script* m_script = nullptr;
 
 	void CreatePlane(string sColor, MeshCreator* mc);
 	void CreateCube(string sColor, MeshCreator* mc);
@@ -41,6 +43,8 @@ public:
 	bool DeleteComponent(std::string name);
 	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap);
 	~Entity();
+
+	void CreateScript(Script* pScript);
 
 
 };
