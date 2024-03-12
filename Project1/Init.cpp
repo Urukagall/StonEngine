@@ -224,7 +224,7 @@ void Init::OnResize()
 
 	// Execute the resize commands.
 	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	ID3D12CommandList* cmdsLists[] = { mCommandList };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// Wait until resize is complete.

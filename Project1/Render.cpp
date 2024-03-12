@@ -37,7 +37,7 @@ bool Render::Initialize()
 	BuildPSO();
 
 	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	ID3D12CommandList* cmdsLists[] = { mCommandList };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	FlushCommandQueue();
@@ -307,7 +307,7 @@ void Render::Draw(const Timer& gt)
 	ThrowIfFailed(mCommandList->Close());
 
 	// Add the command list to the queue for execution.
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	ID3D12CommandList* cmdsLists[] = { mCommandList };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// swap the back and front buffers

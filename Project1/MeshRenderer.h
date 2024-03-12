@@ -23,12 +23,15 @@ struct ObjectConstants
 
 class MeshRenderer : public Component
 {
-public : 
 
+private:
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
+
+public : 
+
 
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
