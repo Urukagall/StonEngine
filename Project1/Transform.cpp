@@ -134,6 +134,12 @@ void Transform::SetPos(const XMFLOAT3& v) {
 	UpdateMatrix();
 }
 
+void Transform::SetRot(const XMFLOAT4X4& v) {
+
+	m_mRot = v;
+	UpdateMatrix();
+}
+
 XMVECTOR Transform::GetPos() {
 	return XMLoadFloat3(&m_vPos);
 }
@@ -153,6 +159,11 @@ XMVECTOR Transform::GetUp() {
 XMFLOAT4X4 Transform::GetMatrix()
 {
 	return m_mTransform;
+}
+
+XMFLOAT4X4 Transform::GetRotate()
+{
+	return m_mRot;
 }
 
 
@@ -204,14 +215,6 @@ void Transform::ApplyVelocity(float deltaTime) {
 
 	// Reload velocity after speed cap
 	XMStoreFloat3(&fVelocity, m_vVelocity);
-
-	OutputDebugStringA("\nVelocity: {");
-	OutputDebugStringA(std::to_string(fVelocity.x).c_str());
-	OutputDebugStringA(", ");
-	OutputDebugStringA(std::to_string(fVelocity.y).c_str());
-	OutputDebugStringA(", ");
-	OutputDebugStringA(std::to_string(fVelocity.z).c_str());
-	OutputDebugStringA("}");
 
 	m_vPos.x += m_vDir.x * deltaTime * fVelocity.x;
 	m_vPos.y += m_vDir.y * deltaTime * fVelocity.y;

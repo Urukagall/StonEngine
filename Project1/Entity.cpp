@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Entity.h"
 
-Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap) {
+Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, Render* pRender) {
 	m_mTransform = Transform();
 	
 	// Create new collider assigned to this entity
@@ -11,22 +11,57 @@ Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList
 	this->md3dDevice = md3dDevice;
 	this->mCommandList = mCommandList;
 	this->mCbvHeap = mCbvHeap;
+	this->m_pRender = pRender;
 }
 
 Entity::~Entity() {
 
 }
+void Entity::CreateScript(Script* pScript)
+{
+	m_script = pScript;
+	m_script->OnLoad();
+}
+void Entity::CreatePlane(string sColor, MeshCreator* mc)
+{
+	string sMesh = "plane_" + sColor;
 
-void Entity::CreateCube(XMFLOAT4 oColor) {
 	MeshRenderer* com = new MeshRenderer(this);
-	com->Box(oColor);
+	com->mBoxGeo = mc->m_mMesh[sMesh];
+	//com->Plane(oColor);
+	m_oMeshRenderers.insert(std::make_pair("plane", com));
+}
+
+void Entity::CreateCube(string sColor, MeshCreator* mc) {
+	string sMesh = "box_" + sColor;
+
+	MeshRenderer* com = new MeshRenderer(this);
+	com->mBoxGeo = mc->m_mMesh[sMesh];
+	//com->Box(oColor);
 	m_oMeshRenderers.insert(std::make_pair("cube", com));
 }
 
-void Entity::CreatePyramid(XMFLOAT4 oColor) {
+void Entity::CreateMissiles(MeshCreator* mc) {
 	MeshRenderer* com = new MeshRenderer(this);
-	com->Pyramid(oColor);
+	com->mBoxGeo = mc->m_mMesh["missiles"];
+	//com->Box(oColor);
+	m_oMeshRenderers.insert(std::make_pair("missile", com));
+}
+
+void Entity::CreatePyramid(string sColor, MeshCreator* mc) {
+	string sMesh = "pyramid_" + sColor;
+
+	MeshRenderer* com = new MeshRenderer(this);
+	com->mBoxGeo = mc->m_mMesh[sMesh];
+	//com->Pyramid(oColor);
 	m_oMeshRenderers.insert(std::make_pair("pyr", com));
+}
+
+void Entity::CreateEnemy(MeshCreator* mc) {
+	MeshRenderer* com = new MeshRenderer(this);
+	com->mBoxGeo = mc->m_mMesh["enemy"];
+	//com->Pyramid(oColor);
+	m_oMeshRenderers.insert(std::make_pair("enemy", com));
 }
 
 void Entity::SetScale(float x, float y, float z, bool scaleColliderSize) {

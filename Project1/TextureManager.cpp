@@ -21,7 +21,7 @@ void TextureManager::LoadTexture(std::wstring path, ID3D12Device* device, ComPtr
     resourceUpload.Begin();
 
     ThrowIfFailed(
-        CreateDDSTextureFromFile(device, resourceUpload, L"texture.dds",
+        CreateDDSTextureFromFile(device, resourceUpload, L"rocks.dds",
             tex.ReleaseAndGetAddressOf())
     );
 

@@ -39,7 +39,7 @@ public:
     virtual bool Initialize();
     ID3D12GraphicsCommandList* GetCommandList() { return mCommandList.Get(); };
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
+    Input input;
 protected:
     virtual void CreateRtvAndDsvDescriptorHeaps();
     virtual void OnResize();

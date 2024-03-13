@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Math.h"
+#include "CustomMath.h"
 #include <float.h>
 #include <cmath>
 

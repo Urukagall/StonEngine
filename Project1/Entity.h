@@ -10,12 +10,16 @@
 #include "Collider.h"
 #include "Texture.h"
 
+#include "MeshCreator.h"
+#include "Script.h"
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
+
 
 class Component;
 class Collider;
 class TextureEntity;
+class Render;
 
 class Entity
 {
@@ -25,22 +29,29 @@ public:
 	std::map<std::string, TextureEntity*> m_mTextures;
 	Transform m_mTransform;
 	Collider* m_collider;
+	Render* m_pRender;
 	
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 
+	Script* m_script = nullptr;
 
-	void CreateCube(XMFLOAT4 oColor);
-	void CreatePyramid(XMFLOAT4 oColor);
-	void SetScale(float x, float y, float z, bool scaleColliderSize = true);
+	void CreatePlane(string sColor, MeshCreator* mc);
+	void CreateCube(string sColor, MeshCreator* mc);
+	void CreateMissiles(MeshCreator* mc);
+	void CreatePyramid(string sColor, MeshCreator* mc);
+	void CreateEnemy(MeshCreator* mc);
+	void SetScale(float x, float y, float z, bool scaleColliderSize=true);
 	void SetPosition(float x, float y, float z);
 	void SetRotate(float yaw, float pitch, float roll);
 	void SetDirection(float velocity, float deltaTime);
 	void setTexture(std::string sName);
 	bool DeleteComponent(std::string name);
-	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap);
+	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, Render* pRender);
 	~Entity();
+
+	void CreateScript(Script* pScript);
 
 
 };
