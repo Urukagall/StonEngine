@@ -42,7 +42,6 @@ void Transform::Rotate(float yaw, float pitch, float roll) {
 
 	quatRot = XMQuaternionRotationAxis(XMLoadFloat3(&m_vDir), roll);
 	
-
 	quatRot = XMQuaternionMultiply(quatRot, XMQuaternionRotationAxis(XMLoadFloat3(&m_vRight), pitch));
 
 	quatRot = XMQuaternionMultiply(quatRot, XMQuaternionRotationAxis(XMLoadFloat3(&m_vUp), yaw));
@@ -70,15 +69,28 @@ void Transform::Rotate(float yaw, float pitch, float roll) {
 }
 
 void Transform::Walk(float speed, float deltaTime) {
-	AddVelocity(m_vDir.x * speed * deltaTime, m_vDir.y * speed * deltaTime, m_vDir.z * speed * deltaTime);
-
-	/*m_vPos.x += m_vDir.x * speed * deltaTime;
+	m_vPos.x += m_vDir.x * speed * deltaTime;
 	m_vPos.y += m_vDir.y * speed * deltaTime;
-	m_vPos.z += m_vDir.z * speed * deltaTime;*/
+	m_vPos.z += m_vDir.z * speed * deltaTime;
 
 	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	XMStoreFloat4x4(&m_mPos, matrix);
 	UpdateMatrix();
+}
+
+void Transform::VelocityWalk(float speed, float deltaTime) {
+	m_fSpeedMultiplier = 1.0f;
+	// Load velocity
+	XMFLOAT3 fVelocity;
+	XMStoreFloat3(&fVelocity, m_vVelocity);
+	fVelocity.x += m_vDir.x * speed;
+	fVelocity.y += m_vDir.y * speed;
+	fVelocity.z += m_vDir.z * speed;
+	
+	// Update pos
+	
+	SetVelocity(fVelocity);
+	//AddVelocity(fVelocity.x, fVelocity.y, fVelocity.z);
 }
 
 
@@ -135,7 +147,6 @@ void Transform::SetPos(const XMFLOAT3& v) {
 }
 
 void Transform::SetRot(const XMFLOAT4X4& v) {
-
 	m_mRot = v;
 	UpdateMatrix();
 }
@@ -188,11 +199,12 @@ void Transform::SetDeceleration(float speed) {
 }
 
 void Transform::ApplyVelocity(float deltaTime) {
+	// Load velocity
 	XMFLOAT3 fVelocity;
 	XMStoreFloat3(&fVelocity, m_vVelocity);
 
-	// Cap velocity
-	XMFLOAT3 cappedVelocity = { fVelocity.x, fVelocity.y, fVelocity.z };
+	// Cap velocity and decelerate
+	XMFLOAT3 cappedVelocity = { fVelocity.x * m_fSpeedMultiplier, fVelocity.y * m_fSpeedMultiplier, fVelocity.z * m_fSpeedMultiplier };
 	if (fVelocity.x > m_fMaxVelocity) cappedVelocity.x = m_fMaxVelocity;
 	if (fVelocity.y > m_fMaxVelocity) cappedVelocity.y = m_fMaxVelocity;
 	if (fVelocity.z > m_fMaxVelocity) cappedVelocity.z = m_fMaxVelocity;
@@ -202,23 +214,31 @@ void Transform::ApplyVelocity(float deltaTime) {
 	if (fVelocity.z < -m_fMaxVelocity) cappedVelocity.z = -m_fMaxVelocity;
 
 	// Decelerate
-	if (cappedVelocity.x > 0) cappedVelocity.x -= m_fDeceleration;
+	/*if (cappedVelocity.x > 0) cappedVelocity.x -= m_fDeceleration;
 	if (cappedVelocity.y > 0) cappedVelocity.y -= m_fDeceleration;
 	if (cappedVelocity.z > 0) cappedVelocity.z -= m_fDeceleration;
 
 	if (cappedVelocity.x < 0) cappedVelocity.x += m_fDeceleration;
 	if (cappedVelocity.y < 0) cappedVelocity.y += m_fDeceleration;
-	if (cappedVelocity.z < 0) cappedVelocity.z += m_fDeceleration;
-	
+	if (cappedVelocity.z < 0) cappedVelocity.z += m_fDeceleration;*/
 
 	SetVelocity(cappedVelocity);
+	m_fSpeedMultiplier -= m_fDeceleration;
 
 	// Reload velocity after speed cap
 	XMStoreFloat3(&fVelocity, m_vVelocity);
 
-	m_vPos.x += m_vDir.x * deltaTime * fVelocity.x;
-	m_vPos.y += m_vDir.y * deltaTime * fVelocity.y;
-	m_vPos.z += m_vDir.z * deltaTime * fVelocity.z;
+	OutputDebugStringA("\nVelocity: {");
+	OutputDebugStringA(std::to_string(fVelocity.x).c_str());
+	OutputDebugStringA(", ");
+	OutputDebugStringA(std::to_string(fVelocity.y).c_str());
+	OutputDebugStringA(", ");
+	OutputDebugStringA(std::to_string(fVelocity.z).c_str());
+	OutputDebugStringA("}");
+
+	m_vPos.x += deltaTime * fVelocity.x;
+	m_vPos.y += deltaTime * fVelocity.y;
+	m_vPos.z += deltaTime * fVelocity.z;
 
 	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	XMStoreFloat4x4(&m_mPos, matrix);
