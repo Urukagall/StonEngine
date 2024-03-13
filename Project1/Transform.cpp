@@ -42,7 +42,6 @@ void Transform::Rotate(float yaw, float pitch, float roll) {
 
 	quatRot = XMQuaternionRotationAxis(XMLoadFloat3(&m_vDir), roll);
 	
-
 	quatRot = XMQuaternionMultiply(quatRot, XMQuaternionRotationAxis(XMLoadFloat3(&m_vRight), pitch));
 
 	quatRot = XMQuaternionMultiply(quatRot, XMQuaternionRotationAxis(XMLoadFloat3(&m_vUp), yaw));
@@ -148,7 +147,6 @@ void Transform::SetPos(const XMFLOAT3& v) {
 }
 
 void Transform::SetRot(const XMFLOAT4X4& v) {
-
 	m_mRot = v;
 	UpdateMatrix();
 }
