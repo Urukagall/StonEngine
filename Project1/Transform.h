@@ -43,6 +43,7 @@ public:
 	void SetRot(const XMFLOAT4X4& v);
 	void SetDeceleration(float speed);
 	XMVECTOR GetPos();
+	XMFLOAT3 GetPosFloat();
 	XMVECTOR GetDir();
 	XMVECTOR GetRight();
 	XMVECTOR GetUp();
@@ -50,7 +51,7 @@ public:
 	void SetScale(float x, float y, float z);
 	void Walk(float speed, float deltaTime);
 
-	void VelocityWalk(float speed, float deltaTime);
+	void VelocityWalk(float speed);
 	void AddVelocity(float x, float y, float z);
 	void SetVelocity(float x, float y, float z);
 	void SetVelocity(XMFLOAT3 vector);

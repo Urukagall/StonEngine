@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Fichiers sources\Scripts">
-      <UniqueIdentifier>{167ecbbe-485b-4e22-934a-415bb09ac9e7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -39,6 +36,9 @@
     <ClInclude Include="Ship.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Gun.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
     <ClInclude Include="Missile.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -48,16 +48,19 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Shoot.cpp">
-      <Filter>Fichiers sources\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="Missile.cpp">
-      <Filter>Fichiers sources\Scripts</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="GameManager.cpp">
-      <Filter>Fichiers sources\Scripts</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Ship.cpp">
-      <Filter>Fichiers sources\Scripts</Filter>
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Missile.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

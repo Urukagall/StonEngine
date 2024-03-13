@@ -102,12 +102,12 @@ void Render::HandleInput(Timer& gt)
 
 	if (input.getKey(ARROW_UP)) {
 		//camera.m_transform->Walk(speed*10, dT);
-		camera.m_transform->VelocityWalk(speed * 0.5f, dT);
+		camera.m_transform->VelocityWalk(speed * 0.5f);
 		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, 0.05f});
 	}
 	else if (input.getKey(ARROW_DOWN)) {
 		//camera.m_transform->Walk(-speed*10, dT);
-		camera.m_transform->VelocityWalk(-speed * 0.5f, dT);
+		camera.m_transform->VelocityWalk(-speed * 0.5f);
 		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, -0.05f});
 	}
 

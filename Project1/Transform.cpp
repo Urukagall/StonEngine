@@ -78,7 +78,7 @@ void Transform::Walk(float speed, float deltaTime) {
 	UpdateMatrix();
 }
 
-void Transform::VelocityWalk(float speed, float deltaTime) {
+void Transform::VelocityWalk(float speed) {
 	m_fSpeedMultiplier = 1.0f;
 	// Load velocity
 	XMFLOAT3 fVelocity;
@@ -164,6 +164,10 @@ void Transform::SetRot(const XMFLOAT4X4& v) {
 
 XMVECTOR Transform::GetPos() {
 	return XMLoadFloat3(&m_vPos);
+}
+
+XMFLOAT3 Transform::GetPosFloat() {
+	return m_vPos;
 }
 
 XMVECTOR Transform::GetDir() {

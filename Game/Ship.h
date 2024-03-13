@@ -6,7 +6,7 @@ public:
 	Ship(Entity* pEntity);
 	~Ship();
 	
-
+	Entity* m_eCamera;
 	std::vector<Entity*> m_eEntity;
 
 	void Update(float dt) override;
