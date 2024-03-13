@@ -1,6 +1,5 @@
 #pragma once
 #include "../Project1/StonEngine.h"
-#include "Missile.h"
 class Shoot : public Script
 {
 public:

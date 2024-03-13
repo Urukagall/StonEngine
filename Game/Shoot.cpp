@@ -1,5 +1,6 @@
 #include "Shoot.h"
 #include "Gun.h"
+#include "Missile.h"
 
 Shoot::Shoot(Entity* pEntity) : Script(pEntity) {
 
@@ -39,8 +40,8 @@ void Shoot::Update(float dt) {
 		pEntity->m_mTransform.SetDeceleration(0.0f);
 		m_vGun.push_back(pEntity);
 	}
+
 	// MISSILE
-	input = m_oEntity->m_pRender->GetInput();
 	if (input->getKeyDown(ARROW_RIGHT)) {
 
 		// créer une droite qui part devant le joueur
@@ -69,7 +70,7 @@ void Shoot::Update(float dt) {
 
 
 		m_vMissiles.push_back(pEntity);
-
+	}
 	for (int i = 0; i < m_vGun.size(); i++)
 	{
 		m_vGun[i]->m_mTransform.ApplyVelocity(dt);
