@@ -36,7 +36,7 @@ void Shoot::Update(float dt) {
 
 	for (Entity* eEntity : m_vMissiles)
 	{
-		eEntity->m_mTransform.Walk(1, dt);
+		//eEntity->m_mTransform.Walk(1, dt);
 	}
 }
 

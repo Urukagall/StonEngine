@@ -155,6 +155,10 @@ XMVECTOR Transform::GetPos() {
 	return XMLoadFloat3(&m_vPos);
 }
 
+XMFLOAT3 Transform::GetPosFloat() {
+	return m_vPos;
+}
+
 XMVECTOR Transform::GetDir() {
 	return XMLoadFloat3(&m_vDir);
 }

@@ -43,6 +43,7 @@ public:
 	void SetRot(const XMFLOAT4X4& v);
 	void SetDeceleration(float speed);
 	XMVECTOR GetPos();
+	XMFLOAT3 GetPosFloat();
 	XMVECTOR GetDir();
 	XMVECTOR GetRight();
 	XMVECTOR GetUp();
