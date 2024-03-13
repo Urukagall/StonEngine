@@ -37,7 +37,7 @@ public:
     int Run();
 
     virtual bool Initialize();
-    static ID3D12GraphicsCommandList* GetCommandList() { return Init::mCommandList.Get(); };
+    ID3D12GraphicsCommandList* GetCommandList() { return mCommandList.Get(); };
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 protected:
@@ -45,13 +45,6 @@ protected:
     virtual void OnResize();
     virtual void Update(Timer& gt) = 0;
     virtual void Draw(const Timer& gt) = 0;
-
-    // Convenience overrides for handling mouse input.
-    //virtual void OnMouseDown(WPARAM btnState, int x, int y) { }
-    //virtual void OnMouseUp(WPARAM btnState, int x, int y) { }
-    //virtual void OnMouseMove(WPARAM btnState, int x, int y) { }
-
-protected:
 
     bool InitMainWindow();
     bool InitDirect3D();
@@ -74,6 +67,7 @@ protected:
 
     static Init* mApp;
     Input input;
+    Timer mTimer;
 
     HINSTANCE mhAppInst = nullptr; // application instance handle
     HWND      mhMainWnd = nullptr; // main window handle
@@ -88,18 +82,17 @@ protected:
     UINT      m4xMsaaQuality = 0;      // quality level of 4X MSAA
 
     // Used to keep track of the “delta-time” and game time (§4.4).
-    Timer mTimer;
 
     Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
     Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
-    static Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice;
+    Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice;
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList;
 
     Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
     UINT64 mCurrentFence = 0;
 
     Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCommandQueue;
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mDirectCmdListAlloc;
-    static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList;
 
     static const int SwapChainBufferCount = 2;
     int mCurrBackBuffer = 0;
@@ -117,7 +110,7 @@ protected:
     UINT mCbvSrvUavDescriptorSize = 0;
 
     // Derived class should set these in derived constructor to customize starting values.
-    std::wstring mMainWndCaption = L"d3d App";
+    std::wstring mMainWndCaption = L"StonEngine";
     D3D_DRIVER_TYPE md3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
     DXGI_FORMAT mBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
     DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;

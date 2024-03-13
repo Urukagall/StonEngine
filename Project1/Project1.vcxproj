@@ -146,6 +146,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Particles.h" />
     <ClInclude Include="pch.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="pch.cpp">

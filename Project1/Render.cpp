@@ -20,7 +20,7 @@ bool Render::Initialize()
 	if (!Init::Initialize())
 		return false;
 
-	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
+	if(FAILED(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr)));
 
 	BuildDescriptorHeaps();
 	BuildRootSignature();
@@ -36,8 +36,8 @@ bool Render::Initialize()
 
 	BuildPSO();
 
-	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get()};
+	if(FAILED(mCommandList->Close()));
+	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	FlushCommandQueue();
@@ -212,11 +212,11 @@ void Render::Draw(const Timer& gt)
 {
 	// Reuse the memory associated with command recording.
 	// We can only reset when the associated command lists have finished execution on the GPU.
-	ThrowIfFailed(mDirectCmdListAlloc->Reset());
+	if(FAILED(mDirectCmdListAlloc->Reset()));
 
 	// A command list can be reset after it has been added to the command queue via ExecuteCommandList.
 	// Reusing the command list reuses memory.
-	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), mPSO.Get()));
+	if(FAILED(mCommandList->Reset(mDirectCmdListAlloc.Get(), mPSO.Get())));
 
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
@@ -260,7 +260,7 @@ void Render::Draw(const Timer& gt)
 
 
 			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootConstantBufferView(0, mObjectCB->Resource()->GetGPUVirtualAddress());
+			mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 			mCommandList->DrawIndexedInstanced(
 				comp->DrawArgs["box"].IndexCount,
@@ -286,7 +286,7 @@ void Render::Draw(const Timer& gt)
 
 
 				//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-				mCommandList->SetGraphicsRootConstantBufferView(0, mObjectCB->Resource()->GetGPUVirtualAddress());
+				mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 				mCommandList->DrawIndexedInstanced(
 					comp->DrawArgs["box"].IndexCount,
@@ -304,14 +304,14 @@ void Render::Draw(const Timer& gt)
 	mCommandList->ResourceBarrier(1, &resssourceState);
 
 	// Done recording commands.
-	ThrowIfFailed(mCommandList->Close());
+	if(FAILED(mCommandList->Close()));
 
 	// Add the command list to the queue for execution.
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get()};
+	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// swap the back and front buffers
-	ThrowIfFailed(mSwapChain->Present(0, 0));
+	if(FAILED(mSwapChain->Present(0, 0)));
 	mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
 
 	// Wait until frame commands are complete.  This waiting is inefficient and is
@@ -327,8 +327,8 @@ void Render::BuildDescriptorHeaps()
 	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	cbvHeapDesc.NodeMask = 0;
-	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(&cbvHeapDesc,
-		IID_PPV_ARGS(&mCbvHeap)));
+	if(FAILED(md3dDevice->CreateDescriptorHeap(&cbvHeapDesc,
+		IID_PPV_ARGS(&mCbvHeap))));
 }
 
 
@@ -353,13 +353,13 @@ void Render::BuildRootSignature()
 	{
 		::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
 	}
-	ThrowIfFailed(hr);
+	if(FAILED(hr));
 
-	ThrowIfFailed(md3dDevice->CreateRootSignature(
+	if(FAILED(md3dDevice->CreateRootSignature(
 		0,
 		serializedRootSig->GetBufferPointer(),
 		serializedRootSig->GetBufferSize(),
-		IID_PPV_ARGS(&mRootSignature)));
+		IID_PPV_ARGS(&mRootSignature))));
 }
 
 void Render::BuildShadersAndInputLayout()
@@ -432,5 +432,5 @@ void Render::BuildPSO()
 	psoDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
 	psoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
 	psoDesc.DSVFormat = mDepthStencilFormat;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mPSO)));
+	if(FAILED(md3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mPSO))));
 }

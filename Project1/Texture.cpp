@@ -3,6 +3,7 @@
 #include "DDSTextureLoader.h"
 #include "Init.h"
 
+
 TextureEntity::TextureEntity() {
 	md3dDevice = nullptr;
 	m_rUploadHeap = nullptr;
@@ -23,7 +24,7 @@ void TextureEntity::Init(ID3D12Device* dDevice) {
 
 void TextureEntity::LoadTexture(std::string sName, std::wstring sFile) {
 	m_sName = sName;
-	if (FAILED(DirectX::CreateDDSTextureFromFile12(md3dDevice, Init::GetCommandList(), sFile.c_str(), m_rResource, m_rUploadHeap))) {
+	if (FAILED(DirectX::CreateDDSTextureFromFile12(md3dDevice, Init::GetApp()->GetCommandList(), sFile.c_str(), m_rResource, m_rUploadHeap))) {
 		return;
 	}
 

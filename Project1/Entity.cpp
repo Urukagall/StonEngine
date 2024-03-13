@@ -50,6 +50,12 @@ void Entity::SetDirection(float velocity, float deltaTime) {
 	m_mTransform.Walk(velocity, deltaTime);
 }
 
+void Entity::setTexture(std::string sName) {
+	TextureEntity* texture = new TextureEntity();
+	m_mTextures.insert(std::make_pair(sName, texture));
+	//texture->Init()
+}
+
 bool Entity::DeleteComponent(std::string name) {
 	auto it = m_oMeshRenderers.find(name);
 

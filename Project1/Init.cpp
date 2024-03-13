@@ -126,8 +126,8 @@ void Init::CreateRtvAndDsvDescriptorHeaps()
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	rtvHeapDesc.NodeMask = 0;
-	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(
-		&rtvHeapDesc, IID_PPV_ARGS(mRtvHeap.GetAddressOf())));
+	if(FAILED(md3dDevice->CreateDescriptorHeap(
+		&rtvHeapDesc, IID_PPV_ARGS(mRtvHeap.GetAddressOf()))));
 
 
 	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
@@ -135,8 +135,8 @@ void Init::CreateRtvAndDsvDescriptorHeaps()
 	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	dsvHeapDesc.NodeMask = 0;
-	ThrowIfFailed(md3dDevice->CreateDescriptorHeap(
-		&dsvHeapDesc, IID_PPV_ARGS(mDsvHeap.GetAddressOf())));
+	if(FAILED(md3dDevice->CreateDescriptorHeap(
+		&dsvHeapDesc, IID_PPV_ARGS(mDsvHeap.GetAddressOf()))));
 }
 
 void Init::OnResize()
@@ -148,7 +148,7 @@ void Init::OnResize()
 	// Flush before changing any resources.
 	FlushCommandQueue();
 
-	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
+	if(FAILED(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr)));
 
 	// Release the previous resources we will be recreating.
 	for (int i = 0; i < SwapChainBufferCount; ++i)
@@ -156,18 +156,18 @@ void Init::OnResize()
 	mDepthStencilBuffer.Reset();
 
 	// Resize the swap chain.
-	ThrowIfFailed(mSwapChain->ResizeBuffers(
+	if(FAILED(mSwapChain->ResizeBuffers(
 		SwapChainBufferCount,
 		mClientWidth, mClientHeight,
 		mBackBufferFormat,
-		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
+		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH)));
 
 	mCurrBackBuffer = 0;
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(mRtvHeap->GetCPUDescriptorHandleForHeapStart());
 	for (UINT i = 0; i < SwapChainBufferCount; i++)
 	{
-		ThrowIfFailed(mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i])));
+		if(FAILED(mSwapChain->GetBuffer(i, IID_PPV_ARGS(&mSwapChainBuffer[i]))));
 		md3dDevice->CreateRenderTargetView(mSwapChainBuffer[i].Get(), nullptr, rtvHeapHandle);
 		rtvHeapHandle.Offset(1, mRtvDescriptorSize);
 	}
@@ -200,13 +200,13 @@ void Init::OnResize()
 
 	CD3DX12_HEAP_PROPERTIES defaultHeap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 
-	ThrowIfFailed(md3dDevice->CreateCommittedResource(
+	if(FAILED(md3dDevice->CreateCommittedResource(
 		&defaultHeap,
 		D3D12_HEAP_FLAG_NONE,
 		&depthStencilDesc,
 		D3D12_RESOURCE_STATE_COMMON,
 		&optClear,
-		IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf())));
+		IID_PPV_ARGS(mDepthStencilBuffer.GetAddressOf()))));
 
 	// Create descriptor to mip level 0 of entire resource using the format of the resource.
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -223,8 +223,8 @@ void Init::OnResize()
 	mCommandList->ResourceBarrier(1, &commonState);
 
 	// Execute the resize commands.
-	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get()};
+	if(FAILED(mCommandList->Close()));
+	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// Wait until resize is complete.
@@ -421,12 +421,12 @@ bool Init::InitDirect3D()
 	// Enable the D3D12 debug layer.
 	{
 		ComPtr<ID3D12Debug> debugController;
-		ThrowIfFailed(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
+		if(FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))));
 		debugController->EnableDebugLayer();
 	}
 #endif
 
-ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&mdxgiFactory)));
+if(FAILED(CreateDXGIFactory1(IID_PPV_ARGS(&mdxgiFactory))));
 
 // Try to create hardware device.
 HRESULT hardwareResult = D3D12CreateDevice(
@@ -438,16 +438,16 @@ HRESULT hardwareResult = D3D12CreateDevice(
 if (FAILED(hardwareResult))
 {
 	ComPtr<IDXGIAdapter> pWarpAdapter;
-	ThrowIfFailed(mdxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter)));
+	if(FAILED(mdxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pWarpAdapter))));
 
-	ThrowIfFailed(D3D12CreateDevice(
+	if(FAILED(D3D12CreateDevice(
 		pWarpAdapter.Get(),
 		D3D_FEATURE_LEVEL_11_0,
-		IID_PPV_ARGS(&md3dDevice)));
+		IID_PPV_ARGS(&md3dDevice))));
 }
 
-ThrowIfFailed(md3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
-	IID_PPV_ARGS(&mFence)));
+if(FAILED(md3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+	IID_PPV_ARGS(&mFence))));
 
 mRtvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 mDsvDescriptorSize = md3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
@@ -462,10 +462,10 @@ msQualityLevels.Format = mBackBufferFormat;
 msQualityLevels.SampleCount = 4;
 msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 msQualityLevels.NumQualityLevels = 0;
-ThrowIfFailed(md3dDevice->CheckFeatureSupport(
+if(FAILED(md3dDevice->CheckFeatureSupport(
 	D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS,
 	&msQualityLevels,
-	sizeof(msQualityLevels)));
+	sizeof(msQualityLevels))));
 
 m4xMsaaQuality = msQualityLevels.NumQualityLevels;
 assert(m4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
@@ -486,18 +486,18 @@ void Init::CreateCommandObjects()
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	ThrowIfFailed(md3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mCommandQueue)));
+	if(FAILED(md3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mCommandQueue))));
 
-	ThrowIfFailed(md3dDevice->CreateCommandAllocator(
+	if(FAILED(md3dDevice->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(mDirectCmdListAlloc.GetAddressOf())));
+		IID_PPV_ARGS(mDirectCmdListAlloc.GetAddressOf()))));
 
-	ThrowIfFailed(md3dDevice->CreateCommandList(
+	if(FAILED(md3dDevice->CreateCommandList(
 		0,
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		mDirectCmdListAlloc.Get(), // Associated command allocator
 		nullptr,                   // Initial PipelineStateObject
-		IID_PPV_ARGS(mCommandList.GetAddressOf())));
+		IID_PPV_ARGS(&mCommandList))));
 
 	// Start off in a closed state.  This is because the first time we refer 
 	// to the command list we will Reset it, and it needs to be closed before
@@ -528,10 +528,10 @@ void Init::CreateSwapChain()
 	sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	// Note: Swap chain uses queue to perform flush.
-	ThrowIfFailed(mdxgiFactory->CreateSwapChain(
+	if(FAILED(mdxgiFactory->CreateSwapChain(
 		mCommandQueue.Get(),
 		&sd,
-		mSwapChain.GetAddressOf()));
+		mSwapChain.GetAddressOf())));
 }
 
 void Init::FlushCommandQueue()
@@ -542,7 +542,7 @@ void Init::FlushCommandQueue()
 	// Add an instruction to the command queue to set a new fence point.  Because we 
 	// are on the GPU timeline, the new fence point won't be set until the GPU finishes
 	// processing all the commands prior to this Signal().
-	ThrowIfFailed(mCommandQueue->Signal(mFence.Get(), mCurrentFence));
+	if(FAILED(mCommandQueue->Signal(mFence.Get(), mCurrentFence)));
 
 	// Wait until the GPU has completed commands up to this fence point.
 	if (mFence->GetCompletedValue() < mCurrentFence)
@@ -550,7 +550,7 @@ void Init::FlushCommandQueue()
 		HANDLE eventHandle = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
 
 		// Fire event when GPU hits current fence.  
-		ThrowIfFailed(mFence->SetEventOnCompletion(mCurrentFence, eventHandle));
+		if(FAILED(mFence->SetEventOnCompletion(mCurrentFence, eventHandle)));
 
 		// Wait until the GPU hits current fence event is fired.
 		WaitForSingleObject(eventHandle, INFINITE);
