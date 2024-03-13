@@ -1,6 +1,6 @@
 #include "GameManager.h"
 #include "Shoot.h"
-
+#include "Ship.h"
 GameManager::GameManager(Entity* pEntity) : Script(pEntity) {
 }
 
@@ -11,8 +11,13 @@ void GameManager::OnLoad() {
     //pEntity->m_pRender->CreateEntityMissiles(3.0, 3.0, 3.0);
     m_oEntity->m_pRender->CreateEntityEnemy(5.0, 5.0, 5.0);
 
-    Shoot* pShoot = new Shoot(m_oEntity);
+
+    Shoot* pShoot = new Shoot(m_oEntity->m_pRender->CreateEntity(0.f, 0.f, 0.f));
     m_oEntity->CreateScript(pShoot);
+
+    Entity* eShip = m_oEntity->m_pRender->CreateEntity(0.f, 0.f, 0.f);
+    Ship* pShip = new Ship(eShip);
+    eShip->CreateScript(pShip);
 }
 
 //Update
