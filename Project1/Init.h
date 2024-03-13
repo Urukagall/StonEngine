@@ -37,7 +37,9 @@ public:
     int Run();
 
     virtual bool Initialize();
+    ID3D12Device* GetDevice() { return md3dDevice.Get(); }
     ID3D12GraphicsCommandList* GetCommandList() { return mCommandList.Get(); };
+    ID3D12DescriptorHeap* GetDescriptorHeap() { return mdDescriptorHeap.Get(); };
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
     Input input;
 protected:
@@ -66,7 +68,6 @@ protected:
 protected:
 
     static Init* mApp;
-    Input input;
     Timer mTimer;
 
     HINSTANCE mhAppInst = nullptr; // application instance handle
@@ -101,6 +102,7 @@ protected:
 
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mdDescriptorHeap;
 
     D3D12_VIEWPORT mScreenViewport;
     D3D12_RECT mScissorRect;

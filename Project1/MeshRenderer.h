@@ -15,6 +15,8 @@ struct ObjectConstants
 	XMFLOAT4X4 WorldViewProj = Math::Identity4x4();
 };
 
+class TextureEntity;
+
 class MeshRenderer : public Component
 {
 
@@ -23,6 +25,7 @@ public:
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
 	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
 	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
+	TextureEntity* m_tTexture;
 
 public : 
 
@@ -31,6 +34,7 @@ public :
 	~MeshRenderer();
 
 	void BuildConstantBuffers();
+	void setTexture(TextureEntity* tTexture);
 	void Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam);
 };
 

@@ -88,7 +88,9 @@ void Entity::SetDirection(float velocity, float deltaTime) {
 void Entity::setTexture(std::string sName) {
 	TextureEntity* texture = new TextureEntity();
 	m_mTextures.insert(std::make_pair(sName, texture));
-	//texture->Init()
+	texture->Init(Init::GetApp()->GetDevice());
+	texture->LoadTexture(sName, L"..\\img\\" + std::wstring(sName.begin(), sName.end()) + L".dds", Init::GetApp()->GetDescriptorHeap());
+	texture->BuildSrvDesc(Init::GetApp()->GetDescriptorHeap(), m_mTextures.size());
 }
 
 bool Entity::DeleteComponent(std::string name) {

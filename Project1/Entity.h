@@ -30,6 +30,7 @@ public:
 	Transform m_mTransform;
 	Collider* m_collider;
 	Render* m_pRender;
+	MeshRenderer* m_mMeshRender;
 	
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
@@ -47,6 +48,7 @@ public:
 	void SetRotate(float yaw, float pitch, float roll);
 	void SetDirection(float velocity, float deltaTime);
 	void setTexture(std::string sName);
+	TextureEntity* getTexture(std::string sName) { return m_mTextures.find(sName)->second; };
 	bool DeleteComponent(std::string name);
 	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, Render* pRender);
 	~Entity();

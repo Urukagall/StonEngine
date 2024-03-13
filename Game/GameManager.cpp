@@ -10,6 +10,8 @@ void GameManager::OnLoad() {
     m_oEntity->m_pRender->CreateEntityCube(2.0, 2.0, 2.0, "blue");
     //pEntity->m_pRender->CreateEntityMissiles(3.0, 3.0, 3.0);
     m_oEntity->m_pRender->CreateEntityEnemy(5.0, 5.0, 5.0);
+    m_oEntity->setTexture("rocks");
+    m_oEntity->m_mMeshRender->setTexture(m_oEntity->getTexture("rocks"));
 
     Shoot* pShoot = new Shoot(m_oEntity);
     m_oEntity->CreateScript(pShoot);
