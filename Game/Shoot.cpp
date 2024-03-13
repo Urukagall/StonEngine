@@ -50,6 +50,9 @@ void Shoot::Update(float dt) {
 		FXMVECTOR point1 = m_oEntity->m_mTransform.GetDir();
 		FXMVECTOR point2 = point1 * 2;
 
+		Entity* target = nullptr;
+		float shortestLen = 999999999999999;
+
 		for (int i = 0; i < ShipsRef->size(); i++)
 		{
 			//XMVECTOR point3 = Ships[i]->m_mTransform.GetPos
@@ -58,8 +61,18 @@ void Shoot::Update(float dt) {
 			XMVECTOR distV = XMVector3LinePointDistance(point1, point2, point3);
 			XMFLOAT3 distF;
 			XMStoreFloat3(&distF, distV);
+
+			
 			if (distF.x < seekerLockRadius && distF.y < seekerLockRadius && distF.z < seekerLockRadius) {
-				OutputDebugStringA("\nKILL HIIIM ! Put the nose on him and Kill Him ! C'mon he's out in front, Shoot Him, Shoot HIM ! and then the maniacal laughter after that.");
+				// Calculate length (dist) to target
+				float len = sqrtf(distF.x * distF.x + distF.y * distF.y + distF.z * distF.z);
+				if (len < shortestLen) {
+					shortestLen = len;
+					target = ShipsRef->at(i);
+				}
+				//OutputDebugStringA("\nlen: ");
+				//OutputDebugStringA(std::to_string(len).c_str());
+				//OutputDebugStringA("\nKILL HIIIM ! Put the nose on him and Kill Him ! C'mon he's out in front, Shoot Him, Shoot HIM ! and then the maniacal laughter after that.");
 			}
 
 			/*OutputDebugStringA("\nDistance: {");
@@ -70,7 +83,8 @@ void Shoot::Update(float dt) {
 			OutputDebugStringA(std::to_string(distF.z).c_str());
 			OutputDebugStringA("}");*/
 		}
-
+		OutputDebugStringA("\nClosest target: ");
+		OutputDebugStringA(std::to_string(shortestLen).c_str());
 		
 
 		XMFLOAT3 pos;

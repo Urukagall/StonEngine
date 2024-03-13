@@ -5,7 +5,7 @@ class Shoot : public Script
 public:
 	Shoot(Entity* pEntity, std::vector<Entity*>* vecPtr);
 	~Shoot();
-	int seekerLockRadius = 15;
+	int seekerLockRadius = 10;
 	std::vector<Entity*> m_vMissiles;
 	std::vector<Entity*> m_vGun;
 	std::vector<Entity*>* ShipsRef;
