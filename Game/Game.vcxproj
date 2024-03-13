@@ -131,6 +131,8 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Gun.h" />
+    <ClInclude Include="Missile.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Ship.h" />
     <ClInclude Include="Shoot.h" />
@@ -139,6 +141,8 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Gun.cpp" />
+    <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Ship.cpp" />
     <ClCompile Include="Shoot.cpp" />
   </ItemGroup>
