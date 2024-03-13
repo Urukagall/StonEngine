@@ -37,7 +37,7 @@ public:
     int Run();
 
     virtual bool Initialize();
-    static ID3D12GraphicsCommandList* GetCommandList() { return Init::mCommandList; };
+    static ID3D12GraphicsCommandList* GetCommandList() { return Init::mCommandList.Get(); };
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 protected:
@@ -99,7 +99,7 @@ protected:
 
     Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCommandQueue;
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mDirectCmdListAlloc;
-    static ID3D12GraphicsCommandList* mCommandList;
+    static Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList;
 
     static const int SwapChainBufferCount = 2;
     int mCurrBackBuffer = 0;

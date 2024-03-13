@@ -37,7 +37,7 @@ bool Render::Initialize()
 	BuildPSO();
 
 	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList };
+	ID3D12CommandList* cmdsLists[] = { mCommandList.Get()};
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	FlushCommandQueue();
@@ -260,7 +260,7 @@ void Render::Draw(const Timer& gt)
 
 
 			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
+			mCommandList->SetGraphicsRootConstantBufferView(0, mObjectCB->Resource()->GetGPUVirtualAddress());
 
 			mCommandList->DrawIndexedInstanced(
 				comp->DrawArgs["box"].IndexCount,
@@ -286,7 +286,7 @@ void Render::Draw(const Timer& gt)
 
 
 				//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-				mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
+				mCommandList->SetGraphicsRootConstantBufferView(0, mObjectCB->Resource()->GetGPUVirtualAddress());
 
 				mCommandList->DrawIndexedInstanced(
 					comp->DrawArgs["box"].IndexCount,
@@ -307,7 +307,7 @@ void Render::Draw(const Timer& gt)
 	ThrowIfFailed(mCommandList->Close());
 
 	// Add the command list to the queue for execution.
-	ID3D12CommandList* cmdsLists[] = { mCommandList };
+	ID3D12CommandList* cmdsLists[] = { mCommandList.Get()};
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
 	// swap the back and front buffers

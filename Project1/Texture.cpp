@@ -53,7 +53,7 @@ void TextureEntity::Offset(std::string sName) {
 	auto offset = m_tTexture[sName]->m_rResource;
 
 	m_dDescriptorHdl.Offset(1, m_uDescriptorSize);
-	m_dSrcVDesc.Format = offset->GetDesc().MipLevels;
+	m_dSrcVDesc.Format = offset->GetDesc().Format;
 	m_dSrcVDesc.Texture2D.MipLevels = offset->GetDesc().MipLevels;
 
 	md3dDevice->CreateShaderResourceView(offset.Get(), &m_dSrcVDesc, m_dDescriptorHdl);
