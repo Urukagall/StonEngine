@@ -98,29 +98,17 @@ void Render::HandleInput(Timer& gt)
 	}
 	else if (input.getKey(rollRight)) {
 		camera.m_transform->Rotate(0, 0, -speed * dT);
-		//camera.Roll(-speed * dT);
 	}
 
 	if (input.getKey(ARROW_UP)) {
-		camera.m_transform->Walk(speed*0.05, dT);
-		//camera.m_transform->AddVelocity(speed * 10, dT);
-
-		/*OutputDebugStringA("\nx: ");
-		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.x).c_str());
-		OutputDebugStringA("\ny: ");
-		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.y).c_str());
-		OutputDebugStringA("\nz: ");
-		OutputDebugStringA(std::to_string(camera.m_transform->m_vPos.z).c_str());
-		OutputDebugStringA("\nSpeed: ");
-		OutputDebugStringA(std::to_string(speed).c_str());
-		OutputDebugStringA("\ndT: ");
-		OutputDebugStringA(std::to_string(dT).c_str());*/
-
-		//camera.Walk(speed * dT);
+		//camera.m_transform->Walk(speed*10, dT);
+		camera.m_transform->VelocityWalk(speed * 0.5f, dT);
+		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, 0.05f});
 	}
 	else if (input.getKey(ARROW_DOWN)) {
-		camera.m_transform->Walk(-speed*0.05, dT);
-		//camera.Walk((-speed) * dT);
+		//camera.m_transform->Walk(-speed*10, dT);
+		camera.m_transform->VelocityWalk(-speed * 0.5f, dT);
+		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, -0.05f});
 	}
 
 	if (input.getKey(ARROW_RIGHT)) {
@@ -145,8 +133,8 @@ void Render::Update(Timer& gt)
 
 	// Update camera
 	//camera.setPosition(x, y, z);
-	camera.setView();
 	camera.m_transform->ApplyVelocity(dT);
+	camera.setView();
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
@@ -212,7 +200,6 @@ void Render::Update(Timer& gt)
 				}
 			}
 		}
-
 	}
 }
 
