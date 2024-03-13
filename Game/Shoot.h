@@ -9,6 +9,10 @@ public:
 	std::vector<Entity*> m_vMissiles;
 	std::vector<Entity*> m_vGun;
 
+	std::vector<int> m_vGunLife;
+
+	int m_iGunDelay;
+
 	void Update(float dt) override;
 	void OnLoad() override;
 };

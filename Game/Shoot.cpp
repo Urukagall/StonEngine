@@ -1,9 +1,8 @@
 #include "Shoot.h"
-#include "Gun.h"
 #include "Missile.h"
 
 Shoot::Shoot(Entity* pEntity) : Script(pEntity) {
-
+	m_iGunDelay = 300;
 }
 
 void Shoot::OnLoad()
@@ -13,11 +12,14 @@ void Shoot::OnLoad()
 
 void Shoot::Update(float dt) {
 	Input* input;
+	
+	m_iGunDelay -= dt;
 
 	// GUN
 	input = m_oEntity->m_pRender->GetInput();
-	if (input->getKey(ARROW_LEFT)) {
+	if (input->getKey(ARROW_LEFT) && m_iGunDelay <= 0) {
 		XMFLOAT3 pos;
+		m_iGunDelay = 300;
 
 		//XMStoreFloat3(&pos, m_oEntity->m_mTransform.GetPos());
 		XMStoreFloat3(&pos, m_oEntity->m_pRender->camera.m_transform->GetPos());
@@ -30,15 +32,13 @@ void Shoot::Update(float dt) {
 
 		Entity* pEntity = m_oEntity->m_pRender->CreateEntityCube(x, y, z, "yellow");
 
-		Gun* pGun = new Gun(pEntity);
-		pEntity->CreateScript(pGun);
-
 		Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
-		newTransform.Scale(0.1f, 0.1f, 0.5f);
+		newTransform.Scale(0.5f, 0.1f, 0.1f);
 		pEntity->m_mTransform = newTransform;
 		pEntity->m_mTransform.VelocityWalk(0.5f);
 		pEntity->m_mTransform.SetDeceleration(0.0f);
 		m_vGun.push_back(pEntity);
+		m_vGunLife.push_back(1000);
 	}
 
 	// MISSILE
@@ -72,14 +72,20 @@ void Shoot::Update(float dt) {
 		m_vMissiles.push_back(pEntity);
 	}
 
-	/*for (int i = 0; i < m_vGun.size(); i++)
+	for (int i = 0; i < m_vGun.size(); i++)
 	{
-		m_vGun[i]->m_mTransform.ApplyVelocity(dt);
+		m_vGun.at(i)->m_mTransform.ApplyVelocity(dt);
+		m_vGunLife.at(i) -= dt;
+		if (m_vGunLife.at(i) <= 0)
+		{
+			m_vGun.at(i)->DeleteComponent("cube");
+			//delete(m_vGun.at(i));
+			//il faut juste le supprimer de la liste d'entity de render.cpp
+			m_vGun.erase(m_vGun.begin() + i);
+			m_vGunLife.erase(m_vGunLife.begin() + i);
+		}
 		
-		m_vGun[i]->DeleteComponent("cube");
-		delete(m_vGun[i]);
-		m_vGun.erase(m_vGun.begin() + i);
-	}*/
+	}
 }
 
 Shoot::~Shoot()
