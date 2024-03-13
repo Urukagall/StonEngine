@@ -32,7 +32,7 @@ void Shoot::Update(float dt) {
 		Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
 		newTransform.Rotate(XMConvertToRadians(-90.0f),0.0f, 0.0f);
 		pEntity->m_mTransform = newTransform;
-		m_eMissiles.push_back(pEntity);
+		m_vMissiles.push_back(pEntity);
 	}
 }
 
