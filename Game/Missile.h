@@ -1,16 +1,18 @@
 #pragma once
 #include "../Project1/StonEngine.h"
-#include "Missile.h"
-class Shoot : public Script
+class Missile : public Script
 {
 public:
-	Shoot(Entity* pEntity);
-	~Shoot();
+	Missile(Entity* pEntity);
+	~Missile();
 
 	std::vector<Entity*> m_vMissiles;
-	std::vector<Entity*> m_vGun;
 
 	void Update(float dt) override;
 	void OnLoad() override;
+private:
+	Entity* m_eTarget;
+	Entity* m_eMissile;
+	float m_fSpeed;
 };
 
