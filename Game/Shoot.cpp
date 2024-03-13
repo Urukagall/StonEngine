@@ -71,14 +71,15 @@ void Shoot::Update(float dt) {
 
 		m_vMissiles.push_back(pEntity);
 	}
-	for (int i = 0; i < m_vGun.size(); i++)
+
+	/*for (int i = 0; i < m_vGun.size(); i++)
 	{
 		m_vGun[i]->m_mTransform.ApplyVelocity(dt);
 		
 		m_vGun[i]->DeleteComponent("cube");
 		delete(m_vGun[i]);
 		m_vGun.erase(m_vGun.begin() + i);
-	}
+	}*/
 }
 
 Shoot::~Shoot()
