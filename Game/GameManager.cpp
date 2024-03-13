@@ -11,6 +11,8 @@ void GameManager::OnLoad() {
     //pEntity->m_pRender->CreateEntityMissiles(3.0, 3.0, 3.0);
     m_oEntity->m_pRender->CreateEntityEnemy(5.0, 5.0, 5.0);
 
+
+
     Shoot* pShoot = new Shoot(m_oEntity);
     m_oEntity->CreateScript(pShoot);
 }

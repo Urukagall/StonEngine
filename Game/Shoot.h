@@ -6,7 +6,7 @@ public:
 	Shoot(Entity* pEntity);
 	~Shoot();
 
-	std::vector<Entity*> m_eMissiles;
+	std::vector<Entity*> m_vMissiles;
 
 	void Update(float dt) override;
 	void OnLoad() override;

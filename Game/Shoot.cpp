@@ -12,7 +12,7 @@ void Shoot::Update(float dt) {
 	Input* input;
 
 	input = m_oEntity->m_pRender->GetInput();
-	if (input->getKeyDown(ARROW_LEFT)) {
+	if (input->getKeyDown(ARROW_RIGHT)) {
 		OutputDebugStringA("Left\n");
 		XMFLOAT3 pos;
 
@@ -31,7 +31,12 @@ void Shoot::Update(float dt) {
 		Entity* pEntity = m_oEntity->m_pRender->CreateEntityMissiles(x, y, z);
 		pEntity->m_mTransform.SetRot(rot);
 		pEntity->m_mTransform.Rotate(0, 0, XMConvertToRadians(90));
-		m_eMissiles.push_back(pEntity);
+		m_vMissiles.push_back(pEntity);
+	}
+
+	for (Entity* eEntity : m_vMissiles)
+	{
+		eEntity->m_mTransform.Walk(1, dt);
 	}
 }
 
