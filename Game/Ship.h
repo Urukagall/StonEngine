@@ -11,6 +11,7 @@ public:
 
 	void Update(float dt) override;
 	void OnLoad() override;
+	std::vector<Entity*>* GetShips();
 };
 
 

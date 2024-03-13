@@ -12,12 +12,14 @@ void GameManager::OnLoad() {
     //m_oEntity->m_pRender->CreateEntityEnemy(5.0, 5.0, 5.0);
 
 
-    Shoot* pShoot = new Shoot(m_oEntity->m_pRender->CreateEntity(0.f, 0.f, 0.f));
-    m_oEntity->CreateScript(pShoot);
+    
 
     Entity* eShip = m_oEntity->m_pRender->CreateEntity(0.f, 0.f, 0.f);
     Ship* pShip = new Ship(eShip);
     eShip->CreateScript(pShip);
+
+    Shoot* pShoot = new Shoot(m_oEntity->m_pRender->CreateEntity(0.f, 0.f, 0.f), pShip->GetShips());
+    m_oEntity->CreateScript(pShoot);
 }
 
 //Update

@@ -38,7 +38,10 @@ void Ship::Update(float dt) {
 		}
 		m_eEntity[i]->m_mTransform.ApplyVelocity(dt);
 	}
+}
 
+std::vector<Entity*>* Ship::GetShips() {
+	return &m_eEntity;
 }
 
 Ship::~Ship()

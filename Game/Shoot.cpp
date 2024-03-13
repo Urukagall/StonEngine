@@ -2,8 +2,8 @@
 #include "Gun.h"
 #include "Missile.h"
 
-Shoot::Shoot(Entity* pEntity) : Script(pEntity) {
-
+Shoot::Shoot(Entity* pEntity, std::vector<Entity*>* vecPtr) : Script(pEntity) {
+	ShipsRef = vecPtr;
 }
 
 void Shoot::OnLoad()
@@ -50,7 +50,28 @@ void Shoot::Update(float dt) {
 		FXMVECTOR point1 = m_oEntity->m_mTransform.GetDir();
 		FXMVECTOR point2 = point1 * 2;
 
-		XMVector3LinePointDistance(point1, point2, point1);
+		for (int i = 0; i < ShipsRef->size(); i++)
+		{
+			//XMVECTOR point3 = Ships[i]->m_mTransform.GetPos
+			XMVECTOR point3 = ShipsRef->at(i)->m_mTransform.GetPos();
+
+			XMVECTOR distV = XMVector3LinePointDistance(point1, point2, point3);
+			XMFLOAT3 distF;
+			XMStoreFloat3(&distF, distV);
+			if (distF.x < seekerLockRadius && distF.y < seekerLockRadius && distF.z < seekerLockRadius) {
+				OutputDebugStringA("\nKILL HIIIM ! Put the nose on him and Kill Him ! C'mon he's out in front, Shoot Him, Shoot HIM ! and then the maniacal laughter after that.");
+			}
+
+			/*OutputDebugStringA("\nDistance: {");
+			OutputDebugStringA(std::to_string(distF.x).c_str());
+			OutputDebugStringA(", ");
+			OutputDebugStringA(std::to_string(distF.y).c_str());
+			OutputDebugStringA(", ");
+			OutputDebugStringA(std::to_string(distF.z).c_str());
+			OutputDebugStringA("}");*/
+		}
+
+		
 
 		XMFLOAT3 pos;
 
