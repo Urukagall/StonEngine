@@ -32,9 +32,10 @@ void Ship::Update(float dt) {
 		if (m_eEntity[i]->m_collider->CheckColl(m_eCamera)) {
 			PostQuitMessage(0);
 		}
-		else if ( fabs(m_eEntity[i]->m_mTransform.GetPosFloat().x) > 120  || fabs(m_eEntity[i]->m_mTransform.GetPosFloat().y) > 120 || fabs(m_eEntity[i]->m_mTransform.GetPosFloat().z) > 120) {
+		else if ( fabs(m_eEntity[i]->m_mTransform.GetPosFloat().x) >= 120  || fabs(m_eEntity[i]->m_mTransform.GetPosFloat().y) >= 120 || fabs(m_eEntity[i]->m_mTransform.GetPosFloat().z) >= 120) {
 			m_eEntity[i]->m_mTransform.m_fSpeedMultiplier = -m_eEntity[i]->m_mTransform.m_fSpeedMultiplier;
-			m_eEntity[i]->SetRotate(XMConvertToRadians(180), 0.0, 0.0);
+			m_eEntity[i]->SetRotate(XMConvertToRadians(90), 0.0, 0.0);
+
 		}
 		m_eEntity[i]->m_mTransform.ApplyVelocity(dt);
 	}
