@@ -9,6 +9,5 @@ public:
 	void Update(float dt) override;
 	~GameManager();
 
-	Entity* pEntity = nullptr;
 };
 

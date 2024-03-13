@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "Particles.h"
 #include "MeshCreator.h"
+#include "Camera.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -29,7 +30,9 @@ public:
     Entity* CreateEntityEnemy(float x, float y, float z);
     void CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed, int particleNumber);
     void CreateParticlesExplosion(float x, float y, float z);
+    Input* GetInput();
 
+    Camera camera;
     MeshCreator* mc = nullptr;
     std::vector<Entity*> m_Entities;
 private:

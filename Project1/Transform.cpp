@@ -134,6 +134,12 @@ void Transform::SetPos(const XMFLOAT3& v) {
 	UpdateMatrix();
 }
 
+void Transform::SetRot(const XMFLOAT4X4& v) {
+
+	m_mRot = v;
+	UpdateMatrix();
+}
+
 XMVECTOR Transform::GetPos() {
 	return XMLoadFloat3(&m_vPos);
 }
@@ -153,6 +159,11 @@ XMVECTOR Transform::GetUp() {
 XMFLOAT4X4 Transform::GetMatrix()
 {
 	return m_mTransform;
+}
+
+XMFLOAT4X4 Transform::GetRotate()
+{
+	return m_mRot;
 }
 
 

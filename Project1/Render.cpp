@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "Render.h"
 #include "defines.h"
-#include "Camera.h"
 
-Camera camera;
 Defines defines;
 
 Render::Render(HINSTANCE hInstance)
@@ -60,6 +58,10 @@ void Render::OnResize()
 
 	XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * Math::Pi, AspectRatio(), 1.0f, 1000.0f);
 	XMStoreFloat4x4(&mProj, P);
+}
+
+Input* Render::GetInput() {
+	return &input;
 }
 
 void Render::HandleInput(Timer& gt)

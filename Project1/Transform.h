@@ -39,6 +39,7 @@ public:
 	void Translation(float x, float y, float z);
 	void SetPos(float x, float y, float z);
 	void SetPos(const XMFLOAT3& v);
+	void SetRot(const XMFLOAT4X4& v);
 	void SetDeceleration(float speed);
 	XMVECTOR GetPos();
 	XMVECTOR GetDir();
@@ -52,5 +53,6 @@ public:
 	void SetVelocity(XMFLOAT3 vector);
 	void ApplyVelocity(float deltaTime);
 	XMFLOAT4X4 GetMatrix();
+	XMFLOAT4X4 GetRotate();
 };
 
