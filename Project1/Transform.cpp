@@ -148,6 +148,17 @@ void Transform::SetPos(const XMFLOAT3& v) {
 
 void Transform::SetRot(const XMFLOAT4X4& v) {
 	m_mRot = v;
+	m_vDir.x = m_mRot._11;
+	m_vDir.y = m_mRot._12;
+	m_vDir.z = m_mRot._13;
+
+	m_vRight.x = m_mRot._21;
+	m_vRight.y = m_mRot._22;
+	m_vRight.z = m_mRot._23;
+
+	m_vUp.x = m_mRot._31;
+	m_vUp.y = m_mRot._32;
+	m_vUp.z = m_mRot._33;
 	UpdateMatrix();
 }
 

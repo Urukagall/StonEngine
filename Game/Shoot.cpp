@@ -29,8 +29,9 @@ void Shoot::Update(float dt) {
 		XMFLOAT4X4 rot = m_oEntity->m_pRender->camera.m_transform->GetRotate();
 
 		Entity* pEntity = m_oEntity->m_pRender->CreateEntityMissiles(x, y, z);
-		pEntity->m_mTransform.SetRot(rot);
-		pEntity->m_mTransform.Rotate(0, 0, XMConvertToRadians(90));
+		Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
+		newTransform.Rotate(XMConvertToRadians(-90.0f),0.0f, 0.0f);
+		pEntity->m_mTransform = newTransform;
 		m_eMissiles.push_back(pEntity);
 	}
 }
