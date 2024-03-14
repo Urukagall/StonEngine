@@ -12,6 +12,7 @@ Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList
 	this->mCommandList = mCommandList;
 	this->mCbvHeap = mCbvHeap;
 	this->m_pRender = pRender;
+	this->m_bIsAlive = true;
 }
 
 Entity::~Entity() {
@@ -30,6 +31,10 @@ void Entity::CreatePlane(string sColor, MeshCreator* mc)
 	com->mBoxGeo = mc->m_mMesh[sMesh];
 	//com->Plane(oColor);
 	m_oMeshRenderers.insert(std::make_pair("plane", com));
+}
+
+void Entity::Dead() {
+	m_bIsAlive = false;
 }
 
 void Entity::CreateCube(string sColor, MeshCreator* mc) {
@@ -85,17 +90,20 @@ void Entity::SetDirection(float velocity, float deltaTime) {
 	m_mTransform.Walk(velocity, deltaTime);
 }
 
-bool Entity::DeleteComponent(std::string name) {
-	auto it = m_oMeshRenderers.find(name);
+bool Entity::DeleteComponent() {
 
-	if (it != m_oMeshRenderers.end()) {
-		// Element found, so delete it
-		delete(m_oMeshRenderers[name]);
-		m_oMeshRenderers.erase(name);
-		return true;
-	}
-	else {
-		return false;
+	for (const auto& pair : m_oMeshRenderers) {
+		delete pair.second;
 	}
 
+	//if (it != m_oMeshRenderers.end()) {
+	//	// Element found, so delete it
+	//	delete(m_oMeshRenderers[name]);
+	//	m_oMeshRenderers.erase(name);
+	//	return true;
+	//}
+	//else {
+	//	return false;
+	//}
+	return true;
 }

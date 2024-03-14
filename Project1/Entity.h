@@ -26,6 +26,8 @@ public:
 	Transform m_mTransform;
 	Collider* m_collider;
 	Render* m_pRender;
+
+	bool m_bIsAlive;
 	
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
@@ -34,6 +36,7 @@ public:
 	Script* m_script = nullptr;
 
 	void CreatePlane(string sColor, MeshCreator* mc);
+	void Dead();
 	void CreateCube(string sColor, MeshCreator* mc);
 	void CreateMissiles(MeshCreator* mc);
 	void CreatePyramid(string sColor, MeshCreator* mc);
@@ -42,7 +45,7 @@ public:
 	void SetPosition(float x, float y, float z);
 	void SetRotate(float yaw, float pitch, float roll);
 	void SetDirection(float velocity, float deltaTime);
-	bool DeleteComponent(std::string name);
+	bool DeleteComponent();
 	Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, ComPtr<ID3D12DescriptorHeap> mCbvHeap, Render* pRender);
 	~Entity();
 

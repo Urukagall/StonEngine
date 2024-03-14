@@ -16,7 +16,7 @@ void Particles::Update(float deltaTime) {
     for (int i = 0; i < particles.size(); i++) {
         particles[i]->Update(deltaTime);
         if (particles[i]->life <= 0) {
-            particles[i]->m_oEntity->DeleteComponent("plane");
+            particles[i]->m_oEntity->DeleteComponent();
             delete(particles[i]);
             particles.erase(particles.begin() + i);
         }

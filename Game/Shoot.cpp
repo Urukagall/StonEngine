@@ -19,7 +19,7 @@ void Shoot::Update(float dt) {
 	input = m_oEntity->m_pRender->GetInput();
 	if (input->getKey(ARROW_LEFT) && m_iGunDelay <= 0) {
 		XMFLOAT3 pos;
-		m_iGunDelay = 300;
+		m_iGunDelay = 100;
 
 		//XMStoreFloat3(&pos, m_oEntity->m_mTransform.GetPos());
 		XMStoreFloat3(&pos, m_oEntity->m_pRender->camera.m_transform->GetPos());
@@ -78,9 +78,9 @@ void Shoot::Update(float dt) {
 		m_vGunLife.at(i) -= dt;
 		if (m_vGunLife.at(i) <= 0)
 		{
-			m_vGun.at(i)->DeleteComponent("cube");
+			//m_vGun.at(i)->DeleteComponent("cube");
 			//delete(m_vGun.at(i));
-			//il faut juste le supprimer de la liste d'entity de render.cpp
+			m_vGun.at(i)->Dead();
 			m_vGun.erase(m_vGun.begin() + i);
 			m_vGunLife.erase(m_vGunLife.begin() + i);
 		}

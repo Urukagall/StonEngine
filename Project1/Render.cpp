@@ -179,10 +179,16 @@ void Render::Update(Timer& gt)
 			pair.second->Update(pr, cam);
 		}
 		if (m_Entities[a]->m_script !=nullptr) {
-			//OutputDebugStringA("bbbb\n");
-			m_Entities[a]->m_script->Update(dT);
+			//OutputDebugStringA(std::to_string(m_Entities.size()).c_str());
+				m_Entities[a]->m_script->Update(dT);
 		}
 
+		if (m_Entities[a]->m_bIsAlive == false)
+		{
+			m_Entities[a]->DeleteComponent();
+			delete(m_Entities[a]);
+			m_Entities.erase(m_Entities.begin() + a);
+		}
 	}
 
 	for (int i = 0; i < m_Particles.size(); ++i) {
