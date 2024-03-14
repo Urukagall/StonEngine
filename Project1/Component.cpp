@@ -6,5 +6,5 @@ Component::Component(Entity* pEntity) {
 }
 
 Component::~Component() {
-
+	//delete mBoxGeo;
 }

@@ -38,8 +38,6 @@ void MeshRenderer::BuildConstantBuffers()
 void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam)
 {
 
-
-
 	XMFLOAT4X4 world = m_oEntity->m_mTransform.GetMatrix();
 
 	XMMATRIX worldM = XMLoadFloat4x4(&world);

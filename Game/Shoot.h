@@ -15,6 +15,7 @@ public:
 	std::vector<int> m_vMissilesLife;
 
 	int m_iGunDelay;
+	int m_iMissilesDelay;
 
 	void Update(float dt) override;
 	void OnLoad() override;

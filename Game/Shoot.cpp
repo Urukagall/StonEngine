@@ -3,7 +3,8 @@
 
 Shoot::Shoot(Entity* pEntity, std::vector<Entity*>* vecPtr) : Script(pEntity) {
 	ShipsRef = vecPtr;
-	m_iGunDelay = 300;
+	m_iGunDelay = 0;
+	m_iMissilesDelay = 0;
 }
 
 void Shoot::OnLoad()
@@ -15,6 +16,7 @@ void Shoot::Update(float dt) {
 	Input* input;
 	
 	m_iGunDelay -= dt;
+	m_iMissilesDelay -= dt;
 
 	// GUN
 	input = m_oEntity->m_pRender->GetInput();
@@ -25,6 +27,7 @@ void Shoot::Update(float dt) {
 		//XMStoreFloat3(&pos, m_oEntity->m_mTransform.GetPos());
 		XMStoreFloat3(&pos, m_oEntity->m_pRender->camera.m_transform->GetPos());
 
+
 		float x = pos.x;
 		float y = pos.y;
 		float z = pos.z;
@@ -33,7 +36,7 @@ void Shoot::Update(float dt) {
 
 		Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
 		newTransform.Scale(0.5f, 0.1f, 0.1f);
-		pEntity->m_mTransform = *m_oEntity->m_pRender->camera.m_transform;
+		pEntity->m_mTransform = newTransform;
 		pEntity->m_mTransform.VelocityWalk(0.5f);
 		pEntity->m_mTransform.SetDeceleration(0.0f);
 		m_vGun.push_back(pEntity);
@@ -42,8 +45,9 @@ void Shoot::Update(float dt) {
 	}
 
 	// MISSILE
-	if (input->getKeyDown(ARROW_RIGHT)) {
+	if (input->getKeyDown(ARROW_RIGHT) && m_iMissilesDelay <= 0) {
 
+		m_iMissilesDelay = 5000;
 		// créer une droite qui part devant le joueur
 		// check distance des ennemis à la droite
 		// lock l'ennemi le plus proche

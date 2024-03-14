@@ -162,6 +162,11 @@ void Transform::SetRot(const XMFLOAT4X4& v) {
 	UpdateMatrix();
 }
 
+void Transform::SetDir(const XMFLOAT3& v) {
+	m_vDir = v;
+	UpdateMatrix();
+}
+
 XMVECTOR Transform::GetPos() {
 	return XMLoadFloat3(&m_vPos);
 }

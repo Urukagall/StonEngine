@@ -16,7 +16,7 @@ Entity::Entity(ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList
 }
 
 Entity::~Entity() {
-
+	
 }
 void Entity::CreateScript(Script* pScript)
 {
@@ -30,7 +30,8 @@ void Entity::CreatePlane(string sColor, MeshCreator* mc)
 	MeshRenderer* com = new MeshRenderer(this);
 	com->mBoxGeo = mc->m_mMesh[sMesh];
 	//com->Plane(oColor);
-	m_oMeshRenderers.insert(std::make_pair("plane", com));
+	m_oMeshRenderer = com;
+	//m_oMeshRenderers.insert(std::make_pair("plane", com));
 }
 
 void Entity::Dead() {
@@ -43,14 +44,17 @@ void Entity::CreateCube(string sColor, MeshCreator* mc) {
 	MeshRenderer* com = new MeshRenderer(this);
 	com->mBoxGeo = mc->m_mMesh[sMesh];
 	//com->Box(oColor);
-	m_oMeshRenderers.insert(std::make_pair("cube", com));
+	m_oMeshRenderer = com;
+	//m_oMeshRenderers.insert(std::make_pair("cube", com));
 }
 
 void Entity::CreateMissiles(MeshCreator* mc) {
 	MeshRenderer* com = new MeshRenderer(this);
 	com->mBoxGeo = mc->m_mMesh["missiles"];
 	//com->Box(oColor);
-	m_oMeshRenderers.insert(std::make_pair("missile", com));
+	m_oMeshRenderer = com;
+	m_oMeshRenderer = com;
+	//m_oMeshRenderers.insert(std::make_pair("missile", com));
 }
 
 void Entity::CreatePyramid(string sColor, MeshCreator* mc) {
@@ -59,14 +63,16 @@ void Entity::CreatePyramid(string sColor, MeshCreator* mc) {
 	MeshRenderer* com = new MeshRenderer(this);
 	com->mBoxGeo = mc->m_mMesh[sMesh];
 	//com->Pyramid(oColor);
-	m_oMeshRenderers.insert(std::make_pair("pyr", com));
+	m_oMeshRenderer = com;
+	//m_oMeshRenderers.insert(std::make_pair("pyr", com));
 }
 
 void Entity::CreateEnemy(MeshCreator* mc) {
 	MeshRenderer* com = new MeshRenderer(this);
 	com->mBoxGeo = mc->m_mMesh["enemy"];
 	//com->Pyramid(oColor);
-	m_oMeshRenderers.insert(std::make_pair("enemy", com));
+	m_oMeshRenderer = com;
+	//m_oMeshRenderers.insert(std::make_pair("enemy", com));
 }
 
 void Entity::SetScale(float x, float y, float z, bool scaleColliderSize) {
@@ -91,10 +97,11 @@ void Entity::SetDirection(float velocity, float deltaTime) {
 }
 
 bool Entity::DeleteComponent() {
+	delete m_oMeshRenderer;
 
-	for (const auto& pair : m_oMeshRenderers) {
+	/*for (const auto& pair : m_oMeshRenderers) {
 		delete pair.second;
-	}
+	}*/
 
 	//if (it != m_oMeshRenderers.end()) {
 	//	// Element found, so delete it

@@ -23,6 +23,7 @@ class Entity
 public: 
 	std::map<std::string, Component*> m_mComponents;
 	std::map<std::string, MeshRenderer*> m_oMeshRenderers;
+	MeshRenderer* m_oMeshRenderer = nullptr;
 	Transform m_mTransform;
 	Collider* m_collider;
 	Render* m_pRender;
