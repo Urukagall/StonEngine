@@ -17,6 +17,7 @@ void GameManager::OnLoad() {
 
     Entity* eShip = m_oEntity->m_pRender->CreateEntity(0.f, 0.f, 0.f);
     Ship* pShip = new Ship(eShip);
+    pShip->m_vGun = &pShoot->m_vGun;
     eShip->CreateScript(pShip);
 }
 

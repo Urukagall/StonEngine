@@ -30,6 +30,7 @@ public:
     Entity* CreateEntityEnemy(float x, float y, float z);
     void CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed, int particleNumber);
     void CreateParticlesExplosion(float x, float y, float z);
+    void CreateParticlesFire(float x, float y, float z);
     Input* GetInput();
 
     Camera camera;

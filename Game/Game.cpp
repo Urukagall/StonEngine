@@ -7,6 +7,8 @@
 #include "Shoot.h"
 #include "GameManager.h"
 
+
+#pragma comment(lib,"dxguid.lib")
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
     PSTR cmdLine, int showCmd)
 {
