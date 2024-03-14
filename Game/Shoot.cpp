@@ -14,10 +14,7 @@ void Shoot::OnLoad()
 void Shoot::Update(float dt) {
 	Input* input;
 
-	for (int i = 0; i < m_vMissiles.size(); i++)
-	{
-		m_vMissiles[i]->m_mTransform.ApplyVelocity(dt);
-	}
+	//OutputDebugStringA("\nShoot Update");
 
 	// GUN
 	input = m_oEntity->m_pRender->GetInput();
@@ -110,6 +107,7 @@ void Shoot::Update(float dt) {
 			pEntity->m_mTransform = newTransform;
 
 			Missile* missileScript = new Missile(pEntity, target);
+			//pEntity->m_mTransform.VelocityWalk(0.5f);
 			pEntity->CreateScript(missileScript);
 
 			m_vMissiles.push_back(pEntity);

@@ -7,12 +7,18 @@ Missile::Missile(Entity* pEntity, Entity* pTarget) : Script(pEntity) {
 
 void Missile::OnLoad()
 {
-	
+	m_eMissile->m_mTransform.SetDeceleration(0.0f);
+	//m_eMissile->m_mTransform.VelocityWalk(0.1f);
 }
 
 void Missile::Update(float dt) {
-	if (fabs(tgt_pos_previous.x) <= FLT_EPSILON && fabs(tgt_pos_previous.y) <= FLT_EPSILON && fabs(tgt_pos_previous.z) <= FLT_EPSILON) { // Check if prev tgt pos != 0
-		if (fabs(msl_pos_previous.x) <= FLT_EPSILON && fabs(msl_pos_previous.y) <= FLT_EPSILON && fabs(msl_pos_previous.z) <= FLT_EPSILON) { // Check if prev tgt pos != 0
+	//OutputDebugStringA("\nMissile Update");
+
+	m_eMissile->m_mTransform.ApplyVelocity(dt);
+	if (fabs(tgt_pos_previous.x) >= FLT_EPSILON && fabs(tgt_pos_previous.y) >= FLT_EPSILON && fabs(tgt_pos_previous.z) >= FLT_EPSILON) { // Check if prev tgt pos != 0
+		if (fabs(msl_pos_previous.x) >= FLT_EPSILON && fabs(msl_pos_previous.y) >= FLT_EPSILON && fabs(msl_pos_previous.z) >= FLT_EPSILON) { // Check if prev tgt pos != 0
+			OutputDebugStringA("\nGuidance Update");
+			
 			// Load previous positions
 			XMVECTOR tgt_pos_previousV = XMLoadFloat3(&tgt_pos_previous);
 			XMVECTOR msl_pos_previousV = XMLoadFloat3(&msl_pos_previous);
@@ -42,17 +48,19 @@ void Missile::Update(float dt) {
 			// Now, calculate the final lateral acceleration required for our missile to home into our target.
 			XMVECTOR latax = RTM_new * N * Vc * LOS_Rate + LOS_Delta * Nt * (0.5 * N); // lateral acceleration
 			XMFLOAT3 lataxF;
+
+			// Debug output
 			XMStoreFloat3(&lataxF, latax);
 			OutputDebugStringA("\nLatax: ");
-			OutputDebugStringA(std::to_string(lataxF.x).c_str());
+			OutputDebugStringA(std::to_string(lataxF.x * 0.0000001f).c_str());
 			OutputDebugStringA(", ");
-			OutputDebugStringA(std::to_string(lataxF.y).c_str());
+			OutputDebugStringA(std::to_string(lataxF.y * 0.0000001f).c_str());
 			OutputDebugStringA(", ");
-			OutputDebugStringA(std::to_string(lataxF.z).c_str());
-			m_eMissile->m_mTransform.AddVelocity(lataxF.x, lataxF.y, lataxF.z);
+			OutputDebugStringA(std::to_string(lataxF.z * 0.0000001f).c_str());
+			m_eMissile->m_mTransform.SetVelocity(-lataxF.x*0.05f, -lataxF.y * 0.05f, -lataxF.z * 0.05f);
 		}
 	}
-	// Update mutable position objects so we can integrate forward to next frame.
+	// Update position of objects so we can integrate forward to next frame.
 	XMStoreFloat3(&msl_pos_previous, m_eMissile->m_mTransform.GetPos());
 	XMStoreFloat3(&tgt_pos_previous, m_eTarget->m_mTransform.GetPos());
 }
