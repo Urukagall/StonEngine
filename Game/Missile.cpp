@@ -15,13 +15,9 @@ void Missile::Update(float dt) {
 	//OutputDebugStringA("\nMissile Update");
 	
 	m_eMissile->m_mTransform.ApplyVelocity(dt);
-	if (timer > 1000) {
-		m_oEntity->m_pRender->CreateParticlesFire(m_eMissile->m_mTransform.GetPosFloat().x, m_eMissile->m_mTransform.GetPosFloat().y, m_eMissile->m_mTransform.GetPosFloat().z);
-		timer = 0;
-	}
-	else {
-		timer += dt;
-	}
+	m_oEntity->m_pRender->CreateParticlesFire(m_eMissile->m_mTransform.GetPosFloat().x, m_eMissile->m_mTransform.GetPosFloat().y, m_eMissile->m_mTransform.GetPosFloat().z);
+
+
 	if (fabs(tgt_pos_previous.x) >= FLT_EPSILON && fabs(tgt_pos_previous.y) >= FLT_EPSILON && fabs(tgt_pos_previous.z) >= FLT_EPSILON) { // Check if prev tgt pos != 0
 		if (fabs(msl_pos_previous.x) >= FLT_EPSILON && fabs(msl_pos_previous.y) >= FLT_EPSILON && fabs(msl_pos_previous.z) >= FLT_EPSILON) { // Check if prev tgt pos != 0
 			OutputDebugStringA("\nGuidance Update");
