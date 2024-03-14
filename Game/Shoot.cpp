@@ -115,6 +115,7 @@ void Shoot::Update(float dt) {
 
 
 			m_vMissiles.push_back(pEntity);
+			m_vMissilesLife.push_back(3000);
 		}
 	}
 	//pour missile
@@ -141,13 +142,22 @@ void Shoot::Update(float dt) {
 		m_vGunLife.at(i) -= dt;
 		if (m_vGunLife.at(i) <= 0)
 		{
-			//m_vGun.at(i)->DeleteComponent("cube");
-			//delete(m_vGun.at(i));
 			m_vGun.at(i)->Dead();
 			m_vGun.erase(m_vGun.begin() + i);
 			m_vGunLife.erase(m_vGunLife.begin() + i);
 		}
 		
+	}
+
+	for (int i = 0; i < m_vMissiles.size(); i++)
+	{
+		m_vMissilesLife.at(i) -= dt;
+		if (m_vMissilesLife.at(i) <= 0)
+		{
+			m_vMissiles.at(i)->Dead();
+			m_vMissiles.erase(m_vMissiles.begin() + i);
+			m_vMissilesLife.erase(m_vMissilesLife.begin() + i);
+		}
 	}
 }
 

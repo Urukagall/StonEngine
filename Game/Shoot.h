@@ -12,6 +12,7 @@ public:
 	vector<Entity*>& Ships = *ShipsRef; // vector is not copied here
 
 	std::vector<int> m_vGunLife;
+	std::vector<int> m_vMissilesLife;
 
 	int m_iGunDelay;
 
