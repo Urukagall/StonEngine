@@ -54,13 +54,13 @@ void Missile::Update(float dt) {
 
 			// Debug output
 			XMStoreFloat3(&lataxF, latax);
-			OutputDebugStringA("\nLatax: ");
-			OutputDebugStringA(std::to_string(lataxF.x * 0.0000001f).c_str());
+			/*OutputDebugStringA("\nLatax: ");
+			OutputDebugStringA(std::to_string(-lataxF.x * m_fResponsiveness).c_str());
 			OutputDebugStringA(", ");
-			OutputDebugStringA(std::to_string(lataxF.y * 0.0000001f).c_str());
+			OutputDebugStringA(std::to_string(-lataxF.y * m_fResponsiveness).c_str());
 			OutputDebugStringA(", ");
-			OutputDebugStringA(std::to_string(lataxF.z * 0.0000001f).c_str());
-			m_eMissile->m_mTransform.SetVelocity(-lataxF.x*0.05f, -lataxF.y * 0.05f, -lataxF.z * 0.05f);
+			OutputDebugStringA(std::to_string(-lataxF.z * m_fResponsiveness).c_str());*/
+			m_eMissile->m_mTransform.SetVelocity(-lataxF.x * m_fResponsiveness, -lataxF.y * m_fResponsiveness, -lataxF.z * m_fResponsiveness);
 		}
 	}
 	// Update position of objects so we can integrate forward to next frame.

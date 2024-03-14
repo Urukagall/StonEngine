@@ -13,11 +13,11 @@ public:
 private:
 	Entity* m_eTarget;
 	Entity* m_eMissile;
-	float m_fSpeed;
+	float m_fResponsiveness = 0.1f;
 	XMFLOAT3 tgt_pos_previous = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT3 msl_pos_previous = { 0.0f,0.0f,0.0f };
 	float LOS_Rate;
-	float N = 5; // Navigation gain
+	float N = 3; // Navigation gain
 	float timer = 0;
 };
 

@@ -90,8 +90,8 @@ void Shoot::Update(float dt) {
 
 		// Target debug
 		if (target != nullptr) {
-			Entity* debugCube = m_oEntity->m_pRender->CreateEntityCube(target->m_mTransform.m_vPos.x, target->m_mTransform.m_vPos.y, target->m_mTransform.m_vPos.z, "purple");
-			debugCube->m_mTransform = target->m_mTransform;
+			//Entity* debugCube = m_oEntity->m_pRender->CreateEntityCube(target->m_mTransform.m_vPos.x, target->m_mTransform.m_vPos.y, target->m_mTransform.m_vPos.z, "purple");
+			//debugCube->m_mTransform = target->m_mTransform;
 
 
 			// CREATE MISSILE
@@ -115,7 +115,7 @@ void Shoot::Update(float dt) {
 
 
 			m_vMissiles.push_back(pEntity);
-			m_vMissilesLife.push_back(3000);
+			m_vMissilesLife.push_back(10000);
 		}
 	}
 	//pour missile
