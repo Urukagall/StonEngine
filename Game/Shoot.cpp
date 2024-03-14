@@ -49,8 +49,16 @@ void Shoot::Update(float dt) {
 		// créer une droite qui part devant le joueur
 		// check distance des ennemis à la droite
 		// lock l'ennemi le plus proche
-		FXMVECTOR point1 = m_oEntity->m_mTransform.GetDir();
-		FXMVECTOR point2 = point1 * 2;
+		FXMVECTOR point1 = m_oEntity->m_pRender->camera.m_transform->GetDir() + m_oEntity->m_pRender->camera.m_transform->GetPos();
+		FXMVECTOR point2 = m_oEntity->m_pRender->camera.m_transform->GetDir() * 10 + m_oEntity->m_pRender->camera.m_transform->GetPos();;
+
+		/*XMFLOAT3 point1F;
+		XMStoreFloat3(&point1F, point1);
+		Entity* debugCube1 = m_oEntity->m_pRender->CreateEntityCube(point1F.x, point1F.y, point1F.z, "blue");
+
+		XMFLOAT3 point2F;
+		XMStoreFloat3(&point2F, point2);
+		Entity* debugCube2 = m_oEntity->m_pRender->CreateEntityCube(point2F.x, point2F.y, point2F.z, "red");*/
 
 		Entity* target = nullptr;
 		float shortestLen = 999999999999999;
