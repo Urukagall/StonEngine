@@ -186,8 +186,12 @@ void Render::Update(Timer& gt)
 		}
 
 		// Update renderer
-		for (const auto& pair : m_Entities[a]->m_oMeshRenderers) {
-			pair.second->Update(pr, cam);
+		//for (const auto& pair : m_Entities[a]->m_oMeshRenderers) {
+		//	pair.second->Update(pr, cam);
+		//}
+		auto it = m_Entities[a]->m_oMeshRenderers.find("cube");
+		if (it != m_Entities[a]->m_oMeshRenderers.end()) {
+			it->second->Update(pr, cam);
 		}
 		if (m_Entities[a]->m_script !=nullptr) {
 			//OutputDebugStringA("bbbb\n");
@@ -376,10 +380,14 @@ void Render::BuildShadersAndInputLayout()
 	mvsByteCode = Tools::CompileShader(L"Shaders\\color.hlsl", nullptr, "VS", "vs_5_0");
 	mpsByteCode = Tools::CompileShader(L"Shaders\\color.hlsl", nullptr, "PS", "ps_5_0");
 
+	//m_tVsByteCode = Tools::CompileShader(L"Shaders\\uv.hlsl", nullptr, "VS", "vs_5_0");
+	//m_tPsByteCode = Tools::CompileShader(L"Shaders\\uv.hlsl", nullptr, "PS", "vs_5_0");
+
 	mInputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		//{"TEXCOORD",0, DXGI_FORMAT_R32G32_FLOAT, 0 , 12 , D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
 	};
 }
 

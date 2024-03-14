@@ -89,7 +89,7 @@ void Entity::newTexture(std::string sName, std::string sFileName) {
 	TextureEntity* texture = new TextureEntity();
 	m_mTextures.insert(std::make_pair(sName, texture));
 	texture->Init(Init::GetApp()->GetDevice());
-	texture->LoadTexture(sName, std::wstring(sFileName.begin(), sFileName.begin()), Init::GetApp()->GetDescriptorHeap());
+	texture->LoadTexture(sName, std::wstring(sFileName.begin(), sFileName.end()), Init::GetApp()->GetDescriptorHeap());
 	texture->BuildSrvDesc(Init::GetApp()->GetDescriptorHeap(), m_mTextures.size());
 }
 

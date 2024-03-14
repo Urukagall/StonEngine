@@ -2,7 +2,12 @@
 #include "MeshRenderer.h"
 #include "Mesh.h"
 #include "Entity.h"
-MeshRenderer::MeshRenderer(Entity* pEntity): Component(pEntity) {
+MeshRenderer::MeshRenderer(Entity* pEntity) : Component(pEntity)
+{
+	if (m_oEntity == nullptr)
+	{
+		return;
+	}
 
 	m_oEntity = pEntity;
 	md3dDevice = m_oEntity->md3dDevice;
@@ -37,6 +42,10 @@ void MeshRenderer::BuildConstantBuffers()
 
 void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam)
 {
+	if (m_oEntity == nullptr)
+	{
+		return;
+	}
 
 	XMFLOAT4X4 world = m_oEntity->m_mTransform.GetMatrix();
 
@@ -55,5 +64,8 @@ void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam)
 }
 	
 void MeshRenderer::setTexture(TextureEntity* tTexture) {
+	if (tTexture == nullptr) {
+		return;
+	}
 	m_tTexture = tTexture;
 }

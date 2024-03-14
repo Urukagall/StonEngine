@@ -70,6 +70,8 @@ private:
 
     ComPtr<ID3DBlob> mvsByteCode = nullptr;
     ComPtr<ID3DBlob> mpsByteCode = nullptr;
+    //ComPtr<ID3DBlob> m_tVsByteCode = nullptr;
+    //ComPtr<ID3DBlob> m_tPsByteCode = nullptr;
 
     std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
 

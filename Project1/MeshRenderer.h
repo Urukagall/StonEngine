@@ -34,7 +34,7 @@ public :
 	~MeshRenderer();
 
 	void BuildConstantBuffers();
-	void setTexture(TextureEntity* tTexture);
 	void Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam);
+	void setTexture(TextureEntity* tTexture);
 };
 
