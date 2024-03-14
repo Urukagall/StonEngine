@@ -20,8 +20,8 @@ void Missile::Update(float dt) {
 
 	if (fabs(tgt_pos_previous.x) >= FLT_EPSILON && fabs(tgt_pos_previous.y) >= FLT_EPSILON && fabs(tgt_pos_previous.z) >= FLT_EPSILON) { // Check if prev tgt pos != 0
 		if (fabs(msl_pos_previous.x) >= FLT_EPSILON && fabs(msl_pos_previous.y) >= FLT_EPSILON && fabs(msl_pos_previous.z) >= FLT_EPSILON) { // Check if prev tgt pos != 0
-			OutputDebugStringA("\nGuidance Update");
-			
+			// GUIDANCE UPDATE
+			// 
 			// Load previous positions
 			XMVECTOR tgt_pos_previousV = XMLoadFloat3(&tgt_pos_previous);
 			XMVECTOR msl_pos_previousV = XMLoadFloat3(&msl_pos_previous);

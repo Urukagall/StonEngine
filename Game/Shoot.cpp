@@ -174,8 +174,8 @@ bool Shoot::IsTargetInFront(const XMVECTOR targetPos) {
 	angle = XMConvertToDegrees(angle);
 
 	// DEBUG OUTPUT
-	OutputDebugStringA("\nAngle to target: ");
-	OutputDebugStringA(std::to_string(angle).c_str());
+	//OutputDebugStringA("\nAngle to target: ");
+	//OutputDebugStringA(std::to_string(angle).c_str());
 
 
 	// Check if angle is within 90 degrees
