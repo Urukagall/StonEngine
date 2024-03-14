@@ -29,10 +29,6 @@ void Shoot::Update(float dt) {
 		float y = pos.y;
 		float z = pos.z;
 
-
-
-		XMFLOAT4X4 rot = m_oEntity->m_pRender->camera.m_transform->GetRotate();
-
 		Entity* pEntity = m_oEntity->m_pRender->CreateEntityCube(x, y, z, "yellow");
 
 		Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
