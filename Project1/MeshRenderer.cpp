@@ -53,7 +53,7 @@ void MeshRenderer::Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam)
 
 	mObjectCB->CopyData(0, objConstants);
 }
-
+	
 void MeshRenderer::setTexture(TextureEntity* tTexture) {
 	m_tTexture = tTexture;
 }

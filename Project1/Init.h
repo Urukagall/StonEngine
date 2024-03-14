@@ -40,6 +40,7 @@ public:
     ID3D12Device* GetDevice() { return md3dDevice.Get(); }
     ID3D12GraphicsCommandList* GetCommandList() { return mCommandList.Get(); };
     ID3D12DescriptorHeap* GetDescriptorHeap() { return mdDescriptorHeap.Get(); };
+    ID3D12CommandAllocator* GetCommandAllocator() { return mDirectCmdListAlloc.Get(); };
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
     Input input;
 protected:

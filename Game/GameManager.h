@@ -5,6 +5,7 @@ class GameManager : public Script
 {
 public:
 	GameManager(Entity* pEntity);
+	void InitResources();
 	void OnLoad() override;
 	void Update(float dt) override;
 	~GameManager();

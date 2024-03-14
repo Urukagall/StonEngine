@@ -5,7 +5,6 @@
 
 class TextureEntity {
 protected:
-    std::map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>> m_tTexture;
     ID3D12Device* md3dDevice;
     Microsoft::WRL::ComPtr<ID3D12Resource> m_rResource;
     Microsoft::WRL::ComPtr<ID3D12Resource> m_rUploadHeap;
@@ -30,6 +29,5 @@ public:
     UINT* getDescriptorSize() { return &m_uDescriptorSize; }
     D3D12_CPU_DESCRIPTOR_HANDLE* getDescriptorHandle() { return &m_dDescriptorHdlCPU; }
     D3D12_GPU_DESCRIPTOR_HANDLE* getDescriptorHandleGPU() { return &m_dDescriptorHdlGPU; }
-    std::map<std::string, Microsoft::WRL::ComPtr<ID3D12Resource>>* getTexture() { return &m_tTexture; };
 };
 

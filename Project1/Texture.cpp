@@ -15,7 +15,6 @@ TextureEntity::TextureEntity() {
 }
 
 TextureEntity::~TextureEntity() {
-	m_tTexture.clear();
 	md3dDevice->Release();
 	m_dDescriptorHeap->Release();
 }
@@ -26,6 +25,10 @@ void TextureEntity::Init(ID3D12Device* dDevice) {
 }
 
 void TextureEntity::LoadTexture(std::string oName, std::wstring sFile, ID3D12DescriptorHeap* CbvDescriptorHeap) {
+
+	if (FAILED(Init::GetApp()->GetCommandList()->Reset(Init::GetApp()->GetCommandAllocator(), nullptr))) {
+		return;
+	}
 
 	if (FAILED(DirectX::CreateDDSTextureFromFile12(md3dDevice,
 		Init::GetApp()->GetCommandList(), sFile.c_str(),
