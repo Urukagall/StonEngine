@@ -3,6 +3,7 @@
 
 Shoot::Shoot(Entity* pEntity) : Script(pEntity) {
 	m_iGunDelay = 300;
+
 }
 
 void Shoot::OnLoad()
@@ -28,6 +29,8 @@ void Shoot::Update(float dt) {
 		float y = pos.y;
 		float z = pos.z;
 
+
+
 		XMFLOAT4X4 rot = m_oEntity->m_pRender->camera.m_transform->GetRotate();
 
 		Entity* pEntity = m_oEntity->m_pRender->CreateEntityCube(x, y, z, "yellow");
@@ -39,6 +42,7 @@ void Shoot::Update(float dt) {
 		pEntity->m_mTransform.SetDeceleration(0.0f);
 		m_vGun.push_back(pEntity);
 		m_vGunLife.push_back(1000);
+		//m_oEntity->m_pRender->CreateParticlesFire(pEntity->m_mTransform.GetPosFloat().x, pEntity->m_mTransform.GetPosFloat().y, pEntity->m_mTransform.GetPosFloat().z);
 	}
 
 	// MISSILE
@@ -71,10 +75,27 @@ void Shoot::Update(float dt) {
 
 		m_vMissiles.push_back(pEntity);
 	}
-
+	//pour missile
+	//m_oEntity->m_pRender->CreateParticlesFire(m_vMissiles.at(i)->m_mTransform.GetPosFloat().x, m_vMissiles.at(i)->m_mTransform.GetPosFloat().y, m_vMissiles.at(i)->m_mTransform.GetPosFloat().z);
 	for (int i = 0; i < m_vGun.size(); i++)
 	{
+
+
 		m_vGun.at(i)->m_mTransform.ApplyVelocity(dt);
+		
+		float dist = (sqrt(pow(m_vGun.at(i)->m_mTransform.GetPosFloat().x + m_oEntity->m_pRender->camera.m_transform->GetPosFloat().x, 2) + pow(m_vGun.at(i)->m_mTransform.GetPosFloat().y + m_oEntity->m_pRender->camera.m_transform->GetPosFloat().y, 2) + pow(m_vGun.at(i)->m_mTransform.GetPosFloat().z + m_oEntity->m_pRender->camera.m_transform->GetPosFloat().z, 2)));
+		//OutputDebugStringA("dist : ");
+		//OutputDebugStringA(std::to_string(dist).c_str());
+		//OutputDebugStringA("\n");
+		//OutputDebugStringA(std::to_string(m_oEntity->m_pRender->camera.m_transform->GetPosFloat().x).c_str());
+		//OutputDebugStringA("\n");
+		//OutputDebugStringA(std::to_string(m_oEntity->m_pRender->camera.m_transform->GetPosFloat().y).c_str());
+		//OutputDebugStringA("\n");
+		//OutputDebugStringA(std::to_string(m_oEntity->m_pRender->camera.m_transform->GetPosFloat().z).c_str());
+		//OutputDebugStringA("\n");
+		if ( dist < 5 ) {
+			m_oEntity->m_pRender->CreateParticlesFire(m_vGun.at(i)->m_mTransform.GetPosFloat().x, m_vGun.at(i)->m_mTransform.GetPosFloat().y, m_vGun.at(i)->m_mTransform.GetPosFloat().z);
+		}
 		m_vGunLife.at(i) -= dt;
 		if (m_vGunLife.at(i) <= 0)
 		{

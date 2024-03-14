@@ -18,6 +18,8 @@ void MeshCreator::Init()
 	m_mMesh["plane_yellow"] = Plane(XMFLOAT4(Colors::Yellow));
 	m_mMesh["plane_blue"] = Plane(XMFLOAT4(Colors::Blue));
 	m_mMesh["plane_purple"] = Plane(XMFLOAT4(Colors::Purple));
+	m_mMesh["plane_gray"] = Plane(XMFLOAT4(Colors::Gray));
+	m_mMesh["plane_dark"] = Plane(XMFLOAT4(Colors::DarkGray));
 
 	m_mMesh["box_red"] = Box(XMFLOAT4(Colors::Red));
 	m_mMesh["box_orange"] = Box(XMFLOAT4(Colors::Orange));

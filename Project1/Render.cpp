@@ -431,6 +431,14 @@ void Render::CreateParticlesExplosion(float x, float y, float z) {
 	m_Particles.push_back(par3);
 }
 
+void Render::CreateParticlesFire(float x, float y, float z) {
+	XMFLOAT3 pos = XMFLOAT3(x, y, z);
+	Particles* par1 = new Particles(this, "gray", mc, 150, md3dDevice, mCommandList, mCbvHeap, pos, 1000, 2000, 10, 20, 10, 100);
+	Particles* par2 = new Particles(this, "dark", mc, 100, md3dDevice, mCommandList, mCbvHeap, pos, 1000, 2000, 10, 20, 10, 100);
+	m_Particles.push_back(par1);
+	m_Particles.push_back(par2);
+}
+
 void Render::BuildPSO()
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;

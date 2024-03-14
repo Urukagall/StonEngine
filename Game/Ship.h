@@ -8,9 +8,10 @@ public:
 	
 	Entity* m_eCamera;
 	std::vector<Entity*> m_eEntity;
-
+	std::vector<Entity*>* m_vGun;
 	void Update(float dt) override;
 	void OnLoad() override;
+	void CreateShip();
 };
 
 
