@@ -11,6 +11,7 @@ public:
 	std::vector<Entity*>* m_vGun;
 	void Update(float dt) override;
 	void OnLoad() override;
+	std::vector<Entity*>* GetShips();
 	void CreateShip();
 };
 

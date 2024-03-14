@@ -1,9 +1,9 @@
 #include "Shoot.h"
 #include "Missile.h"
 
-Shoot::Shoot(Entity* pEntity) : Script(pEntity) {
+Shoot::Shoot(Entity* pEntity, std::vector<Entity*>* vecPtr) : Script(pEntity) {
+	ShipsRef = vecPtr;
 	m_iGunDelay = 300;
-
 }
 
 void Shoot::OnLoad()
@@ -54,22 +54,63 @@ void Shoot::Update(float dt) {
 		FXMVECTOR point1 = m_oEntity->m_mTransform.GetDir();
 		FXMVECTOR point2 = point1 * 2;
 
-		XMVector3LinePointDistance(point1, point2, point1);
+		Entity* target = nullptr;
+		float shortestLen = 999999999999999;
 
-		XMFLOAT3 pos;
+		for (int i = 0; i < ShipsRef->size(); i++)
+		{
+			//XMVECTOR point3 = Ships[i]->m_mTransform.GetPos
+			XMVECTOR point3 = ShipsRef->at(i)->m_mTransform.GetPos();
 
-		//XMStoreFloat3(&pos, m_oEntity->m_mTransform.GetPos());
-		XMStoreFloat3(&pos, m_oEntity->m_pRender->camera.m_transform->GetPos());
+			XMVECTOR distV = XMVector3LinePointDistance(point1, point2, point3);
+			XMFLOAT3 distF;
+			XMStoreFloat3(&distF, distV);
 
-		XMFLOAT4X4 rot = m_oEntity->m_pRender->camera.m_transform->GetRotate();
+			
+			if (distF.x < seekerLockRadius && distF.y < seekerLockRadius && distF.z < seekerLockRadius) {
+				// Calculate length (dist) to target
+				float len = sqrtf(distF.x * distF.x + distF.y * distF.y + distF.z * distF.z);
+				if (len < shortestLen) {
+					shortestLen = len;
+					target = ShipsRef->at(i);
+				}
+				//OutputDebugStringA("\nlen: ");
+				//OutputDebugStringA(std::to_string(len).c_str());
+				//OutputDebugStringA("\nKILL HIIIM ! Put the nose on him and Kill Him ! C'mon he's out in front, Shoot Him, Shoot HIM ! and then the maniacal laughter after that.");
+			}
 
-		Entity* pEntity = m_oEntity->m_pRender->CreateEntityMissiles(pos.x, pos.y, pos.z);
-		Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
-		newTransform.Rotate(XMConvertToRadians(-90.0f), 0.0f, 0.0f);
-		pEntity->m_mTransform = newTransform;
+			/*OutputDebugStringA("\nDistance: {");
+			OutputDebugStringA(std::to_string(distF.x).c_str());
+			OutputDebugStringA(", ");
+			OutputDebugStringA(std::to_string(distF.y).c_str());
+			OutputDebugStringA(", ");
+			OutputDebugStringA(std::to_string(distF.z).c_str());
+			OutputDebugStringA("}");*/
+		}
 
-		Missile* missileScript = new Missile(pEntity);
-		pEntity->CreateScript(missileScript);
+		// Target debug
+		if (target != nullptr) {
+			Entity* debugCube = m_oEntity->m_pRender->CreateEntityCube(target->m_mTransform.m_vPos.x, target->m_mTransform.m_vPos.y, target->m_mTransform.m_vPos.z, "purple");
+			debugCube->m_mTransform = target->m_mTransform;
+
+
+			// CREATE MISSILE
+
+			XMFLOAT3 pos;
+
+			//XMStoreFloat3(&pos, m_oEntity->m_mTransform.GetPos());
+			XMStoreFloat3(&pos, m_oEntity->m_pRender->camera.m_transform->GetPos());
+
+			XMFLOAT4X4 rot = m_oEntity->m_pRender->camera.m_transform->GetRotate();
+
+			Entity* pEntity = m_oEntity->m_pRender->CreateEntityMissiles(pos.x, pos.y, pos.z);
+			Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
+			newTransform.Rotate(XMConvertToRadians(-90.0f), 0.0f, 0.0f);
+			pEntity->m_mTransform = newTransform;
+
+			Missile* missileScript = new Missile(pEntity, target);
+			//pEntity->m_mTransform.VelocityWalk(0.5f);
+			pEntity->CreateScript(missileScript);
 
 
 

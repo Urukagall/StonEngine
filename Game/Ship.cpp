@@ -58,7 +58,10 @@ void Ship::Update(float dt) {
 		}
 
 	}
+}
 
+std::vector<Entity*>* Ship::GetShips() {
+	return &m_eEntity;
 }
 
 Ship::~Ship()
