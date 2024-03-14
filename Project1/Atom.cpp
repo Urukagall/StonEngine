@@ -14,7 +14,7 @@ Atom::Atom(Render* pRender, string sColor, MeshCreator* mc, XMFLOAT3 pos, ComPtr
     scaleMax = scale;
     velocity = Math::Rand(minSpeed, maxSpeed) * 0.00001 ;// 10 - 200
     m_oEntity = new Entity(md3dDevice, mCommandList, mCbvHeap, pRender);
-    m_oEntity->CreatePlane(sColor, mc);
+    m_oEntity->CreateCube(sColor, mc);
     m_oEntity->SetPosition(pos.x, pos.y, pos.z);
     m_oEntity->SetScale(scale.x,scale.y,scale.z);
     m_oEntity->SetRotate(rotate.x, rotate.y, rotate.z);
