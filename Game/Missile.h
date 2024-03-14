@@ -3,7 +3,7 @@
 class Missile : public Script
 {
 public:
-	Missile(Entity* pEntity);
+	Missile(Entity* pEntity, Entity* pTarget);
 	~Missile();
 
 	std::vector<Entity*> m_vMissiles;
@@ -14,5 +14,9 @@ private:
 	Entity* m_eTarget;
 	Entity* m_eMissile;
 	float m_fSpeed;
+	XMFLOAT3 tgt_pos_previous = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 msl_pos_previous = { 0.0f,0.0f,0.0f };
+	float LOS_Rate;
+	float N = 3; // Navigation gain
 };
 

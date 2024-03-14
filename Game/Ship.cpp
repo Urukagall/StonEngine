@@ -46,17 +46,22 @@ void Ship::Update(float dt) {
 			m_eEntity[i]->m_mTransform.ApplyVelocity(dt);
 			for (int j = 0; j < m_vGun->size(); j++) {
 				if (m_eEntity[i]->m_collider->CheckColl(m_vGun->at(j))) {
+					m_oEntity->m_pRender->CreateParticlesExplosion(m_eEntity[i]->m_mTransform.GetPosFloat().x, m_eEntity[i]->m_mTransform.GetPosFloat().y, m_eEntity[i]->m_mTransform.GetPosFloat().z);
 					m_eEntity[i]->Dead();
 					m_eEntity.erase(m_eEntity.begin() + i);
 					m_vGun->at(j)->Dead();
 					m_vGun->erase(m_vGun->begin() + j);
+					
 				}
 			}
 
 		}
 
 	}
+}
 
+std::vector<Entity*>* Ship::GetShips() {
+	return &m_eEntity;
 }
 
 Ship::~Ship()

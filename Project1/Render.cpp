@@ -290,7 +290,7 @@ void Render::Draw(const Timer& gt)
 				mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 				mCommandList->DrawIndexedInstanced(
-					comp->DrawArgs["plane"].IndexCount,
+					comp->DrawArgs["box"].IndexCount,
 					1, 0, 0, 0);
 			}
 		}
@@ -429,9 +429,9 @@ void Render::CreateParticle(float x, float y, float z, string sColor, int minLif
 
 void Render::CreateParticlesExplosion(float x, float y, float z) {
 	XMFLOAT3 pos = XMFLOAT3(x, y, z);
-	Particles* par1 = new Particles(this, "red", mc, 150, md3dDevice, mCommandList, mCbvHeap, pos);
-	Particles* par2 = new Particles(this, "orange", mc, 100, md3dDevice, mCommandList, mCbvHeap, pos);
-	Particles* par3 = new Particles(this, "yellow", mc, 50, md3dDevice, mCommandList, mCbvHeap, pos);
+	Particles* par1 = new Particles(this, "red", mc, 150, md3dDevice, mCommandList, mCbvHeap, pos, 3000, 6000, 1000, 2000,800, 1500);
+	Particles* par2 = new Particles(this, "orange", mc, 100, md3dDevice, mCommandList, mCbvHeap, pos, 3000, 6000, 1000, 2000, 800, 1500);
+	Particles* par3 = new Particles(this, "yellow", mc, 50, md3dDevice, mCommandList, mCbvHeap, pos, 3000, 6000, 1000, 2000, 800, 1500);
 	m_Particles.push_back(par1);
 	m_Particles.push_back(par2);
 	m_Particles.push_back(par3);
