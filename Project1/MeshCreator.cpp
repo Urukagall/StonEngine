@@ -26,6 +26,8 @@ void MeshCreator::Init()
 	m_mMesh["box_yellow"] = Box(XMFLOAT4(Colors::Yellow));
 	m_mMesh["box_blue"] = Box(XMFLOAT4(Colors::Blue));
 	m_mMesh["box_purple"] = Box(XMFLOAT4(Colors::Purple));
+	m_mMesh["box_gray"] = Box(XMFLOAT4(Colors::Gray));
+	m_mMesh["box_dark"] = Box(XMFLOAT4(Colors::DarkGray));
 
 	m_mMesh["pyramid_red"] = Pyramid(XMFLOAT4(Colors::Red));
 	m_mMesh["pyramid_orange"] = Pyramid(XMFLOAT4(Colors::Orange));

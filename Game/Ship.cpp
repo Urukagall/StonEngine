@@ -6,7 +6,7 @@ Ship::Ship(Entity* pEntity) : Script(pEntity) {
 
 void Ship::OnLoad()
 {	
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 1000; i++) {
 		CreateShip();
 
 	}
@@ -24,7 +24,7 @@ void Ship::CreateShip() {
 	Entity* enemy = m_oEntity->m_pRender->CreateEntityEnemy(pos.x, pos.y, pos.z);
 	enemy->SetRotate(rotate.x, rotate.y, rotate.z);
 	enemy->m_collider->SetSize(1.5);
-	enemy->m_mTransform.VelocityWalk(0.01f);
+	enemy->m_mTransform.VelocityWalk(0.05f);
 	enemy->SetRotate(XMConvertToRadians(270), 0.0, XMConvertToRadians(90));
 	enemy->m_mTransform.SetDeceleration(0.0f);
 	enemy->SetScale(5.0, 5.0, 5.0);

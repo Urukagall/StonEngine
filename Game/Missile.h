@@ -18,5 +18,6 @@ private:
 	XMFLOAT3 msl_pos_previous = { 0.0f,0.0f,0.0f };
 	float LOS_Rate;
 	float N = 3; // Navigation gain
+	float timer = 0;
 };
 
