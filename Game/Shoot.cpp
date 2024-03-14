@@ -114,10 +114,10 @@ void Shoot::Update(float dt) {
 	}
 	//pour missile
 	//m_oEntity->m_pRender->CreateParticlesFire(m_vMissiles.at(i)->m_mTransform.GetPosFloat().x, m_vMissiles.at(i)->m_mTransform.GetPosFloat().y, m_vMissiles.at(i)->m_mTransform.GetPosFloat().z);
+	
+	// Update bullets
 	for (int i = 0; i < m_vGun.size(); i++)
 	{
-
-
 		m_vGun.at(i)->m_mTransform.ApplyVelocity(dt);
 		
 		float dist = (sqrt(pow(m_vGun.at(i)->m_mTransform.GetPosFloat().x + m_oEntity->m_pRender->camera.m_transform->GetPosFloat().x, 2) + pow(m_vGun.at(i)->m_mTransform.GetPosFloat().y + m_oEntity->m_pRender->camera.m_transform->GetPosFloat().y, 2) + pow(m_vGun.at(i)->m_mTransform.GetPosFloat().z + m_oEntity->m_pRender->camera.m_transform->GetPosFloat().z, 2)));
@@ -179,7 +179,7 @@ bool Shoot::IsTargetInFront(const XMVECTOR targetPos) {
 
 
 	// Check if angle is within 90 degrees
-	return angle <= 90.0f;
+	return angle <= 70.0f;
 }
 
 Shoot::~Shoot()
