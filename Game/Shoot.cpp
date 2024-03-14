@@ -94,7 +94,7 @@ void Shoot::Update(float dt) {
 		//OutputDebugStringA(std::to_string(m_oEntity->m_pRender->camera.m_transform->GetPosFloat().z).c_str());
 		//OutputDebugStringA("\n");
 		if ( dist < 5 ) {
-			m_oEntity->m_pRender->CreateParticlesFire(m_vGun.at(i)->m_mTransform.GetPosFloat().x, m_vGun.at(i)->m_mTransform.GetPosFloat().y, m_vGun.at(i)->m_mTransform.GetPosFloat().z);
+			//m_oEntity->m_pRender->CreateParticlesFire(m_vGun.at(i)->m_mTransform.GetPosFloat().x, m_vGun.at(i)->m_mTransform.GetPosFloat().y, m_vGun.at(i)->m_mTransform.GetPosFloat().z);
 		}
 		m_vGunLife.at(i) -= dt;
 		if (m_vGunLife.at(i) <= 0)
