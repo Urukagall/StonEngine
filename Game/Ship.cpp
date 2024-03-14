@@ -6,7 +6,7 @@ Ship::Ship(Entity* pEntity) : Script(pEntity) {
 
 void Ship::OnLoad()
 {	
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 1; i++) {
 		CreateShip();
 
 	}
@@ -33,6 +33,9 @@ void Ship::CreateShip() {
 
 void Ship::Update(float dt) {
 	m_eCamera->m_mTransform = *m_oEntity->m_pRender->camera.m_transform;
+	if (m_eEntity.size() == 0) {
+		PostQuitMessage(0);
+	}
 	for (int i = 0; i < m_eEntity.size(); i++) {
 		if (m_eEntity[i]->m_collider->CheckColl(m_eCamera)) {
 			PostQuitMessage(0);
@@ -52,6 +55,16 @@ void Ship::Update(float dt) {
 					m_vGun->at(j)->Dead();
 					m_vGun->erase(m_vGun->begin() + j);
 					
+				}
+			}
+			for (int j = 0; j < m_vMissiles->size(); j++) {
+				if (m_eEntity[i]->m_collider->CheckColl(m_vMissiles->at(j))) {
+					m_oEntity->m_pRender->CreateParticlesExplosion(m_eEntity[i]->m_mTransform.GetPosFloat().x, m_eEntity[i]->m_mTransform.GetPosFloat().y, m_eEntity[i]->m_mTransform.GetPosFloat().z);
+					m_eEntity[i]->Dead();
+					m_eEntity.erase(m_eEntity.begin() + i);
+					m_vMissiles->at(j)->Dead();
+					m_vMissiles->erase(m_vMissiles->begin() + j);
+
 				}
 			}
 

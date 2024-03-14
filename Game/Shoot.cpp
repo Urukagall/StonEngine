@@ -41,7 +41,7 @@ void Shoot::Update(float dt) {
 		pEntity->m_mTransform.VelocityWalk(0.5f);
 		pEntity->m_mTransform.SetDeceleration(0.0f);
 		m_vGun.push_back(pEntity);
-		m_vGunLife.push_back(1000);
+		m_vGunLife.push_back(3000);
 		//m_oEntity->m_pRender->CreateParticlesFire(pEntity->m_mTransform.GetPosFloat().x, pEntity->m_mTransform.GetPosFloat().y, pEntity->m_mTransform.GetPosFloat().z);
 	}
 

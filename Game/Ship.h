@@ -9,6 +9,7 @@ public:
 	Entity* m_eCamera;
 	std::vector<Entity*> m_eEntity;
 	std::vector<Entity*>* m_vGun;
+	std::vector<Entity*>* m_vMissiles;
 	void Update(float dt) override;
 	void OnLoad() override;
 	std::vector<Entity*>* GetShips();
