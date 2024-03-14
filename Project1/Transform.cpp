@@ -228,15 +228,7 @@ void Transform::ApplyVelocity(float deltaTime) {
 	if (fVelocity.y < -m_fMaxVelocity) cappedVelocity.y = -m_fMaxVelocity;
 	if (fVelocity.z < -m_fMaxVelocity) cappedVelocity.z = -m_fMaxVelocity;
 
-	// Decelerate
-	/*if (cappedVelocity.x > 0) cappedVelocity.x -= m_fDeceleration;
-	if (cappedVelocity.y > 0) cappedVelocity.y -= m_fDeceleration;
-	if (cappedVelocity.z > 0) cappedVelocity.z -= m_fDeceleration;
-
-	if (cappedVelocity.x < 0) cappedVelocity.x += m_fDeceleration;
-	if (cappedVelocity.y < 0) cappedVelocity.y += m_fDeceleration;
-	if (cappedVelocity.z < 0) cappedVelocity.z += m_fDeceleration;*/
-
+	// Cap velocity then Decelerate
 	SetVelocity(cappedVelocity);
 	m_fSpeedMultiplier -= m_fDeceleration;
 

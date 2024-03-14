@@ -14,6 +14,11 @@ void Shoot::OnLoad()
 void Shoot::Update(float dt) {
 	Input* input;
 
+	for (int i = 0; i < m_vMissiles.size(); i++)
+	{
+		m_vMissiles[i]->m_mTransform.ApplyVelocity(dt);
+	}
+
 	// GUN
 	input = m_oEntity->m_pRender->GetInput();
 	if (input->getKey(ARROW_LEFT)) {
@@ -83,28 +88,35 @@ void Shoot::Update(float dt) {
 			OutputDebugStringA(std::to_string(distF.z).c_str());
 			OutputDebugStringA("}");*/
 		}
-		OutputDebugStringA("\nClosest target: ");
-		OutputDebugStringA(std::to_string(shortestLen).c_str());
-		
 
-		XMFLOAT3 pos;
-
-		//XMStoreFloat3(&pos, m_oEntity->m_mTransform.GetPos());
-		XMStoreFloat3(&pos, m_oEntity->m_pRender->camera.m_transform->GetPos());
-
-		XMFLOAT4X4 rot = m_oEntity->m_pRender->camera.m_transform->GetRotate();
-
-		Entity* pEntity = m_oEntity->m_pRender->CreateEntityMissiles(pos.x, pos.y, pos.z);
-		Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
-		newTransform.Rotate(XMConvertToRadians(-90.0f), 0.0f, 0.0f);
-		pEntity->m_mTransform = newTransform;
-
-		Missile* missileScript = new Missile(pEntity);
-		pEntity->CreateScript(missileScript);
+		// Target debug
+		if (target != nullptr) {
+			Entity* debugCube = m_oEntity->m_pRender->CreateEntityCube(target->m_mTransform.m_vPos.x, target->m_mTransform.m_vPos.y, target->m_mTransform.m_vPos.z, "purple");
+			debugCube->m_mTransform = target->m_mTransform;
 
 
+			// CREATE MISSILE
 
-		m_vMissiles.push_back(pEntity);
+			XMFLOAT3 pos;
+
+			//XMStoreFloat3(&pos, m_oEntity->m_mTransform.GetPos());
+			XMStoreFloat3(&pos, m_oEntity->m_pRender->camera.m_transform->GetPos());
+
+			XMFLOAT4X4 rot = m_oEntity->m_pRender->camera.m_transform->GetRotate();
+
+			Entity* pEntity = m_oEntity->m_pRender->CreateEntityMissiles(pos.x, pos.y, pos.z);
+			Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
+			newTransform.Rotate(XMConvertToRadians(-90.0f), 0.0f, 0.0f);
+			pEntity->m_mTransform = newTransform;
+
+			Missile* missileScript = new Missile(pEntity, target);
+			pEntity->CreateScript(missileScript);
+
+			m_vMissiles.push_back(pEntity);
+		}
+
+		//OutputDebugStringA("\nClosest target: ");
+		//OutputDebugStringA(std::to_string(shortestLen).c_str());
 	}
 
 	/*for (int i = 0; i < m_vGun.size(); i++)
