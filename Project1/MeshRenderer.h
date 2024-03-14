@@ -1,19 +1,14 @@
 #pragma once
-#include "Component.h"
 #include "pch.h"
+#include "Init.h"
+#include "UploadBuffer.h"
+#include "Component.h"
 #include "Mesh.h"
 #include <array>
 #include "Tools.h"
-#include "Init.h"
-#include "UploadBuffer.h"
+
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
-
-struct Vertex
-{
-	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
-};
 
 struct ObjectConstants
 {
@@ -26,17 +21,13 @@ public :
 
 	ComPtr<ID3D12Device> md3dDevice;
 	ComPtr<ID3D12GraphicsCommandList> mCommandList;
+	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
+	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
+
 	MeshRenderer(Entity* pEntity);
 	~MeshRenderer();
 
-	void Box();
-	void BuildDescriptorHeaps();
 	void BuildConstantBuffers();
-private:
-	ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
-	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
-
-	ComPtr<ID3D12Resource> mUploadBuffer;
-	BYTE* mMappedData = nullptr;
+	void Update(XMFLOAT4X4 proj, XMFLOAT4X4 cam);
 };
 

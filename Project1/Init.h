@@ -38,7 +38,7 @@ public:
 
     virtual bool Initialize();
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
+    Input input;
 protected:
     virtual void CreateRtvAndDsvDescriptorHeaps();
     virtual void OnResize();
@@ -72,7 +72,7 @@ protected:
 protected:
 
     static Init* mApp;
-    Input input;
+
 
     HINSTANCE mhAppInst = nullptr; // application instance handle
     HWND      mhMainWnd = nullptr; // main window handle
@@ -116,11 +116,11 @@ protected:
     UINT mCbvSrvUavDescriptorSize = 0;
 
     // Derived class should set these in derived constructor to customize starting values.
-    std::wstring mMainWndCaption = L"d3d App";
+    std::wstring mMainWndCaption = L"StonEngine";
     D3D_DRIVER_TYPE md3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
     DXGI_FORMAT mBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
     DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    int mClientWidth = 800;
-    int mClientHeight = 600;
+    int mClientWidth = 1920;
+    int mClientHeight = 1080;
 };
 

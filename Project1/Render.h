@@ -1,25 +1,18 @@
 #include "pch.h"
 #include "Init.h"
-#include "Math.h"
+#include "CustomMath.h"
 #include "UploadBuffer.h"
 #include <vector>
 #include "Entity.h"
+#include "MeshRenderer.h"
 #include "Timer.h"
+#include "Particles.h"
+#include "MeshCreator.h"
+#include "Camera.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
 using namespace DirectX::PackedVector;
-
-struct Vertex
-{
-    XMFLOAT3 Pos;
-    XMFLOAT4 Color;
-};
-
-struct ObjectConstants
-{
-    XMFLOAT4X4 WorldViewProj = Math::Identity4x4();
-};
 
 class Render : public Init
 {
@@ -30,7 +23,19 @@ public:
     ~Render();
 
     virtual bool Initialize()override;
+    Entity* CreateEntity(float x, float y, float z);
+    Entity* CreateEntityCube(float x, float y, float z, string sColor);
+    Entity* CreateEntityMissiles(float x, float y, float z);
+    Entity* CreateEntityPyramid(float x, float y, float z, string sColor);
+    Entity* CreateEntityEnemy(float x, float y, float z);
+    void CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed, int particleNumber);
+    void CreateParticlesExplosion(float x, float y, float z);
+    void CreateParticlesFire(float x, float y, float z);
+    Input* GetInput();
 
+    Camera camera;
+    MeshCreator* mc = nullptr;
+    std::vector<Entity*> m_Entities;
 private:
     virtual void OnResize()override;
     virtual void Update(Timer& gt)override;
@@ -40,12 +45,12 @@ private:
     void UpdateCameraPosition();
 
     void BuildDescriptorHeaps();
-    void BuildConstantBuffers();
+    //void BuildConstantBuffers();
     void BuildRootSignature();
     void BuildShadersAndInputLayout();
     void BuildPSO();
 
-    void CreateEntity();
+
 
 private:
 
@@ -55,7 +60,8 @@ private:
     float cameraZ = 0.0f;
 
     std::vector<MeshGeometry*> m_vEntities;
-    std::vector<Entity*> m_Entities;
+
+    std::vector<Particles*> m_Particles;
     ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
     ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
 

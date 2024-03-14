@@ -28,7 +28,7 @@ void Timer::Reset() {
 // used to pause the game, but stores the previous speed, so the game can be resumed using Resume()
 void Timer::Stop() {
 	fPreviousSpeed = fSpeed;
-	this->SetSpeed(0);
+	this->SetSpeed(1);
 }
 // Resume game at the same speed it was running when Stop() was called
 void Timer::Resume() {

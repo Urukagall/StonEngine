@@ -17,6 +17,11 @@ public:
 	//Position
 	XMFLOAT3 m_vPos;
 	XMFLOAT4X4 m_mPos;
+	XMVECTOR m_vVelocity = { 0, 0, 0 };
+	float m_fMaxVelocity = 0.2f;
+	// Dampeners strenght
+	float m_fSpeedMultiplier = 1.0f;
+	float m_fDeceleration = 0.002f; //m_fMaxVelocity * 0.0002f;
 
 	//Rotate
 	XMFLOAT3 m_vUp;
@@ -32,7 +37,28 @@ public:
 	void Identity();
 	void UpdateMatrix();
 	void Rotate(float yaw, float pitch, float roll);
+	void Translation(float x, float y, float z);
+	void SetPos(float x, float y, float z);
+	void SetPos(const XMFLOAT3& v);
+	void SetRot(const XMFLOAT4X4& v);
+	void SetDir(const XMFLOAT3& v);
+	void SetDeceleration(float speed);
+	XMVECTOR GetPos();
+	XMFLOAT3 GetPosFloat();
+	XMVECTOR GetDir();
+	XMVECTOR GetRight();
+	XMVECTOR GetUp();
+	void Scale(float x, float y, float z);
+	void SetScale(float x, float y, float z);
+	void Walk(float speed, float deltaTime);
 
+	void VelocityWalk(float speed);
+	void AddVelocity(float x, float y, float z);
+	void SetVelocity(float x, float y, float z);
+	void SetVelocity(XMFLOAT3 vector);
+	void ApplyVelocity(float deltaTime);
 
+	XMFLOAT4X4 GetMatrix();
+	XMFLOAT4X4 GetRotate();
 };
 

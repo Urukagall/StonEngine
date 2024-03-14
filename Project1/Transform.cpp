@@ -40,35 +40,211 @@ void Transform::UpdateMatrix() {
 void Transform::Rotate(float yaw, float pitch, float roll) {
 	XMVECTOR quatRot;
 
-	XMVECTOR vDir = XMLoadFloat3(&m_vDir);
-	XMVECTOR quat = XMQuaternionRotationAxis(vDir, roll);
-	quatRot = quat;
+	quatRot = XMQuaternionRotationAxis(XMLoadFloat3(&m_vDir), roll);
+	
+	quatRot = XMQuaternionMultiply(quatRot, XMQuaternionRotationAxis(XMLoadFloat3(&m_vRight), pitch));
 
-	XMVECTOR vRight = XMLoadFloat3(&m_vRight);
-	quat = XMQuaternionRotationAxis(vRight, pitch);
-	quatRot *= quat;
-
-	XMVECTOR vUp = XMLoadFloat3(&m_vUp);
-	quat = XMQuaternionRotationAxis(vUp, yaw);
-	quatRot *= quat;
+	quatRot = XMQuaternionMultiply(quatRot, XMQuaternionRotationAxis(XMLoadFloat3(&m_vUp), yaw));
 
 	XMVECTOR vRot = XMLoadFloat4(&m_qRot);
-	vRot *= quatRot;
+	vRot = XMQuaternionMultiply(vRot, quatRot);
 	XMStoreFloat4(&m_qRot, vRot);
 
-	XMMATRIX matRot = XMMatrixRotationQuaternion(quatRot);
+	XMMATRIX matRot = XMMatrixRotationQuaternion(vRot);  // Correction de cette ligne
 	XMStoreFloat4x4(&m_mRot, matRot);
 
-	// r = row, m128_f32 = collumn
-	m_vRight.x = matRot.r[0].m128_f32[0];
-	m_vRight.y = matRot.r[0].m128_f32[1];
-	m_vRight.z = matRot.r[0].m128_f32[2];
 
-	m_vUp.x = matRot.r[1].m128_f32[0];
-	m_vUp.y = matRot.r[1].m128_f32[1];
-	m_vUp.z = matRot.r[1].m128_f32[2];
+	m_vDir.x = m_mRot._11;
+	m_vDir.y = m_mRot._12;
+	m_vDir.z = m_mRot._13;
 
-	m_vDir.x = matRot.r[2].m128_f32[0];
-	m_vDir.y = matRot.r[2].m128_f32[1];
-	m_vDir.z = matRot.r[2].m128_f32[2];
+	m_vRight.x = m_mRot._21;
+	m_vRight.y = m_mRot._22;
+	m_vRight.z = m_mRot._23;
+
+	m_vUp.x = m_mRot._31;
+	m_vUp.y = m_mRot._32;
+	m_vUp.z = m_mRot._33;
+	UpdateMatrix();
+}
+
+void Transform::Walk(float speed, float deltaTime) {
+	m_vPos.x += m_vDir.x * speed * deltaTime;
+	m_vPos.y += m_vDir.y * speed * deltaTime;
+	m_vPos.z += m_vDir.z * speed * deltaTime;
+
+	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMStoreFloat4x4(&m_mPos, matrix);
+	UpdateMatrix();
+}
+
+void Transform::VelocityWalk(float speed) {
+	m_fSpeedMultiplier = 1.0f;
+	// Load velocity
+	XMFLOAT3 fVelocity;
+	XMStoreFloat3(&fVelocity, m_vVelocity);
+	fVelocity.x += m_vDir.x * speed;
+	fVelocity.y += m_vDir.y * speed;
+	fVelocity.z += m_vDir.z * speed;
+	
+	// Update pos
+	
+	SetVelocity(fVelocity);
+	//AddVelocity(fVelocity.x, fVelocity.y, fVelocity.z);
+}
+
+
+void Transform::Translation(float x, float y, float z)
+{
+	m_vPos.x *= x;
+	m_vPos.y *= y;
+	m_vPos.z *= z;
+
+	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMStoreFloat4x4(&m_mPos, matrix);
+	UpdateMatrix();
+}
+
+void Transform::Scale(float x, float y, float z)
+{
+	m_vSca.x *= x;
+	m_vSca.y *= y;
+	m_vSca.z *= z;
+
+	XMMATRIX matrix = XMMatrixScaling(m_vSca.x, m_vSca.y, m_vSca.z);
+	XMStoreFloat4x4(&m_mSca, matrix);
+	UpdateMatrix();
+}
+
+void Transform::SetScale(float x, float y, float z)
+{
+	m_vSca.x = x;
+	m_vSca.y = y;
+	m_vSca.z = z;
+
+	XMMATRIX matrix = XMMatrixScaling(m_vSca.x, m_vSca.y, m_vSca.z);
+	XMStoreFloat4x4(&m_mSca, matrix);
+	UpdateMatrix();
+}
+
+void Transform::SetPos(float x, float y, float z)
+{
+	m_vPos.x = x;
+	m_vPos.y = y;
+	m_vPos.z = z;
+
+	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMStoreFloat4x4(&m_mPos, matrix);
+	UpdateMatrix();
+}
+
+void Transform::SetPos(const XMFLOAT3& v) {
+	m_vPos = v;
+
+	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMStoreFloat4x4(&m_mPos, matrix);
+	UpdateMatrix();
+}
+
+void Transform::SetRot(const XMFLOAT4X4& v) {
+	m_mRot = v;
+	m_vDir.x = m_mRot._11;
+	m_vDir.y = m_mRot._12;
+	m_vDir.z = m_mRot._13;
+
+	m_vRight.x = m_mRot._21;
+	m_vRight.y = m_mRot._22;
+	m_vRight.z = m_mRot._23;
+
+	m_vUp.x = m_mRot._31;
+	m_vUp.y = m_mRot._32;
+	m_vUp.z = m_mRot._33;
+	UpdateMatrix();
+}
+
+void Transform::SetDir(const XMFLOAT3& v) {
+	m_vDir = v;
+	UpdateMatrix();
+}
+
+XMVECTOR Transform::GetPos() {
+	return XMLoadFloat3(&m_vPos);
+}
+
+XMFLOAT3 Transform::GetPosFloat() {
+	return m_vPos;
+}
+
+XMVECTOR Transform::GetDir() {
+	return XMLoadFloat3(&m_vDir);
+}
+
+XMVECTOR Transform::GetRight() {
+	return XMLoadFloat3(&m_vRight);
+}
+
+XMVECTOR Transform::GetUp() {
+	return XMLoadFloat3(&m_vUp);
+}
+
+XMFLOAT4X4 Transform::GetMatrix()
+{
+	return m_mTransform;
+}
+
+XMFLOAT4X4 Transform::GetRotate()
+{
+	return m_mRot;
+}
+
+
+// VELOCITY
+
+void Transform::AddVelocity(float x, float y, float z) {
+	XMVECTOR input = {x, y, z};
+	m_vVelocity += input;
+}
+
+void Transform::SetVelocity(float x, float y, float z) {
+	XMFLOAT3 input = { x, y, z };
+	m_vVelocity = XMLoadFloat3(&input);
+}
+
+void Transform::SetVelocity(XMFLOAT3 vector) {
+	m_vVelocity = XMLoadFloat3(&vector);
+}
+
+void Transform::SetDeceleration(float deceleration) {
+	m_fDeceleration = deceleration;
+}
+
+void Transform::ApplyVelocity(float deltaTime) {
+	// Load velocity
+	XMFLOAT3 fVelocity;
+	XMStoreFloat3(&fVelocity, m_vVelocity);
+
+	// Cap velocity and decelerate
+	XMFLOAT3 cappedVelocity = { fVelocity.x * m_fSpeedMultiplier, fVelocity.y * m_fSpeedMultiplier, fVelocity.z * m_fSpeedMultiplier };
+	if (fVelocity.x > m_fMaxVelocity) cappedVelocity.x = m_fMaxVelocity;
+	if (fVelocity.y > m_fMaxVelocity) cappedVelocity.y = m_fMaxVelocity;
+	if (fVelocity.z > m_fMaxVelocity) cappedVelocity.z = m_fMaxVelocity;
+
+	if (fVelocity.x < -m_fMaxVelocity) cappedVelocity.x = -m_fMaxVelocity;
+	if (fVelocity.y < -m_fMaxVelocity) cappedVelocity.y = -m_fMaxVelocity;
+	if (fVelocity.z < -m_fMaxVelocity) cappedVelocity.z = -m_fMaxVelocity;
+
+	// Cap velocity then Decelerate
+	SetVelocity(cappedVelocity);
+	m_fSpeedMultiplier -= m_fDeceleration;
+
+	// Reload velocity after speed cap
+	XMStoreFloat3(&fVelocity, m_vVelocity);
+
+	m_vPos.x += deltaTime * fVelocity.x;
+	m_vPos.y += deltaTime * fVelocity.y;
+	m_vPos.z += deltaTime * fVelocity.z;
+
+	XMMATRIX matrix = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMStoreFloat4x4(&m_mPos, matrix);
+	UpdateMatrix();
 }

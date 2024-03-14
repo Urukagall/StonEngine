@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "Render.h"
 #include "defines.h"
-#include "Camera.h"
 
-Camera camera;
 Defines defines;
 
 Render::Render(HINSTANCE hInstance)
@@ -20,22 +18,31 @@ bool Render::Initialize()
 	if (!Init::Initialize())
 		return false;
 
-	// Reset the command list to prep for initialization commands.
 	ThrowIfFailed(mCommandList->Reset(mDirectCmdListAlloc.Get(), nullptr));
 
+
 	BuildDescriptorHeaps();
-	BuildConstantBuffers();
 	BuildRootSignature();
 	BuildShadersAndInputLayout();
-	CreateEntity();
+
+	mc = new MeshCreator(mCommandList, md3dDevice);
+	
+	mc->Init();
+
+	//CreateEntityCube(2.0, 2.0, 2.0, "red");
+	//CreateEntituPyramid(1.0, 2.0, 2.0, XMFLOAT4(Colors::Aquamarine));
+
+	//CreateParticlesExplosion(2.0, 2.0, 2.0);
+	//CreateParticlesExplosion(3.0, 3.0, 3.0);
+	//CreateParticlesExplosion(4.0, 4.0, 4.0);
+
 	BuildPSO();
 
-	// Execute the initialization commands.
+
 	ThrowIfFailed(mCommandList->Close());
 	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
 	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	// Wait until initialization is complete.
 	FlushCommandQueue();
 
 	//Set default position
@@ -48,73 +55,155 @@ void Render::OnResize()
 {
 	Init::OnResize();
 
-	// The window resized, so update the aspect ratio and recompute the projection matrix.
+
 	XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * Math::Pi, AspectRatio(), 1.0f, 1000.0f);
 	XMStoreFloat4x4(&mProj, P);
+}
+
+Input* Render::GetInput() {
+	return &input;
 }
 
 void Render::HandleInput(Timer& gt)
 {
 	float dT = gt.GetDT();
 	float speed = 0.001f;
-
-	if (input.getKey(SPRINT)) {
-		speed = 0.01f;
-	}
-
 	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
 	if (input.getKey(pitchUp)) {
-		camera.Pitch(speed * dT);
+		camera.m_transform->Rotate(0, speed * dT, 0);
+		//camera.Pitch(speed * dT);
 	}
 	else if (input.getKey(pitchDown)) {
-		camera.Pitch((-speed)* dT);
+		camera.m_transform->Rotate(0, -speed * dT, 0);
+		//camera.Pitch((-speed)* dT);
 	}
 
 	if (input.getKey(yawLeft)) {
-		camera.Yaw((-speed) * dT);
+		camera.m_transform->Rotate(-speed * dT, 0, 0);
+		//camera.Yaw((-speed) * dT);
 	}
 	else if (input.getKey(yawRight)) {
-		camera.Yaw(speed * dT);
+		camera.m_transform->Rotate(speed * dT, 0, 0);
+		//camera.Yaw(speed * dT);
 	}
 
 	if (input.getKey(rollLeft)) {
-		camera.Roll(speed * dT);
+		camera.m_transform->Rotate(0, 0, speed * dT);
+		//camera.Roll(speed * dT);
 	}
 	else if (input.getKey(rollRight)) {
-		camera.Roll(-speed * dT);
+		camera.m_transform->Rotate(0, 0, -speed * dT);
 	}
 
+	// Apply sprint but not for rotations
+	if (input.getKey(SPRINT)) {
+		speed = 0.01f;
+	}
 	if (input.getKey(ARROW_UP)) {
-		camera.Walk(speed * dT);
+		//camera.m_transform->Walk(speed*10, dT);
+		camera.m_transform->VelocityWalk(speed);
+		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, 0.05f});
 	}
 	else if (input.getKey(ARROW_DOWN)) {
-		camera.Walk((-speed) * dT);
-	}
-
-	if (input.getKey(ARROW_RIGHT)) {
-		camera.Strafe(speed * dT);
-	}
-	else if (input.getKey(ARROW_LEFT)) {
-		camera.Strafe((-speed) * dT);
+		//camera.m_transform->Walk(-speed*10, dT);
+		camera.m_transform->VelocityWalk(-speed);
+		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, -0.05f});
 	}
 }
 
 void Render::Update(Timer& gt)
 {
+	float dT = gt.GetDT();
+
+	for (int i = 0; i < m_Particles.size(); i++) {
+		m_Particles[i]->Update(dT);
+	}
 	// Gérer les entrées utilisateur
 	HandleInput(gt);
 
+	// Update camera
 	//camera.setPosition(x, y, z);
+	camera.m_transform->ApplyVelocity(dT);
 	camera.setView();
 
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
 	XMMATRIX worldViewProj = world * camera.getView() * proj;
 
+
+	// ============ il faut mettre ça dans le MeshRenderer::Update() =================
+
 	// Update the constant buffer with the latest worldViewProj matrix.
-	ObjectConstants objConstants;
+	/*ObjectConstants objConstants;
 	XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-	mObjectCB->CopyData(0, objConstants);
+
+	mObjectCB->CopyData(0, objConstants);*/
+
+	//============ il faut juste appeller tout les update() des components ============
+
+	XMFLOAT4X4 pr;
+	XMStoreFloat4x4(&pr, proj);
+	XMFLOAT4X4 cam;
+	XMStoreFloat4x4(&cam, camera.getView());
+
+	for (int a = 0; a < m_Entities.size(); ++a) {
+		// Check collisions with other objects
+		for (int b = 0; b < m_Entities.size(); ++b) {
+			if(a!=b){
+				/*OutputDebugStringA("\nChecking collisions between ");
+				OutputDebugStringA(std::to_string(a).c_str());
+				OutputDebugStringA(" and ");
+				OutputDebugStringA(std::to_string(b).c_str());*/
+				//Check collision
+				if (m_Entities[a]->m_collider->CheckColl(m_Entities[b])) {
+					//OutputDebugStringA("\nCollision");					
+				}
+				else {
+					//OutputDebugStringA("\nNOPE");
+				}
+			}
+		}
+
+		// Update renderer
+		if (m_Entities[a]->m_oMeshRenderer != nullptr)
+		{
+			m_Entities[a]->m_oMeshRenderer->Update(pr, cam);
+		}
+		/*for (const auto& pair : m_Entities[a]->m_oMeshRenderers) {
+			pair.second->Update(pr, cam);
+		}*/
+		if (m_Entities[a]->m_script !=nullptr) {
+				m_Entities[a]->m_script->Update(dT);
+		}
+
+		if (m_Entities[a]->m_bIsAlive == false)
+		{
+			m_Entities[a]->DeleteComponent();
+			delete(m_Entities[a]);
+			m_Entities.erase(m_Entities.begin() + a);
+		}
+	}
+
+	for (int i = 0; i < m_Particles.size(); ++i) {
+		if (m_Particles[i]->particles.size() == 0) {
+			m_Particles.erase(m_Particles.begin() + i);
+		}
+		else {
+			for (int j = 0; j < m_Particles[i]->particles.size(); j++) {
+				XMFLOAT4X4 pr;
+				XMStoreFloat4x4(&pr, proj);
+				XMFLOAT4X4 cam;
+				XMStoreFloat4x4(&cam, camera.getView());
+				if (m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderer != nullptr)
+				{
+					m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderer->Update(pr, cam);
+				}
+				/*for (const auto& pair : m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderers) {
+					pair.second->Update(pr, cam);
+				}*/
+			}
+		}
+	}
 }
 
 void Render::Draw(const Timer& gt)
@@ -137,7 +226,7 @@ void Render::Draw(const Timer& gt)
 	mCommandList->ResourceBarrier(1, &targetState);
 
 	// Clear the back buffer and depth buffer.
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
+	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to.
@@ -150,37 +239,108 @@ void Render::Draw(const Timer& gt)
 	ID3D12DescriptorHeap* descriptorHeaps[] = { mCbvHeap.Get() };
 	mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
-	//for (int i = 0; i < m_vEntities.size(); ++i) {
-	//	mCommandList->IASetVertexBuffers(0, 1, &m_vEntities[i]->VertexBufferView());
-	//	mCommandList->IASetIndexBuffer(&m_vEntities[i]->IndexBufferView());
-	//	mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	//	mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
-
-	//	mCommandList->DrawIndexedInstanced(
-	//		m_vEntities[i]->DrawArgs["box"].IndexCount,
-	//		1, 0, 0, 0);
-	//}
 
 
 	for (int i = 0; i < m_Entities.size(); ++i) {
-		for (int j = 0; j < m_Entities[i]->m_mComponents.size(); j++) {
-			Mesh* comp = m_Entities[i]->m_mComponents["cube"]->mBoxGeo;
+		if (m_Entities[i]->m_oMeshRenderer != nullptr)
+		{
+			Mesh* comp = m_Entities[i]->m_oMeshRenderer->mBoxGeo;
+
+			mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+			mCommandList->SetPipelineState(mPSO.Get());
+
 			D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
 			D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
 			mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
 			mCommandList->IASetIndexBuffer(&indexBuffer);
 			mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-			mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+
+			//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+			mCommandList->SetGraphicsRootConstantBufferView(0, m_Entities[i]->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
 
 			mCommandList->DrawIndexedInstanced(
 				comp->DrawArgs["box"].IndexCount,
 				1, 0, 0, 0);
 		}
+		
+
+		//for (const auto& pair : m_Entities[i]->m_oMeshRenderers) {
+		//	// pair.first est la clé, pair.second est la valeur
+		//	std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
+		//	Mesh* comp = pair.second->mBoxGeo;
+
+		//	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+		//	mCommandList->SetPipelineState(mPSO.Get());
+
+		//	D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
+		//	D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
+		//	mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
+		//	mCommandList->IASetIndexBuffer(&indexBuffer);
+		//	mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+		//	//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+		//	mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
+
+		//	mCommandList->DrawIndexedInstanced(
+		//		comp->DrawArgs["box"].IndexCount,
+		//		1, 0, 0, 0);
+		//}
+	}
+
+	for (int i = 0; i < m_Particles.size(); ++i) {
+		for (int j = 0; j < m_Particles[i]->particles.size(); ++j) {
+			if (m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderer != nullptr)
+			{
+				Mesh* comp = m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderer->mBoxGeo;
+
+				mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+				mCommandList->SetPipelineState(mPSO.Get());
+
+				D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
+				D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
+				mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
+				mCommandList->IASetIndexBuffer(&indexBuffer);
+				mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+				//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+				mCommandList->SetGraphicsRootConstantBufferView(0, m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderer->mObjectCB->Resource()->GetGPUVirtualAddress());
+
+				mCommandList->DrawIndexedInstanced(
+					comp->DrawArgs["box"].IndexCount,
+					1, 0, 0, 0);
+			}
+			
+
+			//for (const auto& pair : m_Particles[i]->particles[j]->m_oEntity->m_oMeshRenderers) {
+			//	// pair.first est la clé, pair.second est la valeur
+			//	std::cout << "Clé : " << pair.first << ", Valeur : " << pair.second << std::endl;
+			//	Mesh* comp = pair.second->mBoxGeo;
+
+			//	mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+			//	mCommandList->SetPipelineState(mPSO.Get());
+
+			//	D3D12_VERTEX_BUFFER_VIEW vertexBuffer = comp->VertexBufferView();
+			//	D3D12_INDEX_BUFFER_VIEW indexBuffer = comp->IndexBufferView();
+			//	mCommandList->IASetVertexBuffers(0, 1, &vertexBuffer);
+			//	mCommandList->IASetIndexBuffer(&indexBuffer);
+			//	mCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+			//	//mCommandList->SetGraphicsRootDescriptorTable(0, mCbvHeap->GetGPUDescriptorHandleForHeapStart());
+			//	mCommandList->SetGraphicsRootConstantBufferView(0, pair.second->mObjectCB->Resource()->GetGPUVirtualAddress());
+
+			//	mCommandList->DrawIndexedInstanced(
+			//		comp->DrawArgs["box"].IndexCount,
+			//		1, 0, 0, 0);
+			//}
+		}
 
 	}
+
+
 
 	CD3DX12_RESOURCE_BARRIER resssourceState = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
@@ -206,7 +366,6 @@ void Render::Draw(const Timer& gt)
 
 void Render::BuildDescriptorHeaps()
 {
-	
 	D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
 	cbvHeapDesc.NumDescriptors = 1;
 	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -216,41 +375,13 @@ void Render::BuildDescriptorHeaps()
 		IID_PPV_ARGS(&mCbvHeap)));
 }
 
-void Render::BuildConstantBuffers()
-{
-	mObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(md3dDevice.Get(), 1, true);
-
-	UINT objCBByteSize = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-
-	D3D12_GPU_VIRTUAL_ADDRESS cbAddress = mObjectCB->Resource()->GetGPUVirtualAddress();
-	// Offset to the ith object constant buffer in the buffer.
-	int boxCBufIndex = 0;
-	cbAddress += boxCBufIndex * objCBByteSize;
-
-	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
-	cbvDesc.BufferLocation = cbAddress;
-	cbvDesc.SizeInBytes = Tools::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-
-	md3dDevice->CreateConstantBufferView(
-		&cbvDesc,
-		mCbvHeap->GetCPUDescriptorHandleForHeapStart());
-}
 
 void Render::BuildRootSignature()
 {
-	// Shader programs typically require resources as input (constant buffers,
-	// textures, samplers).  The root signature defines the resources the shader
-	// programs expect.  If we think of the shader programs as a function, and
-	// the input resources as function parameters, then the root signature can be
-	// thought of as defining the function signature.  
 
-	// Root parameter can be a table, root descriptor or root constants.
 	CD3DX12_ROOT_PARAMETER slotRootParameter[1];
 
-	// Create a single descriptor table of CBVs.
-	CD3DX12_DESCRIPTOR_RANGE cbvTable;
-	cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-	slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
+	slotRootParameter[0].InitAsConstantBufferView(0);
 
 	// A root signature is an array of root parameters.
 	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(1, slotRootParameter, 0, nullptr,
@@ -289,10 +420,72 @@ void Render::BuildShadersAndInputLayout()
 	};
 }
 
-void Render::CreateEntity() {
-	Entity* en = new Entity(md3dDevice, mCommandList);
-	en->CreateCube();
+Entity* Render::CreateEntity(float posx, float posy, float posz) {
+	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
+	en->SetPosition(posx, posy, posz);
 	m_Entities.push_back(en);
+
+	return en;
+}
+
+Entity* Render::CreateEntityCube(float x, float y, float z, string sColor) {
+	Entity* cu = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
+	cu->CreateCube(sColor, mc);
+	cu->SetPosition(x, y, z);
+	m_Entities.push_back(cu);
+
+	return cu;
+}
+
+Entity* Render::CreateEntityMissiles(float x, float y, float z) {
+	Entity* mi = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
+	mi->CreateMissiles(mc);
+	mi->SetPosition(x, y, z);
+	m_Entities.push_back(mi);
+
+	return mi;
+}
+
+Entity* Render::CreateEntityPyramid(float x, float y, float z, string sColor) {
+	Entity* py = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
+	py->CreatePyramid(sColor, mc);
+	py->SetPosition(x, y, z);
+	m_Entities.push_back(py);
+
+	return py;
+}
+
+Entity* Render::CreateEntityEnemy(float x, float y, float z) {
+	Entity* en = new Entity(md3dDevice, mCommandList, mCbvHeap, this);
+	en->CreateEnemy(mc);
+	en->SetPosition(x, y, z);
+	m_Entities.push_back(en);
+
+	return en;
+}
+
+void Render::CreateParticle(float x, float y, float z, string sColor, int minLife, int maxLife, int minScale, int maxScale, int minSpeed, int maxSpeed, int particleNumber) {
+	XMFLOAT3 pos = XMFLOAT3(x, y, z);
+	Particles* par = new Particles(this, sColor, mc, 150, md3dDevice, mCommandList, mCbvHeap, pos, minLife, maxLife, minScale, maxScale, minSpeed, maxSpeed);
+	m_Particles.push_back(par);
+}
+
+void Render::CreateParticlesExplosion(float x, float y, float z) {
+	XMFLOAT3 pos = XMFLOAT3(x, y, z);
+	Particles* par1 = new Particles(this, "red", mc, 150, md3dDevice, mCommandList, mCbvHeap, pos, 3000, 6000, 1000, 2000,800, 1500);
+	Particles* par2 = new Particles(this, "orange", mc, 100, md3dDevice, mCommandList, mCbvHeap, pos, 3000, 6000, 1000, 2000, 800, 1500);
+	Particles* par3 = new Particles(this, "yellow", mc, 50, md3dDevice, mCommandList, mCbvHeap, pos, 3000, 6000, 1000, 2000, 800, 1500);
+	m_Particles.push_back(par1);
+	m_Particles.push_back(par2);
+	m_Particles.push_back(par3);
+}
+
+void Render::CreateParticlesFire(float x, float y, float z) {
+	XMFLOAT3 pos = XMFLOAT3(x, y, z);
+	Particles* par1 = new Particles(this, "gray", mc, 5, md3dDevice, mCommandList, mCbvHeap, pos, 1000, 2000, 500, 1000, 500, 1000);
+	Particles* par2 = new Particles(this, "dark", mc, 3, md3dDevice, mCommandList, mCbvHeap, pos, 1000, 2000, 500, 1000, 10, 100);
+	m_Particles.push_back(par1);
+	m_Particles.push_back(par2);
 }
 
 void Render::BuildPSO()
