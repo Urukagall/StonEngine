@@ -33,7 +33,7 @@ void Shoot::Update(float dt) {
 
 		Transform newTransform = *m_oEntity->m_pRender->camera.m_transform;
 		newTransform.Scale(0.5f, 0.1f, 0.1f);
-		pEntity->m_mTransform = newTransform;
+		pEntity->m_mTransform = *m_oEntity->m_pRender->camera.m_transform;
 		pEntity->m_mTransform.VelocityWalk(0.5f);
 		pEntity->m_mTransform.SetDeceleration(0.0f);
 		m_vGun.push_back(pEntity);
@@ -67,21 +67,17 @@ void Shoot::Update(float dt) {
 				// Calculate length (dist) to target
 				float len = sqrtf(distF.x * distF.x + distF.y * distF.y + distF.z * distF.z);
 				if (len < shortestLen) {
-					shortestLen = len;
-					target = ShipsRef->at(i);
+
+					// Check if target in front or behind
+					if (IsTargetInFront(ShipsRef->at(i)->m_mTransform.GetPos())) {
+						shortestLen = len;
+						target = ShipsRef->at(i);
+					}
 				}
 				//OutputDebugStringA("\nlen: ");
 				//OutputDebugStringA(std::to_string(len).c_str());
 				//OutputDebugStringA("\nKILL HIIIM ! Put the nose on him and Kill Him ! C'mon he's out in front, Shoot Him, Shoot HIM ! and then the maniacal laughter after that.");
 			}
-
-			/*OutputDebugStringA("\nDistance: {");
-			OutputDebugStringA(std::to_string(distF.x).c_str());
-			OutputDebugStringA(", ");
-			OutputDebugStringA(std::to_string(distF.y).c_str());
-			OutputDebugStringA(", ");
-			OutputDebugStringA(std::to_string(distF.z).c_str());
-			OutputDebugStringA("}");*/
 		}
 
 		// Target debug
@@ -107,8 +103,6 @@ void Shoot::Update(float dt) {
 			Missile* missileScript = new Missile(pEntity, target);
 			//pEntity->m_mTransform.VelocityWalk(0.5f);
 			pEntity->CreateScript(missileScript);
-
-
 
 			m_vMissiles.push_back(pEntity);
 			m_vMissilesLife.push_back(10000);
@@ -155,6 +149,33 @@ void Shoot::Update(float dt) {
 			m_vMissilesLife.erase(m_vMissilesLife.begin() + i);
 		}
 	}
+}
+
+bool Shoot::IsTargetInFront(const XMVECTOR targetPos) {
+	const XMVECTOR playerPos = m_oEntity->m_pRender->camera.m_transform->GetPos();
+	XMVECTOR playerFwd = m_oEntity->m_pRender->camera.m_transform->GetDir();
+	// Calculate vector from player to target
+	XMVECTOR toTarget = XMVectorSubtract(targetPos, playerPos);
+	// Normalize the vectors
+	XMVECTOR playerFwdNorm = XMVector3Normalize(playerFwd);
+	XMVECTOR toTargetNorm = XMVector3Normalize(toTarget);
+
+	// Calculate the dot product to get the angle between vectors
+	float dotProduct = XMVectorGetX(XMVector3Dot(playerFwdNorm, toTargetNorm));
+
+	// Convert dot product to angle (in radians)
+	float angle = acosf(dotProduct);
+
+	// Convert angle from radians to degrees
+	angle = XMConvertToDegrees(angle);
+
+	// DEBUG OUTPUT
+	OutputDebugStringA("\nAngle to target: ");
+	OutputDebugStringA(std::to_string(angle).c_str());
+
+
+	// Check if angle is within 90 degrees
+	return angle <= 90.0f;
 }
 
 Shoot::~Shoot()

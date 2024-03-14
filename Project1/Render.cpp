@@ -68,11 +68,6 @@ void Render::HandleInput(Timer& gt)
 {
 	float dT = gt.GetDT();
 	float speed = 0.001f;
-
-	if (input.getKey(SPRINT)) {
-		speed = 0.01f;
-	}
-
 	// Vérifiez les touches enfoncées et mettez à jour les valeurs de déplacement en conséquence
 	if (input.getKey(pitchUp)) {
 		camera.m_transform->Rotate(0, speed * dT, 0);
@@ -100,24 +95,19 @@ void Render::HandleInput(Timer& gt)
 		camera.m_transform->Rotate(0, 0, -speed * dT);
 	}
 
+	// Apply sprint but not for rotations
+	if (input.getKey(SPRINT)) {
+		speed = 0.01f;
+	}
 	if (input.getKey(ARROW_UP)) {
 		//camera.m_transform->Walk(speed*10, dT);
-		camera.m_transform->VelocityWalk(speed * 0.5f);
+		camera.m_transform->VelocityWalk(speed);
 		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, 0.05f});
 	}
 	else if (input.getKey(ARROW_DOWN)) {
 		//camera.m_transform->Walk(-speed*10, dT);
-		camera.m_transform->VelocityWalk(-speed * 0.5f);
+		camera.m_transform->VelocityWalk(-speed);
 		//camera.m_transform->SetVelocity({ 0.0f, 0.0f, -0.05f});
-	}
-
-	if (input.getKey(ARROW_RIGHT)) {
-		// MISSILE
-		//camera.Strafe(speed * dT);
-	}
-	else if (input.getKey(ARROW_LEFT)) {
-		// SHOOT
-		//camera.Strafe((-speed) * dT);
 	}
 }
 
