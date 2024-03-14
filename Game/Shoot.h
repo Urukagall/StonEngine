@@ -18,5 +18,6 @@ public:
 
 	void Update(float dt) override;
 	void OnLoad() override;
+	bool IsTargetInFront(const XMVECTOR targetPos);
 };
 
