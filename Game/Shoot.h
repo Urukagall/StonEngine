@@ -10,6 +10,7 @@ public:
 	std::vector<Entity*> m_vGun;
 
 	std::vector<int> m_vGunLife;
+	std::vector<int> m_vMissilesLife;
 
 	int m_iGunDelay;
 
